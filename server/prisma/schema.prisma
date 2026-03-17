@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  avatar    String?
+  beltRank  String   @default("white")
+  academy   String?
+  bio       String?
+  createdAt DateTime @default(now())
+
+  sessions         TrainingSession[]
+  following        Follow[]          @relation("following")
+  followers        Follow[]          @relation("followers")
+  groupMemberships GroupMember[]
+}
+
+model TrainingSession {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id])
+  type         String   // "class", "open_mat", "solo"
+  duration     Int      // total seconds
+  classTime    Int?     // seconds in instruction
+  sparringTime Int?     // seconds sparring
+  notes        String?
+  photo        String?
+  heartRate    Json?    // { avg, max, min, data[] }
+  createdAt    DateTime @default(now())
+
+  @@index([userId, createdAt])
+}
+
+model Academy {
+  id        String  @id @default(cuid())
+  name      String
+  address   String
+  lat       Float
+  lng       Float
+  phone     String?
+  website   String?
+  schedule  Json?   // { openMats: [...], classes: [...] }
+}
+
+model Group {
+  id          String        @id @default(cuid())
+  name        String
+  description String?
+  avatar      String?
+  isAcademy   Boolean       @default(false)
+  createdAt   DateTime      @default(now())
+  members     GroupMember[]
+}
+
+model GroupMember {
+  id      String @id @default(cuid())
+  userId  String
+  groupId String
+  role    String @default("member") // "admin", "member"
+  user    User   @relation(fields: [userId], references: [id])
+  group   Group  @relation(fields: [groupId], references: [id])
+
+  @@unique([userId, groupId])
+}
+
+model Follow {
+  id          String @id @default(cuid())
+  followerId  String
+  followingId String
+  follower    User   @relation("following", fields: [followerId], references: [id])
+  following   User   @relation("followers", fields: [followingId], references: [id])
+
+  @@unique([followerId, followingId])
+}

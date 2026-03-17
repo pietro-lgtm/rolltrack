@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(npx tsc:*)",
+      "Bash(npx vite:*)",
+      "Bash(xargs kill:*)",
+      "Bash(curl -s http://localhost:3001/api/academies)",
+      "Bash(lsof -ti:5173)"
+    ]
+  }
+}
