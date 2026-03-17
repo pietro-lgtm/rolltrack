@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import type { TrainingSession } from '../types'
 import Avatar from './Avatar'
 import BeltBadge from './BeltBadge'
@@ -56,6 +57,7 @@ interface SessionCardProps {
 }
 
 export default function SessionCard({ session, onLike, onComment, onShare }: SessionCardProps) {
+  const navigate = useNavigate()
   const [liked, setLiked] = useState(session.liked ?? false)
   const [likeCount, setLikeCount] = useState(session.likes ?? 0)
 
@@ -83,8 +85,18 @@ export default function SessionCard({ session, onLike, onComment, onShare }: Ses
     onLike?.(session.id)
   }
 
+  const handleCardClick = () => {
+    navigate(`/session/${session.id}`)
+  }
+
   return (
-    <div className="bg-gray-800 rounded-2xl p-4 space-y-3">
+    <div
+      className="bg-gray-800 rounded-2xl p-4 space-y-3 cursor-pointer transition-colors hover:bg-gray-750"
+      onClick={handleCardClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleCardClick() }}
+    >
       {/* Header: avatar, name, belt, academy, time */}
       <div className="flex items-center gap-3">
         {user && (
@@ -163,7 +175,7 @@ export default function SessionCard({ session, onLike, onComment, onShare }: Ses
       )}
 
       {/* Actions: like, comment, share */}
-      <div className="flex items-center gap-6 pt-2 border-t border-gray-700">
+      <div className="flex items-center gap-6 pt-2 border-t border-gray-700" onClick={(e) => e.stopPropagation()}>
         <button
           onClick={handleLike}
           className={`flex items-center gap-1.5 text-sm transition-colors ${

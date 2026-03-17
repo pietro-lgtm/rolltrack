@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import { Settings, Edit3, ChevronRight, Users } from 'lucide-react'
+import { Settings, Edit3, ChevronRight, Users, ClipboardList } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { api } from '../api/client'
 import Avatar from '../components/Avatar'
@@ -10,6 +10,7 @@ import StreakBanner from '../components/home/StreakBanner'
 import TrainingCalendar from '../components/profile/TrainingCalendar'
 import WorkoutLog from '../components/profile/WorkoutLog'
 import ProgressCharts from '../components/profile/ProgressCharts'
+import Achievements from '../components/profile/Achievements'
 import LoadingSpinner from '../components/ui/LoadingSpinner'
 import type { TrainingSession, UserStats, Technique } from '../types'
 
@@ -164,6 +165,7 @@ export default function Profile() {
             to="/profile/log"
             className="flex-1 flex items-center justify-center gap-1.5 py-2 bg-navy-700 hover:bg-navy-600 rounded-xl text-xs font-medium text-gray-300 transition-colors"
           >
+            <ClipboardList size={14} />
             Training Log
           </Link>
         </div>
@@ -189,6 +191,9 @@ export default function Profile() {
         <h3 className="text-sm font-semibold text-gray-400 mb-3">Progress</h3>
         <ProgressCharts sessions={sessions} techniques={techniques} />
       </div>
+
+      {/* Achievements */}
+      <Achievements />
 
       {/* Recent Training */}
       <div>

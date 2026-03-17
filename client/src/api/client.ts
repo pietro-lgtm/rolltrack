@@ -1,17 +1,13 @@
-const BASE_URL = import.meta.env.VITE_API_URL || '/api'
-
-let currentUserId = 'user1'
-
-export function setCurrentUserId(id: string) {
-  currentUserId = id
-}
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
+const TOKEN_KEY = 'rolltrack_token'
 
 async function request<T>(method: string, path: string, body?: unknown): Promise<T> {
   const url = `${BASE_URL}${path}`
+  const token = localStorage.getItem(TOKEN_KEY)
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
-    'X-User-Id': currentUserId,
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
   }
 
   const config: RequestInit = {
@@ -24,6 +20,15 @@ async function request<T>(method: string, path: string, body?: unknown): Promise
   }
 
   const response = await fetch(url, config)
+
+  if (response.status === 401) {
+    // Token expired or invalid - clear and redirect to login
+    localStorage.removeItem(TOKEN_KEY)
+    if (window.location.pathname !== '/login' && window.location.pathname !== '/signup') {
+      window.location.href = '/login'
+    }
+    throw new ApiError(401, 'Unauthorized', 'Authentication required')
+  }
 
   if (!response.ok) {
     const errorBody = await response.text().catch(() => '')
@@ -38,8 +43,8 @@ async function request<T>(method: string, path: string, body?: unknown): Promise
   return toCamelCase(json) as T
 }
 
-// Field aliases: API field name → client field name
-// Applied AFTER snake_case → camelCase conversion
+// Field aliases: API field name -> client field name
+// Applied AFTER snake_case -> camelCase conversion
 const FIELD_ALIASES: Record<string, string> = {
   sessionType: 'type',
   giNogi: 'gi',
@@ -74,6 +79,11 @@ const FIELD_ALIASES: Record<string, string> = {
   rollsCount: 'rollsCount',
   memberCount: 'memberCount',
   inviteCode: 'inviteCode',
+  classType: 'classType',
+  groupType: 'groupType',
+  createdByName: 'createdByName',
+  myRole: 'myRole',
+  isMember: 'isMember',
 }
 
 // Convert snake_case keys to camelCase recursively, then apply aliases

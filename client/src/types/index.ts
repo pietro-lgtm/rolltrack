@@ -171,6 +171,17 @@ export interface Friendship {
   createdAt: string
 }
 
+export interface AcademyScheduleEntry {
+  id: string
+  academyId: string
+  dayOfWeek: number
+  startTime: string
+  endTime: string
+  classType: string
+  instructor?: string
+  notes?: string
+}
+
 export interface Group {
   id: string
   name: string
@@ -178,12 +189,16 @@ export interface Group {
   avatar?: string
   bannerImage?: string
   type: GroupType
+  groupType?: GroupType
   isAcademy: boolean
   memberCount: number
   members?: GroupMember[]
   academyId?: string
   inviteCode?: string
   createdAt?: string
+  createdByName?: string
+  myRole?: string | null
+  isMember?: boolean
 }
 
 export interface GroupMember {
@@ -267,6 +282,51 @@ export interface UserStats {
   beltProgress: number
   monthlyBreakdown: { month: string; sessions: number; duration: number }[]
   weekDays: boolean[] // Mon-Sun, true if trained that day
+}
+
+export type CompetitionResult = 'gold' | 'silver' | 'bronze' | 'did_not_place'
+export type CompetitionDivision = 'gi' | 'nogi'
+
+export interface Competition {
+  id: string
+  userId: string
+  tournamentName: string
+  date: string
+  result: CompetitionResult
+  weightClass?: string
+  division: CompetitionDivision
+  notes?: string
+  createdAt: string
+}
+
+export interface Achievement {
+  id: string
+  type: 'training' | 'competition' | 'streak'
+  icon: string
+  title: string
+  description: string
+  earned: boolean
+  progress: number
+}
+
+export interface AchievementsData {
+  milestones: Achievement[]
+  competitionRecord: {
+    total: number
+    wins: number
+    losses: number
+    podiums: number
+  }
+  beltProgression: {
+    currentBelt: BeltRank
+    stripes: number
+    startedAt: string
+  }
+  currentStreak: number
+  longestStreak: number
+  totalSessions: number
+  totalHours: number
+  sparringHours: number
 }
 
 export interface ScheduleEntry {

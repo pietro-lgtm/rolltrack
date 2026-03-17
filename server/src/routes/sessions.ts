@@ -333,6 +333,62 @@ router.put('/:id', (req: Request, res: Response) => {
   res.json(updated);
 });
 
+// GET /:id/comments - list comments for a session
+router.get('/:id/comments', (req: Request, res: Response) => {
+  const sessionId = req.params.id;
+
+  const session = db.prepare('SELECT id FROM training_sessions WHERE id = ?').get(sessionId);
+  if (!session) {
+    res.status(404).json({ error: 'Session not found' });
+    return;
+  }
+
+  const comments = db.prepare(`
+    SELECT c.*, u.name AS user_name, u.avatar_url AS user_avatar_url, u.belt_rank AS user_belt_rank
+    FROM comments c
+    JOIN users u ON u.id = c.user_id
+    WHERE c.target_type = 'session' AND c.target_id = ?
+    ORDER BY c.created_at ASC
+  `).all(sessionId);
+
+  res.json(comments);
+});
+
+// POST /:id/comments - create a comment on a session
+router.post('/:id/comments', (req: Request, res: Response) => {
+  const userId = req.userId;
+  const sessionId = req.params.id;
+  const { text } = req.body;
+
+  if (!text || typeof text !== 'string' || text.trim().length === 0) {
+    res.status(400).json({ error: 'Comment text is required' });
+    return;
+  }
+
+  const session = db.prepare('SELECT id FROM training_sessions WHERE id = ?').get(sessionId);
+  if (!session) {
+    res.status(404).json({ error: 'Session not found' });
+    return;
+  }
+
+  const commentId = genId();
+  const now = nowISO();
+
+  db.prepare(`
+    INSERT INTO comments (id, user_id, target_type, target_id, content, created_at)
+    VALUES (?, ?, 'session', ?, ?, ?)
+  `).run(commentId, userId, sessionId, text.trim(), now);
+
+  const created = db.prepare(`
+    SELECT c.*, u.name AS user_name, u.avatar_url AS user_avatar_url, u.belt_rank AS user_belt_rank
+    FROM comments c
+    JOIN users u ON u.id = c.user_id
+    WHERE c.id = ?
+  `).get(commentId);
+
+  res.status(201).json(created);
+});
+
 // DELETE /:id - delete session (cascades rolls, techniques, wearable)
 router.delete('/:id', (req: Request, res: Response) => {
   const userId = req.userId;

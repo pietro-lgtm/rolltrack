@@ -1,11 +1,12 @@
 import Database from 'better-sqlite3';
 import path from 'path';
-import { fileURLToPath } from 'url';
+import fs from 'fs';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const dbPath = path.join(__dirname, '..', 'data', 'rolltrack.db');
+const dataDir = path.resolve('./data');
+if (!fs.existsSync(dataDir)) {
+  fs.mkdirSync(dataDir, { recursive: true });
+}
+const dbPath = path.join(dataDir, 'rolltrack.db');
 
 import type BetterSqlite3 from 'better-sqlite3';
 const db: BetterSqlite3.Database = new Database(dbPath);
@@ -241,6 +242,29 @@ db.exec(`
   CREATE INDEX IF NOT EXISTS idx_likes_target ON likes(target_type, target_id);
   CREATE INDEX IF NOT EXISTS idx_likes_user ON likes(user_id);
   CREATE INDEX IF NOT EXISTS idx_comments_target ON comments(target_type, target_id);
+
+  CREATE TABLE IF NOT EXISTS competitions (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL REFERENCES users(id),
+    tournament_name TEXT NOT NULL,
+    date TEXT NOT NULL,
+    result TEXT CHECK(result IN ('gold','silver','bronze','did_not_place')) NOT NULL,
+    weight_class TEXT,
+    division TEXT CHECK(division IN ('gi','nogi')) DEFAULT 'gi',
+    notes TEXT,
+    created_at TEXT DEFAULT (datetime('now')),
+    updated_at TEXT DEFAULT (datetime('now'))
+  );
+
+  CREATE INDEX IF NOT EXISTS idx_competitions_user ON competitions(user_id);
+  CREATE INDEX IF NOT EXISTS idx_competitions_date ON competitions(date);
 `);
+
+// Add password_hash column if it doesn't exist (for existing databases)
+try {
+  db.exec(`ALTER TABLE users ADD COLUMN password_hash TEXT`);
+} catch {
+  // Column already exists, ignore
+}
 
 export default db;

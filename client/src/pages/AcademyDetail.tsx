@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { MapContainer, TileLayer, Marker } from 'react-leaflet'
+import L from 'leaflet'
 import {
   ArrowLeft,
   MapPin,
@@ -11,9 +13,32 @@ import {
   CircleDot,
   Clock,
   ExternalLink,
+  Navigation,
 } from 'lucide-react'
 import { api } from '../api/client'
 import type { Academy, ClassScheduleEntry } from '../types'
+
+// Fix default marker icon issue
+delete (L.Icon.Default.prototype as any)._getIconUrl
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+})
+
+const academyIcon = L.divIcon({
+  className: 'custom-marker',
+  html: `<div style="
+    width: 14px;
+    height: 14px;
+    background: #3b82f6;
+    border: 3px solid white;
+    border-radius: 50%;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+  "></div>`,
+  iconSize: [20, 20],
+  iconAnchor: [10, 10],
+})
 
 const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
@@ -81,22 +106,56 @@ export default function AcademyDetail() {
 
   return (
     <div className="min-h-full pb-24">
-      {/* Banner */}
+      {/* Mini Map */}
       <div className="relative h-48 overflow-hidden">
-        {academy.bannerImage ? (
-          <img src={academy.bannerImage} alt="" className="w-full h-full object-cover" />
-        ) : (
-          <div className="w-full h-full bg-gradient-to-br from-accent/30 via-navy-700 to-navy-900" />
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-navy-900 via-navy-900/40 to-transparent" />
+        <MapContainer
+          center={[academy.lat, academy.lng]}
+          zoom={15}
+          className="w-full h-full z-0"
+          zoomControl={false}
+          attributionControl={false}
+          dragging={false}
+          scrollWheelZoom={false}
+          doubleClickZoom={false}
+          touchZoom={false}
+        >
+          <TileLayer
+            url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+            attribution='&copy; <a href="https://carto.com/">CARTO</a>'
+          />
+          <Marker position={[academy.lat, academy.lng]} icon={academyIcon} />
+        </MapContainer>
+        <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-navy-900 to-transparent z-[400]" />
 
         {/* Back button */}
         <button
           onClick={() => navigate('/map')}
-          className="absolute top-4 left-4 w-10 h-10 rounded-full bg-navy-900/60 backdrop-blur-sm flex items-center justify-center text-white hover:bg-navy-800 transition-colors"
+          className="absolute top-4 left-4 w-10 h-10 rounded-full bg-navy-900/60 backdrop-blur-sm flex items-center justify-center text-white hover:bg-navy-800 transition-colors z-[500]"
         >
           <ArrowLeft size={20} />
         </button>
+      </div>
+
+      {/* Route Buttons */}
+      <div className="px-4 -mt-2 relative z-10 flex gap-3">
+        <a
+          href={`https://www.google.com/maps/dir/?api=1&destination=${academy.lat},${academy.lng}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex-1 flex items-center justify-center gap-2 py-3 bg-navy-700 text-white rounded-xl text-sm font-medium hover:bg-navy-600 transition-colors border border-navy-500/30"
+        >
+          <Navigation size={16} />
+          Google Maps
+        </a>
+        <a
+          href={`https://waze.com/ul?ll=${academy.lat},${academy.lng}&navigate=yes`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex-1 flex items-center justify-center gap-2 py-3 bg-navy-700 text-white rounded-xl text-sm font-medium hover:bg-navy-600 transition-colors border border-navy-500/30"
+        >
+          <ExternalLink size={16} />
+          Waze
+        </a>
       </div>
 
       {/* Academy info */}

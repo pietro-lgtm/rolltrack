@@ -7,9 +7,11 @@ import GroupBanner from '../components/groups/GroupBanner'
 import GroupFeed from '../components/groups/GroupFeed'
 import GroupEvents from '../components/groups/GroupEvents'
 import GroupMembers from '../components/groups/GroupMembers'
+import GroupDetails from '../components/groups/GroupDetails'
+import GroupSchedule from '../components/groups/GroupSchedule'
 import InviteModal from '../components/groups/InviteModal'
 
-type Tab = 'feed' | 'events' | 'members'
+type Tab = 'feed' | 'events' | 'members' | 'details' | 'schedule'
 
 export default function GroupDetail() {
   const { id } = useParams<{ id: string }>()
@@ -56,6 +58,8 @@ export default function GroupDetail() {
     { key: 'feed', label: 'Feed' },
     { key: 'events', label: 'Events' },
     { key: 'members', label: 'Members' },
+    { key: 'details', label: 'Details' },
+    { key: 'schedule', label: 'Schedule' },
   ]
 
   return (
@@ -89,11 +93,25 @@ export default function GroupDetail() {
             <UserPlus size={16} />
             Invite
           </button>
-          <button className="flex items-center gap-2 px-4 py-2 bg-navy-700 hover:bg-navy-600 rounded-xl text-sm font-medium text-white transition-colors">
+          <button
+            onClick={() => setActiveTab('details')}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
+              activeTab === 'details'
+                ? 'bg-accent text-navy-900 font-semibold'
+                : 'bg-navy-700 hover:bg-navy-600 text-white'
+            }`}
+          >
             <Info size={16} />
             Details
           </button>
-          <button className="flex items-center gap-2 px-4 py-2 bg-navy-700 hover:bg-navy-600 rounded-xl text-sm font-medium text-white transition-colors">
+          <button
+            onClick={() => setActiveTab('schedule')}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
+              activeTab === 'schedule'
+                ? 'bg-accent text-navy-900 font-semibold'
+                : 'bg-navy-700 hover:bg-navy-600 text-white'
+            }`}
+          >
             <Calendar size={16} />
             Schedule
           </button>
@@ -124,6 +142,8 @@ export default function GroupDetail() {
         {activeTab === 'feed' && <GroupFeed groupId={group.id} />}
         {activeTab === 'events' && <GroupEvents groupId={group.id} />}
         {activeTab === 'members' && <GroupMembers groupId={group.id} />}
+        {activeTab === 'details' && <GroupDetails group={group} />}
+        {activeTab === 'schedule' && <GroupSchedule groupId={group.id} academyId={group.academyId} />}
       </div>
 
       {/* Invite modal */}

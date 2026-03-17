@@ -13,12 +13,25 @@ import {
   ThermometerSun,
   MessageSquare,
   Zap,
+  Send,
+  MessageCircle,
 } from 'lucide-react'
 import { api } from '../api/client'
 import { useAuth } from '../context/AuthContext'
 import LoadingSpinner from '../components/ui/LoadingSpinner'
+import Avatar from '../components/Avatar'
 import ShareCard from '../components/profile/ShareCard'
-import type { TrainingSession, Roll } from '../types'
+import type { TrainingSession, Roll, BeltRank } from '../types'
+
+interface SessionComment {
+  id: string
+  userId: string
+  content: string
+  createdAt: string
+  userName: string
+  userAvatar?: string
+  userBeltRank?: BeltRank
+}
 
 const feelingLabels: Record<number, { emoji: string; label: string; color: string }> = {
   1: { emoji: '\u{1F629}', label: 'Terrible', color: 'text-red-400' },
@@ -44,6 +57,20 @@ function formatDuration(seconds: number): string {
   return `${m}m`
 }
 
+function formatTimeAgo(dateStr: string): string {
+  const diff = Date.now() - new Date(dateStr).getTime()
+  const minutes = Math.floor(diff / (1000 * 60))
+  if (minutes < 1) return 'Just now'
+  if (minutes < 60) return `${minutes}m ago`
+  const hours = Math.floor(minutes / 60)
+  if (hours < 24) return `${hours}h ago`
+  const days = Math.floor(hours / 24)
+  if (days === 1) return 'Yesterday'
+  if (days < 7) return `${days}d ago`
+  const weeks = Math.floor(days / 7)
+  return `${weeks}w ago`
+}
+
 export default function SessionDetail() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
@@ -52,6 +79,9 @@ export default function SessionDetail() {
   const [rolls, setRolls] = useState<Roll[]>([])
   const [loading, setLoading] = useState(true)
   const [showShare, setShowShare] = useState(false)
+  const [comments, setComments] = useState<SessionComment[]>([])
+  const [commentText, setCommentText] = useState('')
+  const [postingComment, setPostingComment] = useState(false)
 
   useEffect(() => {
     if (!id) return
@@ -74,6 +104,37 @@ export default function SessionDetail() {
     fetchSession()
     return () => { cancelled = true }
   }, [id])
+
+  useEffect(() => {
+    if (!id) return
+    let cancelled = false
+
+    async function fetchComments() {
+      try {
+        const data = await api.get<SessionComment[]>(`/sessions/${id}/comments`)
+        if (!cancelled) setComments(data)
+      } catch {
+        // silently fail
+      }
+    }
+
+    fetchComments()
+    return () => { cancelled = true }
+  }, [id])
+
+  const handlePostComment = async () => {
+    if (!id || !commentText.trim() || postingComment) return
+    setPostingComment(true)
+    try {
+      const newComment = await api.post<SessionComment>(`/sessions/${id}/comments`, { text: commentText.trim() })
+      setComments((prev) => [...prev, newComment])
+      setCommentText('')
+    } catch {
+      // silently fail
+    } finally {
+      setPostingComment(false)
+    }
+  }
 
   if (loading) {
     return (
@@ -351,6 +412,67 @@ export default function SessionDetail() {
             </p>
           </div>
         )}
+        {/* Comments Section */}
+        <div className="bg-navy-800 rounded-2xl p-4">
+          <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+            <MessageCircle size={16} className="text-blue-400" />
+            Comments {comments.length > 0 && `(${comments.length})`}
+          </h3>
+
+          {/* Existing comments */}
+          {comments.length > 0 ? (
+            <div className="space-y-3 mb-4">
+              {comments.map((comment) => (
+                <div key={comment.id} className="flex gap-3">
+                  <Avatar
+                    name={comment.userName}
+                    src={comment.userAvatar}
+                    beltRank={comment.userBeltRank}
+                    size="sm"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-medium text-white">{comment.userName}</span>
+                      <span className="text-xs text-gray-500">{formatTimeAgo(comment.createdAt)}</span>
+                    </div>
+                    <p className="text-sm text-gray-300 mt-0.5">{comment.content}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-gray-500 mb-4">No comments yet. Be the first!</p>
+          )}
+
+          {/* Add comment input */}
+          <div className="flex items-center gap-2 pt-3 border-t border-navy-700">
+            {user && (
+              <Avatar
+                name={user.name}
+                src={user.avatar}
+                beltRank={user.beltRank}
+                size="sm"
+              />
+            )}
+            <div className="flex-1 flex items-center gap-2 bg-navy-700 rounded-xl px-3 py-2">
+              <input
+                type="text"
+                value={commentText}
+                onChange={(e) => setCommentText(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter') handlePostComment() }}
+                placeholder="Add a comment..."
+                className="flex-1 bg-transparent text-sm text-white placeholder-gray-500 outline-none"
+              />
+              <button
+                onClick={handlePostComment}
+                disabled={!commentText.trim() || postingComment}
+                className="p-1.5 rounded-lg text-accent hover:text-accent/80 disabled:text-gray-600 disabled:cursor-not-allowed transition-colors"
+              >
+                <Send size={16} />
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Share Card Modal */}
