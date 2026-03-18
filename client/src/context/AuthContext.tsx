@@ -64,7 +64,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     try {
-      const data = await authFetch<User>('/auth/me')
+      const data = await authFetch<User>('/api/auth/me')
       setUser(data)
     } catch {
       // Token invalid/expired - clear it
@@ -80,7 +80,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [refreshUser])
 
   const login = useCallback(async (email: string, password: string) => {
-    const data = await authFetch<{ token: string; user: User }>('/auth/login', {
+    const data = await authFetch<{ token: string; user: User }>('/api/auth/login', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
     })
@@ -89,7 +89,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const signup = useCallback(async (name: string, email: string, password: string) => {
-    const data = await authFetch<{ token: string; user: User }>('/auth/signup', {
+    const data = await authFetch<{ token: string; user: User }>('/api/auth/signup', {
       method: 'POST',
       body: JSON.stringify({ email, password, name }),
     })
