@@ -49,14 +49,7 @@ export default function AcademyPicker({ value, onChange }: AcademyPickerProps) {
         .get<{ data: Academy[] }>(`/academies?q=${encodeURIComponent(query)}`)
         .then((res) => setResults(res.data))
         .catch(() => {
-          // Fallback mock search
-          import('../../mock/data').then(({ mockAcademies }) => {
-            setResults(
-              mockAcademies.filter((a) =>
-                a.name.toLowerCase().includes(query.toLowerCase())
-              )
-            )
-          })
+          setResults([])
         })
         .finally(() => setLoading(false))
     }, 300)

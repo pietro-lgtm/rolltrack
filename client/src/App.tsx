@@ -26,6 +26,7 @@ const GroupEvent = lazy(() => import('./pages/GroupEvent'))
 const FriendsList = lazy(() => import('./pages/FriendsList'))
 const TrainingLog = lazy(() => import('./pages/TrainingLog'))
 const Settings = lazy(() => import('./pages/Settings'))
+const AcademyCreate = lazy(() => import('./pages/AcademyCreate'))
 
 function PageLoader() {
   return (
@@ -96,6 +97,7 @@ export default function App() {
         </Route>
 
         {/* Pages without bottom nav */}
+        <Route path="/map/academy/create" element={<ProtectedRoute><AcademyCreate /></ProtectedRoute>} />
         <Route path="/map/academy/:id" element={<ProtectedRoute><AcademyDetail /></ProtectedRoute>} />
         <Route path="/record/summary/:id" element={<ProtectedRoute><SessionSummary /></ProtectedRoute>} />
         <Route path="/session/:id" element={<ProtectedRoute><SessionDetail /></ProtectedRoute>} />

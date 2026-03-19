@@ -16,7 +16,20 @@ import {
   Navigation,
 } from 'lucide-react'
 import { api } from '../api/client'
+import { useAuth } from '../context/AuthContext'
+import { Users, Shield, UserPlus, Check, XCircle } from 'lucide-react'
 import type { Academy, ClassScheduleEntry } from '../types'
+
+interface AcademyMember {
+  id: string
+  userId: string
+  name: string
+  avatarUrl?: string
+  beltRank: string
+  stripes: number
+  role: string
+  status: string
+}
 
 // Fix default marker icon issue
 delete (L.Icon.Default.prototype as any)._getIconUrl
@@ -59,8 +72,12 @@ function getClassColor(type: string): string {
 export default function AcademyDetail() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const [academy, setAcademy] = useState<Academy | null>(null)
+  const { user } = useAuth()
+  const [academy, setAcademy] = useState<(Academy & { myMembership?: { role: string; status: string }; memberCount?: number; isClaimed?: boolean; claimedByUserId?: string }) | null>(null)
   const [loading, setLoading] = useState(true)
+  const [members, setMembers] = useState<AcademyMember[]>([])
+  const [showMembers, setShowMembers] = useState(false)
+  const [actionLoading, setActionLoading] = useState(false)
 
   useEffect(() => {
     async function load() {
@@ -75,6 +92,38 @@ export default function AcademyDetail() {
     }
     load()
   }, [id])
+
+  const loadMembers = async () => {
+    try {
+      const res = await api.get<{ data: AcademyMember[] }>(`/academies/${id}/members`)
+      setMembers(res.data || [])
+    } catch {}
+  }
+
+  const handleClaim = async () => {
+    setActionLoading(true)
+    try {
+      await api.post(`/academies/${id}/claim`)
+      const data = await api.get<Academy>(`/academies/${id}`)
+      setAcademy(data as any)
+    } catch {} finally { setActionLoading(false) }
+  }
+
+  const handleJoin = async () => {
+    setActionLoading(true)
+    try {
+      await api.post(`/academies/${id}/join`)
+      const data = await api.get<Academy>(`/academies/${id}`)
+      setAcademy(data as any)
+    } catch {} finally { setActionLoading(false) }
+  }
+
+  const handleMemberAction = async (memberId: string, status: 'approved' | 'rejected') => {
+    try {
+      await api.put(`/academies/${id}/members/${memberId}`, { status })
+      loadMembers()
+    } catch {}
+  }
 
   if (loading) {
     return (
@@ -281,8 +330,89 @@ export default function AcademyDetail() {
         </div>
       )}
 
+      {/* Membership Actions */}
+      <div className="px-4 mt-6 space-y-3">
+        {!academy.myMembership && !academy.isClaimed && (
+          <button
+            onClick={handleClaim}
+            disabled={actionLoading}
+            className="w-full flex items-center justify-center gap-2 py-3 bg-purple-500/20 text-purple-400 rounded-xl text-sm font-medium hover:bg-purple-500/30 transition-colors ring-1 ring-purple-500/30 disabled:opacity-50"
+          >
+            <Shield size={16} />
+            Claim This Academy
+          </button>
+        )}
+
+        {!academy.myMembership && academy.isClaimed && (
+          <button
+            onClick={handleJoin}
+            disabled={actionLoading}
+            className="w-full flex items-center justify-center gap-2 py-3 bg-blue-500/20 text-blue-400 rounded-xl text-sm font-medium hover:bg-blue-500/30 transition-colors ring-1 ring-blue-500/30 disabled:opacity-50"
+          >
+            <UserPlus size={16} />
+            Request to Join
+          </button>
+        )}
+
+        {academy.myMembership?.status === 'pending' && (
+          <div className="py-3 text-center text-sm text-yellow-400 bg-yellow-500/10 rounded-xl ring-1 ring-yellow-500/20">
+            Membership pending approval
+          </div>
+        )}
+
+        {academy.myMembership?.status === 'approved' && (
+          <div className="flex items-center justify-center gap-2 py-3 text-sm text-green-400 bg-green-500/10 rounded-xl ring-1 ring-green-500/20">
+            <Check size={16} />
+            {academy.myMembership.role === 'moderator' ? 'Moderator' : 'Member'}
+          </div>
+        )}
+
+        {/* Members button */}
+        <button
+          onClick={() => { setShowMembers(!showMembers); if (!showMembers) loadMembers(); }}
+          className="w-full flex items-center justify-center gap-2 py-3 bg-navy-800 text-gray-300 rounded-xl text-sm font-medium hover:bg-navy-700 transition-colors"
+        >
+          <Users size={16} />
+          Members {academy.memberCount ? `(${academy.memberCount})` : ''}
+        </button>
+
+        {/* Members list */}
+        {showMembers && (
+          <div className="bg-navy-800 rounded-xl border border-navy-600 overflow-hidden">
+            {members.length === 0 ? (
+              <div className="py-6 text-center text-sm text-gray-500">No members yet</div>
+            ) : (
+              members.map((m) => (
+                <div key={m.id} className="flex items-center gap-3 px-4 py-3 border-b border-navy-700 last:border-b-0">
+                  <div className="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center text-xs font-bold text-white">
+                    {m.name?.[0] || '?'}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm text-white truncate">{m.name}</div>
+                    <div className="text-xs text-gray-500 capitalize">{m.beltRank} belt {m.role === 'moderator' ? '· Moderator' : ''}</div>
+                  </div>
+                  {m.status === 'pending' && academy.myMembership?.role === 'moderator' && (
+                    <div className="flex gap-1.5">
+                      <button onClick={() => handleMemberAction(m.id, 'approved')} className="w-7 h-7 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 hover:bg-green-500/30">
+                        <Check size={14} />
+                      </button>
+                      <button onClick={() => handleMemberAction(m.id, 'rejected')} className="w-7 h-7 rounded-full bg-red-500/20 flex items-center justify-center text-red-400 hover:bg-red-500/30">
+                        <XCircle size={14} />
+                      </button>
+                    </div>
+                  )}
+                  {m.status === 'pending' && academy.myMembership?.role !== 'moderator' && (
+                    <span className="text-xs text-yellow-400">Pending</span>
+                  )}
+                </div>
+              ))
+            )}
+          </div>
+        )}
+      </div>
+
       {/* Check In CTA */}
-      <div className="px-4 mt-8">
+      <div className="px-4 mt-6">
         <button
           onClick={() => navigate('/record', { state: { academyId: academy.id, academyName: academy.name } })}
           className="w-full flex items-center justify-center gap-2 py-4 bg-accent hover:bg-accent/90 rounded-2xl text-base font-bold text-navy-900 transition-colors shadow-lg shadow-accent/20"

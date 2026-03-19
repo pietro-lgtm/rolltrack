@@ -41,12 +41,7 @@ export default function WeeklySchedule() {
         setSchedule(items)
       })
       .catch(() => {
-        setSchedule([
-          { id: '1', dayOfWeek: 0, type: 'class', gi: 'gi', startTime: '18:00' },
-          { id: '2', dayOfWeek: 2, type: 'class', gi: 'nogi', startTime: '18:00' },
-          { id: '3', dayOfWeek: 4, type: 'class', gi: 'gi', startTime: '18:00' },
-          { id: '4', dayOfWeek: 5, type: 'open_mat', gi: 'both', startTime: '10:00' },
-        ])
+        setSchedule([])
       })
 
     // Fetch this week's sessions to mark completed days
@@ -61,16 +56,7 @@ export default function WeeklySchedule() {
         setCompletedDays(days)
       })
       .catch(() => {
-        // Mark some mock days
-        const now = new Date()
-        const dayIndex = (now.getDay() + 6) % 7
-        const days = new Set<string>()
-        for (let i = 0; i < dayIndex; i += 2) {
-          const d = new Date(now)
-          d.setDate(d.getDate() - (dayIndex - i))
-          days.add(`${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`)
-        }
-        setCompletedDays(days)
+        setCompletedDays(new Set())
       })
   }, [])
 

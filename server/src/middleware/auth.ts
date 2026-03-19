@@ -17,8 +17,8 @@ interface JwtPayload {
 }
 
 export function authMiddleware(req: Request, res: Response, next: NextFunction): void {
-  // Skip auth for auth routes and health check
-  if (req.path.startsWith('/api/auth') || req.path === '/api/health') {
+  // Skip auth for auth routes, health check, and wearable OAuth callbacks
+  if (req.path.startsWith('/api/auth') || req.path === '/api/health' || req.path.startsWith('/api/wearable-auth/callback')) {
     next();
     return;
   }

@@ -126,6 +126,25 @@ export class ApiError extends Error {
   }
 }
 
+async function uploadFile(file: File): Promise<{ url: string; filename: string }> {
+  const formData = new FormData()
+  formData.append('file', file)
+  const token = localStorage.getItem(TOKEN_KEY)
+
+  const response = await fetch(`${BASE_URL}/uploads`, {
+    method: 'POST',
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+    body: formData,
+  })
+
+  if (!response.ok) {
+    const errorBody = await response.text().catch(() => '')
+    throw new ApiError(response.status, response.statusText, errorBody)
+  }
+
+  return response.json()
+}
+
 export const api = {
   get<T>(path: string): Promise<T> {
     return request<T>('GET', path)
@@ -142,4 +161,6 @@ export const api = {
   del<T>(path: string): Promise<T> {
     return request<T>('DELETE', path)
   },
+
+  upload: uploadFile,
 }

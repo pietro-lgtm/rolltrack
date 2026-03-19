@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react'
 import type { User } from '../types'
 
-const BASE_URL = import.meta.env.VITE_API_URL || '/api'
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
 const TOKEN_KEY = 'rolltrack_token'
 
 interface AuthContextType {

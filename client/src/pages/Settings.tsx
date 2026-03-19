@@ -17,10 +17,9 @@ import type { User as UserType, BeltRank } from '../types'
 
 const beltOptions: BeltRank[] = ['white', 'blue', 'purple', 'brown', 'black']
 
-interface WearableConnection {
-  name: string
-  icon: string
+interface WearableStatus {
   connected: boolean
+  lastSync?: string
 }
 
 export default function Settings() {
@@ -42,12 +41,12 @@ export default function Settings() {
   const [showActivity, setShowActivity] = useState(true)
   const [shareStats, setShareStats] = useState(true)
 
-  // Wearable connections (mock)
-  const [wearables, setWearables] = useState<WearableConnection[]>([
-    { name: 'Apple Watch', icon: '\u{2328}\u{FE0F}', connected: false },
-    { name: 'Garmin', icon: '\u{1F4F1}', connected: false },
-    { name: 'Whoop', icon: '\u{1F4AA}', connected: false },
-  ])
+  // Wearable connections
+  const [wearableStatus, setWearableStatus] = useState<Record<string, WearableStatus>>({
+    whoop: { connected: false },
+    oura: { connected: false },
+    apple_health: { connected: false },
+  })
 
   useEffect(() => {
     if (user) {
@@ -59,6 +58,13 @@ export default function Settings() {
       setAcademy(user.academy ?? '')
     }
   }, [user])
+
+  // Fetch wearable connection status
+  useEffect(() => {
+    api.get<Record<string, WearableStatus>>('/wearable-auth/status')
+      .then(setWearableStatus)
+      .catch(() => {})
+  }, [])
 
   const handleSave = async () => {
     setSaving(true)
@@ -80,12 +86,21 @@ export default function Settings() {
     }
   }
 
-  const toggleWearable = (index: number) => {
-    setWearables((prev) =>
-      prev.map((w, i) =>
-        i === index ? { ...w, connected: !w.connected } : w
-      )
-    )
+  const connectWearable = async (provider: string) => {
+    if (provider === 'apple_health') return // No web API
+    try {
+      const res = await api.get<{ url: string }>(`/wearable-auth/connect/${provider}`)
+      window.location.href = res.url
+    } catch (err: any) {
+      alert(err?.body || 'Integration not configured yet')
+    }
+  }
+
+  const disconnectWearable = async (provider: string) => {
+    try {
+      await api.post(`/wearable-auth/disconnect/${provider}`)
+      setWearableStatus((prev) => ({ ...prev, [provider]: { connected: false } }))
+    } catch {}
   }
 
   const handleSignOut = () => {
@@ -257,32 +272,43 @@ export default function Settings() {
             </h2>
           </div>
           <div className="bg-navy-800 rounded-2xl overflow-hidden divide-y divide-navy-700">
-            {wearables.map((wearable, i) => (
-              <div
-                key={wearable.name}
-                className="flex items-center justify-between px-4 py-3"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="text-lg">{wearable.icon}</span>
-                  <span className="text-sm font-medium">{wearable.name}</span>
+            {[
+              { key: 'whoop', name: 'Whoop', icon: '\u{1F4AA}' },
+              { key: 'oura', name: 'Oura Ring', icon: '\u{1F48D}' },
+              { key: 'apple_health', name: 'Apple Health', icon: '\u{2764}\u{FE0F}' },
+            ].map(({ key, name: wName, icon }) => {
+              const status = wearableStatus[key]
+              const isConnected = status?.connected ?? false
+              const isApple = key === 'apple_health'
+              return (
+                <div key={key} className="flex items-center justify-between px-4 py-3">
+                  <div className="flex items-center gap-3">
+                    <span className="text-lg">{icon}</span>
+                    <div>
+                      <span className="text-sm font-medium">{wName}</span>
+                      {isApple && <span className="text-xs text-gray-600 block">Manual entry only</span>}
+                    </div>
+                  </div>
+                  {isApple ? (
+                    <span className="text-xs text-gray-600">N/A</span>
+                  ) : isConnected ? (
+                    <button
+                      onClick={() => disconnectWearable(key)}
+                      className="px-3 py-1.5 rounded-lg bg-green-500/20 text-green-400 text-xs font-medium hover:bg-red-500/20 hover:text-red-400 transition-colors"
+                    >
+                      Connected
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => connectWearable(key)}
+                      className="px-3 py-1.5 rounded-lg bg-navy-600 text-gray-300 text-xs font-medium hover:bg-navy-500 transition-colors"
+                    >
+                      Connect
+                    </button>
+                  )}
                 </div>
-                <button
-                  onClick={() => toggleWearable(i)}
-                  className={`relative w-11 h-6 rounded-full transition-colors ${
-                    wearable.connected ? 'bg-accent' : 'bg-navy-600'
-                  }`}
-                >
-                  <div
-                    className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform ${
-                      wearable.connected ? 'translate-x-5.5 left-0.5' : 'left-0.5'
-                    }`}
-                    style={{
-                      transform: wearable.connected ? 'translateX(22px)' : 'translateX(0)',
-                    }}
-                  />
-                </button>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </section>
 

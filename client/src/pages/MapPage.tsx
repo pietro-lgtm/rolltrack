@@ -3,7 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import { api } from '../api/client'
 import type { Academy } from '../types'
-import { Search, MapPin, X } from 'lucide-react'
+import { Search, MapPin, X, Plus } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 // Fix default marker icon issue with bundlers (webpack/vite)
@@ -187,6 +187,14 @@ export default function MapPage() {
             </Marker>
           ))}
         </MapContainer>
+
+        {/* Add Academy FAB */}
+        <button
+          onClick={() => navigate('/map/academy/create')}
+          className="absolute bottom-4 right-4 z-[1000] w-12 h-12 rounded-full bg-blue-500 text-white flex items-center justify-center shadow-lg shadow-blue-500/30 hover:bg-blue-400 transition-colors"
+        >
+          <Plus size={24} />
+        </button>
 
         {/* Search bar floating over the map */}
         <div className="absolute top-3 left-3 right-3 z-[1000]">

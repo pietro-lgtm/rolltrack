@@ -267,4 +267,54 @@ try {
   // Column already exists, ignore
 }
 
+// Add session_name column for share overlay
+try {
+  db.exec(`ALTER TABLE training_sessions ADD COLUMN session_name TEXT`);
+} catch {
+  // Column already exists, ignore
+}
+
+// Academy claim/moderation columns
+try {
+  db.exec(`ALTER TABLE academies ADD COLUMN created_by_user_id TEXT REFERENCES users(id)`);
+} catch {}
+try {
+  db.exec(`ALTER TABLE academies ADD COLUMN claimed_by_user_id TEXT REFERENCES users(id)`);
+} catch {}
+try {
+  db.exec(`ALTER TABLE academies ADD COLUMN is_claimed INTEGER DEFAULT 0`);
+} catch {}
+
+// Academy members table
+db.exec(`
+  CREATE TABLE IF NOT EXISTS academy_members (
+    id TEXT PRIMARY KEY,
+    academy_id TEXT NOT NULL REFERENCES academies(id) ON DELETE CASCADE,
+    user_id TEXT NOT NULL REFERENCES users(id),
+    role TEXT CHECK(role IN ('moderator','member')) DEFAULT 'member',
+    status TEXT CHECK(status IN ('pending','approved','rejected')) DEFAULT 'pending',
+    created_at TEXT DEFAULT (datetime('now')),
+    UNIQUE(academy_id, user_id)
+  );
+  CREATE INDEX IF NOT EXISTS idx_academy_members_academy ON academy_members(academy_id);
+  CREATE INDEX IF NOT EXISTS idx_academy_members_user ON academy_members(user_id);
+`);
+
+// Wearable OAuth tokens
+db.exec(`
+  CREATE TABLE IF NOT EXISTS wearable_tokens (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL REFERENCES users(id),
+    provider TEXT NOT NULL CHECK(provider IN ('whoop','oura')),
+    access_token TEXT,
+    refresh_token TEXT,
+    token_expires_at TEXT,
+    scope TEXT,
+    provider_user_id TEXT,
+    created_at TEXT DEFAULT (datetime('now')),
+    updated_at TEXT DEFAULT (datetime('now')),
+    UNIQUE(user_id, provider)
+  );
+`);
+
 export default db;

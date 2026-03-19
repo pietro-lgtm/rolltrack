@@ -14,22 +14,18 @@ export default function Home() {
       .get<UserStats>('/sessions/stats')
       .then(setStats)
       .catch(() => {
-        // Fallback mock stats
         setStats({
-          totalSessions: 47,
-          totalDuration: 253800,
-          totalRolls: 124,
-          sessionsThisWeek: 3,
-          currentStreak: 5,
-          longestStreak: 14,
-          avgSessionDuration: 5400,
-          favoriteTechniques: [
-            { name: 'Armbar', count: 12 },
-            { name: 'Triangle', count: 9 },
-          ],
-          beltProgress: 0.6,
+          totalSessions: 0,
+          totalDuration: 0,
+          totalRolls: 0,
+          sessionsThisWeek: 0,
+          currentStreak: 0,
+          longestStreak: 0,
+          avgSessionDuration: 0,
+          favoriteTechniques: [],
+          beltProgress: 0,
           monthlyBreakdown: [],
-          weekDays: [true, false, true, false, true, false, false],
+          weekDays: [false, false, false, false, false, false, false],
         })
       })
   }, [])

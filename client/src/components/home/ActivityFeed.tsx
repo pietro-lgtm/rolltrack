@@ -62,10 +62,8 @@ export default function ActivityFeed() {
         setHasMore(sessions.length === limit)
       })
       .catch(() => {
-        import('../../mock/data').then(({ mockSessions }) => {
-          setItems(mockSessions)
-          setHasMore(false)
-        })
+        setItems([])
+        setHasMore(false)
       })
       .finally(() => setLoading(false))
   }

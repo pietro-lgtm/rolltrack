@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ChevronLeft, Camera } from 'lucide-react'
+import { ChevronLeft, Camera, ClipboardList } from 'lucide-react'
 import { api } from '../api/client'
 import type {
   SessionType,
@@ -20,8 +20,10 @@ import TechniqueLogger from '../components/record/TechniqueLogger'
 import WeatherWidget from '../components/record/WeatherWidget'
 import WearableSync from '../components/record/WearableSync'
 import PostWorkoutSummary from '../components/record/PostWorkoutSummary'
+import ManualEntryForm from '../components/record/ManualEntryForm'
+import ShareOverlay from '../components/share/ShareOverlay'
 
-type RecordStep = 'setup' | 'timer' | 'post' | 'summary'
+type RecordStep = 'setup' | 'timer' | 'manual' | 'post' | 'summary'
 
 const FEELING_EMOJIS = [
   { value: 1, emoji: '\uD83D\uDE29', label: 'Awful' },
@@ -60,16 +62,36 @@ export default function Record() {
   const [rolls, setRolls] = useState<Roll[]>([])
   const [techniques, setTechniques] = useState<Technique[]>([])
   const [notes, setNotes] = useState('')
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null)
+  const [uploadingPhoto, setUploadingPhoto] = useState(false)
   const [feeling, setFeeling] = useState(3)
   const [intensity, setIntensity] = useState(3)
   const [weather, setWeather] = useState<WeatherInfo | null>(null)
   const [wearable, setWearable] = useState<WearableInfo | null>(null)
+
+  // Manual entry
+  const [startedAt, setStartedAt] = useState<string | null>(null)
 
   // Step 4: Summary
   const [saving, setSaving] = useState(false)
 
   const handleTimerStop = (data: TimerData) => {
     setTimerData(data)
+    setStep('post')
+  }
+
+  const handleManualContinue = (data: {
+    sessionType: SessionType
+    giType: GiType
+    academy: Academy | null
+    timerData: TimerData
+    startedAt: string
+  }) => {
+    setSessionType(data.sessionType)
+    setGiType(data.giType)
+    setAcademy(data.academy)
+    setTimerData(data.timerData)
+    setStartedAt(data.startedAt)
     setStep('post')
   }
 
@@ -89,6 +111,8 @@ export default function Record() {
         classTime: timerData.classSecs,
         sparringTime: timerData.sparringSecs,
         drillingTime: timerData.drillingSecs,
+        startedAt: startedAt || new Date().toISOString(),
+        photo: photoUrl,
         rolls,
         techniques: techniques.map((t) => t.name),
         notes,
@@ -120,8 +144,24 @@ export default function Record() {
     }
   }
 
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploadingPhoto(true)
+    try {
+      const result = await api.upload(file)
+      setPhotoUrl(result.url)
+    } catch {
+      console.error('Photo upload failed')
+    } finally {
+      setUploadingPhoto(false)
+    }
+  }
+
+  const [showShare, setShowShare] = useState(false)
+
   const handleShare = () => {
-    console.log('Share session')
+    setShowShare(true)
   }
 
   const resetAll = () => {
@@ -137,12 +177,16 @@ export default function Record() {
     setIntensity(3)
     setWeather(null)
     setWearable(null)
+    setPhotoUrl(null)
+    setUploadingPhoto(false)
+    setStartedAt(null)
     setSaving(false)
   }
 
   const handleBack = () => {
     if (step === 'timer') setStep('setup')
-    else if (step === 'post') setStep('timer')
+    else if (step === 'manual') setStep('setup')
+    else if (step === 'post') setStep(startedAt ? 'manual' : 'timer')
     else if (step === 'summary') setStep('post')
   }
 
@@ -161,6 +205,7 @@ export default function Record() {
         <h1 className="text-xl font-bold text-white">
           {step === 'setup' && 'New Session'}
           {step === 'timer' && 'Training'}
+          {step === 'manual' && 'Log Past Session'}
           {step === 'post' && 'Post-Workout'}
           {step === 'summary' && 'Summary'}
         </h1>
@@ -202,14 +247,31 @@ export default function Record() {
             >
               Start Timer
             </button>
+
+            {/* Manual entry */}
+            <button
+              onClick={() => setStep('manual')}
+              className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-navy-800 text-gray-400 text-sm font-medium hover:bg-navy-700 transition-colors"
+            >
+              <ClipboardList size={18} />
+              Log Past Session
+            </button>
           </div>
         )}
 
-        {/* STEP 2: Timer */}
+        {/* STEP 2a: Timer */}
         {step === 'timer' && (
           <div className="flex flex-col items-center pt-8">
             <Timer onStop={handleTimerStop} />
           </div>
+        )}
+
+        {/* STEP 2b: Manual Entry */}
+        {step === 'manual' && (
+          <ManualEntryForm
+            onContinue={handleManualContinue}
+            onBack={() => setStep('setup')}
+          />
         )}
 
         {/* STEP 3: Post-workout form */}
@@ -295,11 +357,26 @@ export default function Record() {
               <WearableSync data={wearable} onChange={setWearable} />
             </div>
 
-            {/* Photo upload placeholder */}
-            <button className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-navy-800 text-gray-400 text-sm hover:bg-navy-700 transition-colors">
-              <Camera size={18} />
-              Add Photo
-            </button>
+            {/* Photo upload */}
+            <div>
+              {photoUrl ? (
+                <div className="relative rounded-xl overflow-hidden">
+                  <img src={photoUrl.startsWith('/') ? `${import.meta.env.VITE_API_URL || 'http://localhost:3001'}${photoUrl}` : photoUrl} alt="Session" className="w-full h-48 object-cover" />
+                  <button
+                    onClick={() => setPhotoUrl(null)}
+                    className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/60 flex items-center justify-center text-white text-xs"
+                  >
+                    X
+                  </button>
+                </div>
+              ) : (
+                <label className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-navy-800 text-gray-400 text-sm hover:bg-navy-700 transition-colors cursor-pointer">
+                  <Camera size={18} />
+                  {uploadingPhoto ? 'Uploading...' : 'Add Photo'}
+                  <input type="file" accept="image/*" className="hidden" onChange={handlePhotoUpload} disabled={uploadingPhoto} />
+                </label>
+              )}
+            </div>
 
             {/* Continue */}
             <button
@@ -336,6 +413,22 @@ export default function Record() {
           </div>
         )}
       </div>
+
+      {/* Share Overlay */}
+      <ShareOverlay
+        isOpen={showShare}
+        onClose={() => setShowShare(false)}
+        data={{
+          totalSecs: timerData.totalSecs,
+          rollsCount: rolls.length,
+          wins: rolls.filter((r) => r.result === 'sub_win' || r.result === 'points_win').length,
+          losses: rolls.filter((r) => r.result === 'sub_loss' || r.result === 'points_loss').length,
+          draws: rolls.filter((r) => r.result === 'draw' || r.result === 'positional').length,
+          sessionType,
+          gi: giType,
+          date: new Date(startedAt || Date.now()).toLocaleDateString(),
+        }}
+      />
     </div>
   )
 }

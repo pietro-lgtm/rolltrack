@@ -1,9 +1,12 @@
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
 import { authMiddleware } from './middleware/auth.js';
 
-// Import seed data (runs on import)
-import './seed.js';
+// Seed data only in development (set SEED_DB=true to enable)
+if (process.env.SEED_DB === 'true') {
+  import('./seed.js').catch(() => console.log('[seed] Seed module not available'));
+}
 
 // Import route modules
 import authRouter from './routes/auth.js';
@@ -17,6 +20,8 @@ import scheduleRouter from './routes/schedule.js';
 import eventsRouter from './routes/events.js';
 import postsRouter from './routes/posts.js';
 import wearableRouter from './routes/wearable.js';
+import uploadsRouter from './routes/uploads.js';
+import wearableAuthRouter from './routes/wearable-auth.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -26,6 +31,10 @@ app.use(cors({
   credentials: true,
 }));
 app.use(express.json());
+
+// Serve uploaded files
+const dataDir = process.env.DATA_DIR || './data';
+app.use('/uploads', express.static(path.join(dataDir, 'uploads')));
 
 // Auth routes (no JWT required)
 app.use('/api/auth', authRouter);
@@ -49,6 +58,8 @@ app.use('/api/schedule', scheduleRouter);
 app.use('/api/events', eventsRouter);
 app.use('/api/posts', postsRouter);
 app.use('/api/wearable', wearableRouter);
+app.use('/api/uploads', uploadsRouter);
+app.use('/api/wearable-auth', wearableAuthRouter);
 
 app.listen(PORT, () => {
   console.log(`RollTrack API running on http://localhost:${PORT}`);
