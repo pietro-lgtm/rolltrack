@@ -1,9 +1,22 @@
-export type EventStatus = "upcoming" | "announced" | "past" | "soldout";
+export type EventStatus = "upcoming" | "announced" | "soon" | "past" | "soldout";
+
+export type Zone = "san-jose" | "cartago" | "guanacaste" | "puntarenas";
+
+export const ZONES: { value: Zone; label: string }[] = [
+  { value: "san-jose", label: "San José (todo San José)" },
+  { value: "cartago", label: "Cartago" },
+  { value: "guanacaste", label: "Guanacaste" },
+  { value: "puntarenas", label: "Puntarenas" },
+];
+
+export const zoneLabel = (z: Zone) =>
+  ZONES.find((x) => x.value === z)?.label ?? z;
 
 export type ClubEvent = {
   slug: string;
   title: string;
   type: "weekly" | "race" | "special";
+  zone: Zone;
   /** ISO date-time in Costa Rica time, e.g. "2026-08-15T18:00:00-06:00". Omit if TBA. */
   dateISO?: string;
   /** Human-readable recurrence for weekly runs, e.g. "Todos los domingos · 8:00 AM". */
@@ -23,14 +36,29 @@ export type ClubEvent = {
 };
 
 /**
- * EDIT THIS FILE to manage events. The site recomputes everything from here:
- * home "next run" block, /eventos list, and Event JSON-LD.
+ * EDIT THIS FILE to manage events — this is the calendar's backend.
+ * Template for a new event:
+ *
+ *   {
+ *     slug: "corrida-x",              // unique, url-safe
+ *     title: "Corrida X",
+ *     type: "special",                // weekly | race | special
+ *     zone: "san-jose",               // san-jose | cartago | guanacaste | puntarenas
+ *     dateISO: "2026-09-12T08:00:00-06:00",  // omit while TBA
+ *     location: { name: "Parque La Sabana", mapsUrl: "https://maps.app.goo.gl/..." },
+ *     description: "Qué es, qué llevar, qué esperar.",
+ *     distanceKm: 5,
+ *     status: "announced",            // upcoming | announced | soon | past | soldout
+ *   },
+ *
+ * After editing: npx vercel deploy --prod (from this folder) publishes it.
  */
 export const events: ClubEvent[] = [
   {
-    slug: "domingo",
+    slug: "domingo-sj",
     title: "El domingo de siempre",
     type: "weekly",
+    zone: "san-jose",
     recurrence: "Todos los domingos · 8:00 AM",
     location: {
       name: "San José · punto rotativo (se anuncia en IG y WhatsApp)",
@@ -43,9 +71,51 @@ export const events: ClubEvent[] = [
     featured: true,
   },
   {
+    slug: "cartago",
+    title: "NCN Cartago",
+    type: "weekly",
+    zone: "cartago",
+    recurrence: "Fecha y hora se anuncian en IG y WhatsApp", // TODO: set fixed schedule if there is one
+    location: {
+      name: "Cartago · punto se anuncia cada semana",
+      mapsUrl: "",
+    },
+    description:
+      "El club también corre en Cartago. Mismo espíritu: gratis, social y sin niveles. Seguí el IG y el grupo de WhatsApp para el punto y la hora de cada corrida.",
+    status: "upcoming",
+  },
+  {
+    slug: "guanacaste",
+    title: "NCN Guanacaste",
+    type: "weekly",
+    zone: "guanacaste",
+    recurrence: "Fecha y hora se anuncian en IG y WhatsApp", // TODO: set fixed schedule if there is one
+    location: {
+      name: "Guanacaste · punto se anuncia cada semana",
+      mapsUrl: "",
+    },
+    description:
+      "GUANA está activo. Corridas del club en Guanacaste — el punto y la hora se anuncian en Instagram y el grupo de WhatsApp.",
+    status: "upcoming",
+  },
+  {
+    slug: "puntarenas",
+    title: "NCN Puntarenas",
+    type: "weekly",
+    zone: "puntarenas",
+    location: {
+      name: "Puntarenas",
+      mapsUrl: "",
+    },
+    description:
+      "La próxima parada del club. Unite al newsletter y al WhatsApp para enterarte primero cuando arranquemos en Puntarenas.",
+    status: "soon",
+  },
+  {
     slug: "bunker-gp",
     title: "BUNKER GP",
     type: "race",
+    zone: "san-jose",
     // TODO: set real date when confirmed, e.g. "2026-09-12T19:00:00-06:00"
     dateISO: undefined,
     location: {

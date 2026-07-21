@@ -24,12 +24,26 @@ export const site = {
     substack: "https://nopasanadaoficial.substack.com/s/no-corro-nada",
   },
 
+  // EDIT to manage sponsors shown on the home page. TODO: confirm current roster.
   sponsors: [
     { name: "HOKA", note: "Official HOKA CR Run Club" },
     { name: "Heineken 0.0", note: "Powered by" },
-    { name: "GLU", note: "Powered by" },
     { name: "Zepol", note: "Powered by" },
   ],
+
+  /**
+   * Featured film/video on the home page.
+   * videoUrl accepts a YouTube link (watch/short/embed), a Vimeo link, or a
+   * direct .mp4 path (e.g. "/media/film.mp4" after dropping the file in public/media/).
+   * Leave videoUrl empty to show the "PRONTO" placeholder.
+   */
+  film: {
+    title: "La película del club", // TODO: real film title
+    subtitle: "Un film de NO CORRO NADA",
+    videoUrl: "", // TODO: paste YouTube/Vimeo/.mp4 link
+  },
+
+  merchUrl: "https://shop.nopasanada.com",
 
   join: {
     // Google Form that captures signups (source of truth).

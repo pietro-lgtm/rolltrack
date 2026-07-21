@@ -11,7 +11,11 @@ file/field to edit. The site works before these are set — forms degrade gracef
 - Still available if wanted defensively: `nocorronada.net`, `.org`, `.co`, `.run`,
   `.club`, `.cr` (nic.cr, pricier, max local signal).
 
-## 2. Google Form (signup capture)
+## 2. Google Form (signup capture) — ⚠️ DO THIS FIRST
+
+**Until this (or Kit) is configured, form submissions on the live site are
+accepted but stored nowhere** (they only leave a trace in Vercel → Project →
+Logs, which expire). Creating the Form takes ~5 minutes:
 
 Create a Form with fields: Nombre, Correo, Teléfono, Fuente (short answer, optional).
 Then get the internal IDs:
@@ -82,7 +86,25 @@ Research conclusion (July 2026):
 - **Merch**: Gumroad pays out to CR banks (simplest, ~10% cut). Shopify works but needs a
   local gateway (Shopify Payments unavailable in CR) + ~2% surcharge.
 
-## 9. Phase 3 groundwork (member pages, check-ins, referrals)
+## 9. Content backends (no CMS — files ARE the backend)
+
+Every content surface is one editable file. Edit → `npx vercel deploy --prod`
+(run inside `nocorronada/`) → live in ~1 minute.
+
+| Content | File | Notes |
+|---|---|---|
+| Corridas / eventos / BUNKER GP fecha | `src/data/events.ts` | Template comment at the top of the file. Zones: san-jose, cartago, guanacaste, puntarenas |
+| El film de la portada | `src/config/site.ts` → `film.videoUrl` | Paste a YouTube (unlisted works), Vimeo, or `.mp4` link. For the mp4 route: big files don't belong in the repo — YouTube is the move |
+| Fotos y videos (/media) | `src/data/media.ts` + drop files in `public/media/` | Photos <500KB ideally; videos via YouTube links |
+| Sponsors (texto, home) | `src/config/site.ts` → `sponsors` | GLU removed; confirm HOKA / Heineken 0.0 / Zepol |
+| Banners / ads | `src/data/ads.ts` + artwork in `public/ads/` | Slots: `home` (bajo el film) and `corridas` (bajo el calendario), ~1200×200px |
+| FAQ | `src/data/faq.ts` | Optional `link:` renders a CTA under the answer |
+
+Optional upgrade later: connect the GitHub repo to the Vercel project
+(dashboard → Project → Settings → Git, root directory `nocorronada`) so every
+push auto-deploys and you can edit these files from github.com on your phone.
+
+## 10. Phase 3 groundwork (member pages, check-ins, referrals)
 
 Needs a database + auth (Supabase recommended). Sketch already in
 [ARCHITECTURE.md](ARCHITECTURE.md): member profile w/ personal benefits page, photo

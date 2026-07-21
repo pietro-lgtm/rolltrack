@@ -3,10 +3,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { site } from "@/config/site";
 
 const links = [
-  { href: "/eventos", label: "Eventos" },
+  { href: "/corridas", label: "Corridas" },
   { href: "/bunker-gp", label: "Bunker GP" },
+  { href: "/media", label: "Media" },
   { href: "/faq", label: "FAQ" },
 ];
 
@@ -37,6 +39,14 @@ export function Nav() {
               {l.label}
             </Link>
           ))}
+          <a
+            href={site.merchUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="label-mono text-ink transition-colors hover:text-volt"
+          >
+            Merch ↗
+          </a>
           <Link
             href="/unite"
             className="label-mono bg-volt px-4 py-2 text-black transition-colors hover:bg-ink"
@@ -69,6 +79,15 @@ export function Nav() {
                 {l.label}
               </Link>
             ))}
+            <a
+              href={site.merchUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="label-mono border-b hairline py-4 text-ink"
+              onClick={() => setOpen(false)}
+            >
+              Merch ↗
+            </a>
             <Link
               href="/unite"
               className="label-mono my-4 bg-volt px-4 py-3 text-center text-black"

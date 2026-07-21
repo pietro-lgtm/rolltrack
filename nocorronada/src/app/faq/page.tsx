@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { faqs, type Faq } from "@/data/faq";
 import { FaqJsonLd } from "@/lib/jsonld";
 import { SectionLabel, VoltLink, GhostLink } from "@/components/ui";
@@ -43,7 +44,26 @@ function FaqItem({ item }: { item: Faq }) {
           +
         </span>
       </summary>
-      <p className="max-w-2xl pb-6 text-muted">{item.a}</p>
+      <p className="max-w-2xl text-muted">{item.a}</p>
+      {item.link &&
+        (item.link.href.startsWith("/") ? (
+          <Link
+            href={item.link.href}
+            className="label-mono mt-4 inline-block text-volt hover:text-ink"
+          >
+            → {item.link.label}
+          </Link>
+        ) : (
+          <a
+            href={item.link.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="label-mono mt-4 inline-block text-volt hover:text-ink"
+          >
+            → {item.link.label}
+          </a>
+        ))}
+      <div className="pb-6" />
     </details>
   );
 }

@@ -83,6 +83,12 @@ export async function POST(req: Request) {
     kit: kitResult.status === "fulfilled" && kitResult.value,
   };
 
+  // Stopgap while integrations are unconfigured: leave a trace in the function
+  // logs so signups aren't silently lost. Wire Google Form + Kit (SETUP.md) ASAP.
+  if (!delivered.googleForm && !delivered.kit) {
+    console.error("[join] SIGNUP NOT DELIVERED — configure SETUP.md:", JSON.stringify(fields));
+  }
+
   return Response.json({
     ok: true,
     delivered,

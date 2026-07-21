@@ -215,7 +215,7 @@ export default function BunkerGpPage() {
           </p>
           <div className="mt-10 flex flex-wrap gap-4">
             <VoltLink href="/unite?source=bunker-gp">Avisame primero</VoltLink>
-            <GhostLink href="/eventos">Ver todos los eventos</GhostLink>
+            <GhostLink href="/corridas">Ver todas las corridas</GhostLink>
           </div>
         </div>
         <div className="checker" />

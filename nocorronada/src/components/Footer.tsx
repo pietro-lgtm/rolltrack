@@ -14,11 +14,14 @@ export function Footer() {
         </div>
         <div className="flex flex-col gap-3">
           <p className="label-mono text-muted">Club</p>
-          <Link href="/eventos" className="label-mono text-ink hover:text-volt">
-            Eventos
+          <Link href="/corridas" className="label-mono text-ink hover:text-volt">
+            Corridas
           </Link>
           <Link href="/bunker-gp" className="label-mono text-ink hover:text-volt">
             Bunker GP
+          </Link>
+          <Link href="/media" className="label-mono text-ink hover:text-volt">
+            Media
           </Link>
           <Link href="/unite" className="label-mono text-ink hover:text-volt">
             Unite al club
@@ -52,6 +55,14 @@ export function Footer() {
             className="label-mono text-ink hover:text-volt"
           >
             TikTok ↗
+          </a>
+          <a
+            href={site.merchUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="label-mono text-ink hover:text-volt"
+          >
+            Merch ↗
           </a>
         </div>
       </div>

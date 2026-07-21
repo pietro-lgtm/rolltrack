@@ -4,6 +4,8 @@ import { getEvent } from "@/data/events";
 import { essentialFaqs } from "@/data/faq";
 import { SectionLabel, VoltLink, GhostLink, Bib } from "@/components/ui";
 import { Marquee } from "@/components/Marquee";
+import { FilmBlock } from "@/components/FilmBlock";
+import { AdRail } from "@/components/AdRail";
 
 export const metadata: Metadata = {
   // Home keeps the site-wide default title shape — bypass the layout template.
@@ -41,7 +43,7 @@ const stats = [
 ];
 
 export default function Home() {
-  const domingo = getEvent("domingo")!;
+  const domingo = getEvent("domingo-sj")!;
 
   return (
     <>
@@ -124,14 +126,37 @@ export default function Home() {
               </div>
 
               <div className="mt-10">
-                <GhostLink href="/eventos">Ver todos los eventos</GhostLink>
+                <GhostLink href="/corridas">
+                  Ver el calendario de corridas
+                </GhostLink>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 4 — BUNKER GP TEASER */}
+      {/* 4 — EL FILM */}
+      <section className="border-b hairline">
+        <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
+          <SectionLabel>Cine NCN</SectionLabel>
+          <p className="mt-6 max-w-xl text-xl text-ink sm:text-2xl">
+            Corremos y lo filmamos.
+          </p>
+
+          <div className="mt-10">
+            <FilmBlock />
+          </div>
+
+          <div className="mt-10">
+            <GhostLink href="/media">Ver fotos y videos</GhostLink>
+          </div>
+        </div>
+      </section>
+
+      {/* 5 — AD RAIL (renders nothing while empty) */}
+      <AdRail slot="home" />
+
+      {/* 6 — BUNKER GP TEASER */}
       <div className="checker-volt" aria-hidden />
       <section
         className="border-b hairline"
@@ -228,6 +253,12 @@ export default function Home() {
                 <span className="label-mono text-muted">{sp.note}</span>
               </div>
             ))}
+          </div>
+
+          <div className="mt-8">
+            <GhostLink href={site.merchUrl} external>
+              Merch · shop.nopasanada.com ↗
+            </GhostLink>
           </div>
         </div>
       </section>
