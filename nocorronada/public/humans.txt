@@ -1,0 +1,15 @@
+/* TEAM */
+  Club: NO CORRO NADA
+  By: No Pasa Nada — medio independiente de Costa Rica y México
+  Founder: Pietro Cercone
+  Location: San José, Costa Rica
+
+/* CLUB */
+  Otro club de correr. Siempre gratis.
+  Buena actitud y cero excusas.
+  Domingos 8:00 AM · San José · desde 2024
+
+/* SITE */
+  Built: 2026
+  Stack: Next.js, TypeScript, Tailwind
+  Standards: HTML5, responsive, JSON-LD
