@@ -9,8 +9,8 @@ export const site = {
   motto: "Buena actitud y cero excusas.",
   description:
     "NO CORRO NADA es el run club de No Pasa Nada en Costa Rica. Otro club de correr: abierto a todo el mundo, siempre gratis, sin niveles. Corremos los domingos en San José (y creciendo), con eventos como el BUNKER GP.",
-  // Canonical production URL — update when the domain is registered.
-  url: "https://nocorronada.run", // TODO: confirm final domain
+  // Canonical production URL.
+  url: "https://nocorronada.com",
   locale: "es_CR",
   city: "San José, Costa Rica",
   foundedYear: 2024,

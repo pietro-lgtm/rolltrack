@@ -5,14 +5,11 @@ file/field to edit. The site works before these are set — forms degrade gracef
 
 ## 1. Domain
 
-- `nocorronada.com` is taken: registered 2025-06-03 via GoDaddy, owner hidden by
-  privacy proxy, currently a GoDaddy "Launching Soon" placeholder saying
-  "© 2025 Nocorronada", expires 2028. To pursue it: use the contact form on the
-  site itself, or GoDaddy Domain Broker (they negotiate anonymously, ~$120 fee + price).
-- **Available right now**: `nocorronada.net`, `.org`, `.co`, `.run`, `.club`, `.cr`.
-  Recommendation: **nocorronada.run** as primary (+ `.net` defensive). `.cr` via nic.cr
-  if you want max local signal (pricier, ~$40+/yr).
-- After choosing: update `url` in [src/config/site.ts](src/config/site.ts).
+- `nocorronada.com` — **owned by Pietro** (GoDaddy, registered 2025-06-03, expires 2028).
+  It's the canonical domain (`url` in [src/config/site.ts](src/config/site.ts)).
+  DNS points at Vercel: `A @ → 76.76.21.21`, `CNAME www → cname.vercel-dns.com`.
+- Still available if wanted defensively: `nocorronada.net`, `.org`, `.co`, `.run`,
+  `.club`, `.cr` (nic.cr, pricier, max local signal).
 
 ## 2. Google Form (signup capture)
 

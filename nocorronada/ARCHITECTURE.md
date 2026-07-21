@@ -4,8 +4,8 @@ Run club by No Pasa Nada (Costa Rica). Black + neon green, alternative running c
 
 ## Domain
 
-- `nocorronada.com` — **taken** (registered 2025-06-03 via GoDaddy, privacy-protected, "Launching Soon" placeholder, expires 2028). Options: contact via the site's own form, GoDaddy Domain Broker, or skip it.
-- **Available**: `nocorronada.net`, `.org`, `.co`, `.run`, `.club`, `.cr`. Recommendation: `nocorronada.run` (memorable, on-brand) with `.net` as defensive backup, or `.cr` for local cred.
+- `nocorronada.com` — owned by Pietro (GoDaddy, registered 2025-06-03, expires 2028). Canonical domain, attached to the Vercel deployment. The 2025 "Launching Soon" placeholder was GoDaddy's default site.
+- Still available as defensive registrations: `.net`, `.org`, `.co`, `.run`, `.club`, `.cr`.
 
 ## Phasing
 
