@@ -30,6 +30,12 @@ export type ClubEvent = {
   /** Inscription price in CRC for paid events. Omit for free events. */
   priceCRC?: number;
   stravaRouteUrl?: string;
+  /** Event art, IG portrait 1080x1350. Uploaded via /admin (served from /api/img). */
+  image?: string;
+  /** Registration link for this specific event (defaults to /unite). */
+  signupUrl?: string;
+  /** FAQ link for this event (defaults to /faq). */
+  faqUrl?: string;
   status: EventStatus;
   /** Set true to feature on the home page "next up" block. */
   featured?: boolean;

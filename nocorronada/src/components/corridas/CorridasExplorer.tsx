@@ -1,5 +1,6 @@
 "use client";
 
+/* eslint-disable @next/next/no-img-element -- event art is user-uploaded IG portrait art served from /api/img at final size */
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -8,6 +9,8 @@ import {
   type EventStatus,
   type Zone,
 } from "@/data/events";
+import { gmapsUrl, isNavigable, wazeUrl } from "@/lib/maps";
+import { GhostLink, VoltLink } from "@/components/ui";
 
 type ZoneFilter = Zone | "all";
 
@@ -83,44 +86,140 @@ function ZoneTag({ zone }: { zone: Zone }) {
   return <span className="label-mono text-muted">{zoneLabel(zone)}</span>;
 }
 
+/** True for absolute http(s) links, which must open in a new tab via <a>. */
+const isExternalUrl = (url: string) => /^https?:\/\//i.test(url);
+
+/** Event art (IG portrait 1080x1350). Full-bleed; stacks above content on mobile. */
+function EventArt({ src, alt }: { src: string; alt: string }) {
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className="aspect-[4/5] w-full object-cover sm:w-72 sm:shrink-0"
+    />
+  );
+}
+
+/** Google Maps + Waze row — only when the place is a real, navigable location. */
+function NavLinks({ location }: { location: ClubEvent["location"] }) {
+  if (!isNavigable(location.name)) return null;
+  const mapsHref = location.mapsUrl || gmapsUrl(location.name);
+  return (
+    <p className="label-mono mt-3 flex flex-wrap items-center gap-2 text-muted">
+      <a
+        href={mapsHref}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="transition-colors hover:text-volt"
+      >
+        Google Maps ↗
+      </a>
+      <span aria-hidden>·</span>
+      <a
+        href={wazeUrl(location.name)}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="transition-colors hover:text-volt"
+      >
+        Waze ↗
+      </a>
+    </p>
+  );
+}
+
+/** Card action row: inscribirme (primary while open), Strava route, FAQ. */
+function ActionRow({ event }: { event: ClubEvent }) {
+  const signupUrl = event.signupUrl ?? "/unite";
+  const signupPrimary =
+    event.status === "upcoming" || event.status === "announced";
+  const faqUrl = event.faqUrl ?? "/faq";
+  const SignupLink = signupPrimary ? VoltLink : GhostLink;
+
+  return (
+    <div className="mt-8 flex flex-wrap items-center gap-4">
+      <SignupLink href={signupUrl} external={isExternalUrl(signupUrl)}>
+        Inscribirme
+      </SignupLink>
+      {event.stravaRouteUrl && (
+        <GhostLink href={event.stravaRouteUrl} external>
+          Ruta en Strava ↗
+        </GhostLink>
+      )}
+      {isExternalUrl(faqUrl) ? (
+        <a
+          href={faqUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="label-mono text-muted transition-colors hover:text-volt"
+        >
+          FAQ
+        </a>
+      ) : (
+        <Link
+          href={faqUrl}
+          className="label-mono text-muted transition-colors hover:text-volt"
+        >
+          FAQ
+        </Link>
+      )}
+    </div>
+  );
+}
+
 /** A weekly recurring run. San José keeps its pace-groups + perros/café rows. */
 function WeeklyCard({ event }: { event: ClubEvent }) {
   const isSanJose = event.slug === "domingo-sj";
   const { label, live } = weeklyStatus(event.status);
 
+  const content = (
+    <>
+      <div className="flex flex-wrap items-center gap-4">
+        <ZoneTag zone={event.zone} />
+        <StatusPill label={label} live={live} />
+      </div>
+
+      <h3 className="display mt-5 text-3xl sm:text-4xl">{event.title}</h3>
+
+      {event.recurrence && (
+        <p className="label-mono mt-4 text-muted">{event.recurrence}</p>
+      )}
+
+      <div className="mt-6 border-t hairline pt-6">
+        <p className="label-mono text-muted">Punto de salida</p>
+        <p className="mt-2 text-ink">{event.location.name}</p>
+        <NavLinks location={event.location} />
+      </div>
+
+      <p className="mt-6 max-w-2xl text-muted">{event.description}</p>
+
+      {isSanJose && (
+        <div className="mt-6 border-t hairline pt-6">
+          <p className="label-mono text-muted">
+            Grupos: 5:30 / 7:30 / 9:00+ min/km
+          </p>
+          <p className="mt-3 max-w-xl text-muted">
+            Perros bienvenidos (con correa). Después hay café.
+          </p>
+        </div>
+      )}
+
+      <ActionRow event={event} />
+    </>
+  );
+
+  const body = event.image ? (
+    <div className="flex flex-col sm:flex-row">
+      <EventArt src={event.image} alt={event.title} />
+      <div className="flex-1 p-6 sm:p-8">{content}</div>
+    </div>
+  ) : (
+    <div className="p-6 sm:p-8">{content}</div>
+  );
+
   return (
     <article className="border hairline bg-asphalt">
       {isSanJose && <div className="checker" aria-hidden />}
-      <div className="p-6 sm:p-8">
-        <div className="flex flex-wrap items-center gap-4">
-          <ZoneTag zone={event.zone} />
-          <StatusPill label={label} live={live} />
-        </div>
-
-        <h3 className="display mt-5 text-3xl sm:text-4xl">{event.title}</h3>
-
-        {event.recurrence && (
-          <p className="label-mono mt-4 text-muted">{event.recurrence}</p>
-        )}
-
-        <div className="mt-6 border-t hairline pt-6">
-          <p className="label-mono text-muted">Punto de salida</p>
-          <p className="mt-2 text-ink">{event.location.name}</p>
-        </div>
-
-        <p className="mt-6 max-w-2xl text-muted">{event.description}</p>
-
-        {isSanJose && (
-          <div className="mt-6 border-t hairline pt-6">
-            <p className="label-mono text-muted">
-              Grupos: 5:30 / 7:30 / 9:00+ min/km
-            </p>
-            <p className="mt-3 max-w-xl text-muted">
-              Perros bienvenidos (con correa). Después hay café.
-            </p>
-          </div>
-        )}
-      </div>
+      {body}
     </article>
   );
 }
@@ -131,30 +230,46 @@ function RaceCard({ event, round }: { event: ClubEvent; round: number }) {
   const { label, live } = raceStatus(event.status);
   const roundLabel = String(round).padStart(2, "0");
 
+  const content = (
+    <>
+      <div className="flex flex-wrap items-center gap-4">
+        <span className="label-mono text-muted">Round {roundLabel}</span>
+        <ZoneTag zone={event.zone} />
+        <StatusPill label={label} live={live} />
+      </div>
+
+      <h3 className="display mt-5 text-3xl sm:text-4xl">{event.title}</h3>
+
+      <p className="label-mono mt-4 text-muted">
+        {event.dateISO ? formatEventDate(event.dateISO) : "Fecha por anunciar"}
+      </p>
+      <p className="label-mono mt-1 text-muted">{event.location.name}</p>
+      <NavLinks location={event.location} />
+
+      <p className="mt-6 max-w-2xl text-muted">{event.description}</p>
+
+      {detailHref ? (
+        <p className="label-mono mt-8 text-ink transition-colors group-hover:text-volt">
+          Ver detalles ↗
+        </p>
+      ) : (
+        <ActionRow event={event} />
+      )}
+    </>
+  );
+
+  const body = event.image ? (
+    <div className="flex flex-col sm:flex-row">
+      <EventArt src={event.image} alt={event.title} />
+      <div className="flex-1 p-6 sm:p-8">{content}</div>
+    </div>
+  ) : (
+    <div className="p-6 sm:p-8">{content}</div>
+  );
+
   const inner = (
     <>
-      <div className="p-6 sm:p-8">
-        <div className="flex flex-wrap items-center gap-4">
-          <span className="label-mono text-muted">Round {roundLabel}</span>
-          <ZoneTag zone={event.zone} />
-          <StatusPill label={label} live={live} />
-        </div>
-
-        <h3 className="display mt-5 text-3xl sm:text-4xl">{event.title}</h3>
-
-        <p className="label-mono mt-4 text-muted">
-          {event.dateISO ? formatEventDate(event.dateISO) : "Fecha por anunciar"}
-        </p>
-        <p className="label-mono mt-1 text-muted">{event.location.name}</p>
-
-        <p className="mt-6 max-w-2xl text-muted">{event.description}</p>
-
-        {detailHref && (
-          <p className="label-mono mt-8 text-ink transition-colors group-hover:text-volt">
-            Ver detalles ↗
-          </p>
-        )}
-      </div>
+      {body}
       {event.slug === "bunker-gp" && <div className="checker-volt" aria-hidden />}
     </>
   );
