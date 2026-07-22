@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import { events } from "@/data/events";
+import { getContent } from "@/lib/content";
 import { EventJsonLd } from "@/lib/jsonld";
 import { SectionLabel, VoltLink } from "@/components/ui";
 import { AdRail } from "@/components/AdRail";
-import { CorridasList } from "@/components/corridas/CorridasList";
+import { CorridasExplorer } from "@/components/corridas/CorridasExplorer";
+import { ClubForm } from "@/components/corridas/ClubForm";
 import { site } from "@/config/site";
 
 export const metadata: Metadata = {
@@ -12,7 +13,11 @@ export const metadata: Metadata = {
     "Calendario del club de running en San José, Costa Rica: el domingo de siempre (~5K, grupos de ritmo) más las corridas en Cartago y Guanacaste, y carreras como el BUNKER GP. Filtrá por zona. Gratis, sin niveles.",
 };
 
-export default function CorridasPage() {
+// Admin can override events via getContent(); keep the page fresh within a minute.
+export const revalidate = 60;
+
+export default async function CorridasPage() {
+  const { events } = await getContent();
   const datedEvents = events.filter((e) => e.dateISO);
 
   return (
@@ -21,24 +26,27 @@ export default function CorridasPage() {
         <EventJsonLd key={e.slug} event={e} />
       ))}
 
-      {/* Header */}
-      <section className="border-b hairline">
-        <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
-          <p className="label-mono text-muted">Calendario</p>
-          <h1 className="display mt-4 text-5xl sm:text-8xl">Corridas</h1>
-          <p className="mt-6 max-w-xl text-muted">
-            Un club de correr con calendario de verdad: el domingo de siempre en
-            San José, más Cartago y Guanacaste activos. Elegí tu zona. Todo se
-            confirma primero en Instagram y WhatsApp.
-          </p>
-        </div>
-      </section>
-
-      {/* Zone filter + filtered lists (client) */}
-      <CorridasList events={events} />
+      {/* Header dropdown (zone selector) + filtered weekly/race lists (client) */}
+      <CorridasExplorer events={events} />
 
       {/* Sponsor rail — renders nothing while empty */}
       <AdRail slot="corridas" />
+
+      {/* Abrí tu club */}
+      <section id="abri-tu-club" className="border-b hairline">
+        <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
+          <SectionLabel>Expansión · todo el país</SectionLabel>
+          <h2 className="display mt-6 text-4xl sm:text-6xl">Abrí tu club</h2>
+          <p className="mt-6 max-w-xl text-muted">
+            ¿No hay NCN en tu ciudad? Abrilo vos. Buscamos gente que quiera
+            llevar el club a todo el país (y más allá).
+          </p>
+
+          <div className="mt-10 max-w-2xl">
+            <ClubForm />
+          </div>
+        </div>
+      </section>
 
       {/* Strava / rutas */}
       <section>

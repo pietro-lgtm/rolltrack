@@ -86,6 +86,19 @@ Research conclusion (July 2026):
 - **Merch**: Gumroad pays out to CR banks (simplest, ~10% cut). Shopify works but needs a
   local gateway (Shopify Payments unavailable in CR) + ~2% surcharge.
 
+## 8b. Admin panel (nocorronada.com/admin)
+
+- Login: user `pietro` (initial password was set in chat — **change it after first
+  login**: Admin → Usuarios → cambiar contraseña). Sessions last 12h.
+- Tabs: **Solicitudes** ("Abrí tu club" applications) · **Waivers** (signed
+  releases with cédula + version) · **Contenido** (film + events/corridas — edits
+  go live in ~1 min, no deploy) · **Usuarios** (add/remove admins, passwords).
+- Storage: Vercel Blob store `ncn-data` (private). Waiver text template lives in
+  `src/data/waiver.ts` — have a lawyer review it before BUNKER GP; bump `version`
+  when the text changes.
+- A scheduled Claude task checks for new club applications every Monday 9 AM
+  (reads only the anonymous `/api/club/summary` endpoint).
+
 ## 9. Content backends (no CMS — files ARE the backend)
 
 Every content surface is one editable file. Edit → `npx vercel deploy --prod`

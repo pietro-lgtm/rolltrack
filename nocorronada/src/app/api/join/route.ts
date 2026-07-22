@@ -1,20 +1,34 @@
 import { site } from "@/config/site";
+import { waiver } from "@/data/waiver";
+import { appendJson, WAIVERS_DOC, type WaiverRecord } from "@/lib/store";
 
-// Route handler needs the Node.js runtime for outbound fetch to Google/Kit.
+// Route handler needs the Node.js runtime for outbound fetch + Blob writes.
 export const runtime = "nodejs";
 
 type JoinBody = {
-  name?: unknown;
-  email?: unknown;
-  phone?: unknown;
+  nombre?: unknown;
+  apellido?: unknown;
+  edad?: unknown;
+  cedula?: unknown;
+  nivel?: unknown;
+  meta5k?: unknown;
+  correo?: unknown;
+  telefono?: unknown;
+  aceptaSalud?: unknown;
+  aceptaAcuerdo?: unknown;
   source?: unknown;
   website?: unknown;
 };
 
 type Fields = {
-  name: string;
-  email: string;
-  phone: string;
+  nombre: string;
+  apellido: string;
+  edad: number;
+  cedula: string;
+  nivel: string;
+  meta5k: string;
+  correo: string;
+  telefono: string;
   source: string;
 };
 
@@ -37,80 +51,154 @@ export async function POST(req: Request) {
     return Response.json({ ok: true });
   }
 
-  const name = typeof body.name === "string" ? body.name.trim() : "";
-  const email = typeof body.email === "string" ? body.email.trim() : "";
-  const phoneRaw = typeof body.phone === "string" ? body.phone.trim() : "";
+  const nombre = typeof body.nombre === "string" ? body.nombre.trim() : "";
+  const apellido = typeof body.apellido === "string" ? body.apellido.trim() : "";
+  const edadRaw =
+    typeof body.edad === "string" || typeof body.edad === "number"
+      ? String(body.edad).trim()
+      : "";
+  const cedulaRaw = typeof body.cedula === "string" ? body.cedula.trim() : "";
+  const nivel = typeof body.nivel === "string" ? body.nivel.trim() : "";
+  const meta5k = typeof body.meta5k === "string" ? body.meta5k.trim() : "";
+  const correo = typeof body.correo === "string" ? body.correo.trim() : "";
+  const telefonoRaw =
+    typeof body.telefono === "string" ? body.telefono.trim() : "";
+  const aceptaSalud = body.aceptaSalud === true;
+  const aceptaAcuerdo = body.aceptaAcuerdo === true;
   const source =
     typeof body.source === "string" && body.source.trim()
       ? body.source.trim()
       : "web";
 
-  if (name.length < 2 || name.length > 80) {
+  if (nombre.length < 2 || nombre.length > 60) {
     return Response.json(
-      { ok: false, error: "Escribí tu nombre (entre 2 y 80 caracteres)." },
+      { ok: false, error: "Escribí tu nombre (entre 2 y 60 caracteres)." },
       { status: 400 },
     );
   }
 
-  if (!EMAIL_RE.test(email) || email.length > 254) {
+  if (apellido.length < 2 || apellido.length > 60) {
+    return Response.json(
+      { ok: false, error: "Escribí tu apellido (entre 2 y 60 caracteres)." },
+      { status: 400 },
+    );
+  }
+
+  const edad = Number(edadRaw);
+  if (!Number.isInteger(edad) || edad < 10 || edad > 99) {
+    return Response.json(
+      { ok: false, error: "Revisá tu edad — tiene que estar entre 10 y 99." },
+      { status: 400 },
+    );
+  }
+
+  // Strip spaces and dashes, then require 8–12 digits.
+  const cedula = cedulaRaw.replace(/[\s-]/g, "");
+  if (!/^\d{8,12}$/.test(cedula)) {
+    return Response.json(
+      { ok: false, error: "Revisá tu cédula — usá de 8 a 12 dígitos." },
+      { status: 400 },
+    );
+  }
+
+  if (!site.join.nivelOptions.includes(nivel as never)) {
+    return Response.json(
+      { ok: false, error: "Elegí tu nivel de correr." },
+      { status: 400 },
+    );
+  }
+
+  if (meta5k.length < 1 || meta5k.length > 40) {
+    return Response.json(
+      { ok: false, error: "Contanos tu meta de 5K (máximo 40 caracteres)." },
+      { status: 400 },
+    );
+  }
+
+  if (!EMAIL_RE.test(correo) || correo.length > 254) {
     return Response.json(
       { ok: false, error: "Revisá tu correo — no parece válido." },
       { status: 400 },
     );
   }
 
-  // Strip spaces and dashes, then require 8–15 digits with an optional leading +.
-  const phone = phoneRaw.replace(/[\s-]/g, "");
-  if (!/^\+?\d{8,15}$/.test(phone)) {
+  // Teléfono is optional. If present, strip spaces/dashes and require 8–15 digits.
+  let telefono = "";
+  if (telefonoRaw) {
+    const stripped = telefonoRaw.replace(/[\s-]/g, "");
+    if (!/^\+?\d{8,15}$/.test(stripped)) {
+      return Response.json(
+        {
+          ok: false,
+          error: "Revisá tu teléfono — usá de 8 a 15 dígitos, con o sin +.",
+        },
+        { status: 400 },
+      );
+    }
+    telefono = stripped;
+  }
+
+  if (!aceptaSalud || !aceptaAcuerdo) {
     return Response.json(
       {
         ok: false,
-        error: "Revisá tu teléfono — usá de 8 a 15 dígitos, con o sin +.",
+        error: "Tenés que aceptar la exoneración para participar.",
       },
       { status: 400 },
     );
   }
 
-  const fields: Fields = { name, email, phone, source };
+  const fields: Fields = {
+    nombre,
+    apellido,
+    edad,
+    cedula,
+    nivel,
+    meta5k,
+    correo,
+    telefono,
+    source,
+  };
 
-  const [googleResult, kitResult] = await Promise.allSettled([
+  const [googleResult, kitResult, waiverResult] = await Promise.allSettled([
     submitGoogleForm(fields),
     submitKit(fields),
+    recordWaiver(fields),
   ]);
 
   const delivered = {
     googleForm: googleResult.status === "fulfilled" && googleResult.value,
     kit: kitResult.status === "fulfilled" && kitResult.value,
+    waiver: waiverResult.status === "fulfilled" && waiverResult.value,
   };
-
-  // Stopgap while integrations are unconfigured: leave a trace in the function
-  // logs so signups aren't silently lost. Wire Google Form + Kit (SETUP.md) ASAP.
-  if (!delivered.googleForm && !delivered.kit) {
-    console.error("[join] SIGNUP NOT DELIVERED — configure SETUP.md:", JSON.stringify(fields));
-  }
 
   return Response.json({
     ok: true,
     delivered,
     whatsappUrl: site.social.whatsapp,
-    waiverUrl: site.join.waiverUrl,
     stravaUrl: site.social.strava,
   });
 }
 
-/** POST the signup to the Google Form. Returns whether it was delivered. */
+/** POST the signup to the club's real Google Form. Returns whether it was delivered. */
 async function submitGoogleForm(fields: Fields): Promise<boolean> {
   const id = site.join.googleFormId;
   if (!id || id.startsWith("REPLACE")) return false;
 
-  try {
-    const entries = site.join.googleFormEntries;
-    const params = new URLSearchParams();
-    params.set(entries.name, fields.name);
-    params.set(entries.email, fields.email);
-    params.set(entries.phone, fields.phone);
-    params.set(entries.source, fields.source);
+  const entries = site.join.googleFormEntries;
+  const params = new URLSearchParams();
+  params.set(entries.nombre, fields.nombre);
+  params.set(entries.apellido, fields.apellido);
+  params.set(entries.edad, String(fields.edad));
+  params.set(entries.cedula, fields.cedula);
+  params.set(entries.nivel, fields.nivel);
+  params.set(entries.meta5k, fields.meta5k);
+  params.set(entries.correo, fields.correo);
+  if (fields.telefono) params.set(entries.telefono, fields.telefono);
+  params.set(entries.aceptaSalud, "Sí");
+  params.set(entries.aceptaAcuerdo, "Sí");
 
+  try {
     const res = await fetch(
       `https://docs.google.com/forms/d/e/${id}/formResponse`,
       {
@@ -123,11 +211,19 @@ async function submitGoogleForm(fields: Fields): Promise<boolean> {
     // Google Forms answers with a 2xx confirmation page (or a 3xx redirect).
     const ok = res.status >= 200 && res.status < 400;
     if (!ok) {
-      console.error("[join] Google Form rejected the signup:", res.status);
+      console.error(
+        "[join] Google Form rejected the signup:",
+        res.status,
+        JSON.stringify(fields),
+      );
     }
     return ok;
   } catch (err) {
-    console.error("[join] Google Form submission failed:", err);
+    console.error(
+      "[join] Google Form submission failed:",
+      err,
+      JSON.stringify(fields),
+    );
     return false;
   }
 }
@@ -145,10 +241,11 @@ async function submitKit(fields: Fields): Promise<boolean> {
         "X-Kit-Api-Key": key,
       },
       body: JSON.stringify({
-        email_address: fields.email,
-        first_name: fields.name,
+        email_address: fields.correo,
+        first_name: fields.nombre,
         fields: {
-          phone_number: fields.phone,
+          phone_number: fields.telefono ?? "",
+          nivel: fields.nivel,
           source: fields.source,
         },
       }),
@@ -174,7 +271,7 @@ async function submitKit(fields: Fields): Promise<boolean> {
             "Content-Type": "application/json",
             "X-Kit-Api-Key": key,
           },
-          body: JSON.stringify({ email_address: fields.email }),
+          body: JSON.stringify({ email_address: fields.correo }),
         },
       );
       if (formRes.status < 200 || formRes.status >= 300) {
@@ -190,6 +287,25 @@ async function submitKit(fields: Fields): Promise<boolean> {
     return true;
   } catch (err) {
     console.error("[join] Kit submission failed:", err);
+    return false;
+  }
+}
+
+/** Persist the signed waiver acceptance to Blob. Returns whether it was recorded. */
+async function recordWaiver(fields: Fields): Promise<boolean> {
+  try {
+    const record: WaiverRecord = {
+      nombre: fields.nombre,
+      apellido: fields.apellido,
+      cedula: fields.cedula,
+      correo: fields.correo,
+      acceptedAt: new Date().toISOString(),
+      waiverVersion: waiver.version,
+    };
+    await appendJson(WAIVERS_DOC, record);
+    return true;
+  } catch (err) {
+    console.error("[join] Waiver record failed:", err);
     return false;
   }
 }

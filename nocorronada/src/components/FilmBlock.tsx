@@ -1,4 +1,4 @@
-import { site } from "@/config/site";
+import { getContent } from "@/lib/content";
 
 function embedUrl(raw: string): { kind: "iframe" | "mp4"; src: string } | null {
   if (!raw) return null;
@@ -13,16 +13,17 @@ function embedUrl(raw: string): { kind: "iframe" | "mp4"; src: string } | null {
 }
 
 /**
- * Featured film player. Reads site.film — paste a YouTube/Vimeo/.mp4 link into
- * site.ts and it goes live; while empty it renders the "PRONTO" teaser.
+ * Featured film player. Reads content (code default + /admin override) —
+ * while videoUrl is empty it renders the "PRONTO" teaser.
  */
-export function FilmBlock() {
-  const video = embedUrl(site.film.videoUrl);
+export async function FilmBlock() {
+  const { film } = await getContent();
+  const video = embedUrl(film.videoUrl);
 
   return (
     <div className="border hairline bg-asphalt">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b hairline px-6 py-4 sm:px-8">
-        <p className="label-mono text-muted">{site.film.subtitle}</p>
+        <p className="label-mono text-muted">{film.subtitle}</p>
         <p className="label-mono text-volt">CINE NCN</p>
       </div>
 
@@ -31,7 +32,7 @@ export function FilmBlock() {
           {video.kind === "iframe" ? (
             <iframe
               src={video.src}
-              title={site.film.title}
+              title={film.title}
               className="absolute inset-0 h-full w-full"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
@@ -47,7 +48,7 @@ export function FilmBlock() {
         </div>
       ) : (
         <div className="flex aspect-video w-full flex-col items-center justify-center gap-4 bg-black px-6 text-center">
-          <p className="display text-4xl sm:text-6xl">{site.film.title}</p>
+          <p className="display text-4xl sm:text-6xl">{film.title}</p>
           <p className="label-mono text-muted">Pronto · aquí mismo</p>
         </div>
       )}

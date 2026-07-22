@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
-  ZONES,
   zoneLabel,
   type ClubEvent,
   type EventStatus,
@@ -11,6 +10,18 @@ import {
 } from "@/data/events";
 
 type ZoneFilter = Zone | "all";
+
+/** Menu items for the header zone dropdown. label-mono uppercases them in CSS. */
+const ZONE_ITEMS: { value: ZoneFilter; label: string }[] = [
+  { value: "all", label: "Todas" },
+  { value: "san-jose", label: "San José (todo San José)" },
+  { value: "cartago", label: "Cartago" },
+  { value: "guanacaste", label: "Guanacaste" },
+  { value: "puntarenas", label: "Puntarenas" },
+];
+
+const currentZoneLabel = (zone: ZoneFilter) =>
+  zone === "all" ? "Todas las zonas" : zoneLabel(zone);
 
 /** es-CR long date + time, computed in Costa Rica time so server and client agree. */
 function formatEventDate(dateISO: string): string {
@@ -132,9 +143,7 @@ function RaceCard({ event, round }: { event: ClubEvent; round: number }) {
         <h3 className="display mt-5 text-3xl sm:text-4xl">{event.title}</h3>
 
         <p className="label-mono mt-4 text-muted">
-          {event.dateISO
-            ? formatEventDate(event.dateISO)
-            : "Fecha por anunciar"}
+          {event.dateISO ? formatEventDate(event.dateISO) : "Fecha por anunciar"}
         </p>
         <p className="label-mono mt-1 text-muted">{event.location.name}</p>
 
@@ -164,8 +173,46 @@ function RaceCard({ event, round }: { event: ClubEvent; round: number }) {
   return <article className="border hairline bg-asphalt">{inner}</article>;
 }
 
-export function CorridasList({ events }: { events: ClubEvent[] }) {
+/**
+ * Owns the whole /corridas explorer: the h1 doubles as a zone-selector dropdown,
+ * and the filtered weekly + race lists react to the selection. Filtering behavior
+ * is identical to the old CorridasList (weekly by zone, races kept round-numbered).
+ */
+export function CorridasExplorer({ events }: { events: ClubEvent[] }) {
   const [zone, setZone] = useState<ZoneFilter>("all");
+  const [open, setOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // Close on outside click + Escape.
+  useEffect(() => {
+    if (!open) return;
+    function onPointer(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setOpen(false);
+    }
+    document.addEventListener("mousedown", onPointer);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onPointer);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  function pickZone(value: ZoneFilter) {
+    setZone(value);
+    setOpen(false);
+  }
+
+  function goToAbriTuClub() {
+    setOpen(false);
+    document
+      .getElementById("abri-tu-club")
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 
   const matches = (e: ClubEvent) => zone === "all" || e.zone === zone;
 
@@ -179,24 +226,74 @@ export function CorridasList({ events }: { events: ClubEvent[] }) {
 
   return (
     <>
-      {/* Zone filter */}
+      {/* Header — the h1 is the zone selector */}
       <section className="border-b hairline">
-        <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-          <label className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
-            <span className="label-mono text-muted">Filtrar por zona</span>
-            <select
-              value={zone}
-              onChange={(e) => setZone(e.target.value as ZoneFilter)}
-              className="label-mono w-full border hairline bg-black px-4 py-3 text-ink focus:border-volt focus:outline-none sm:w-auto"
-            >
-              <option value="all">Todas las zonas</option>
-              {ZONES.map((z) => (
-                <option key={z.value} value={z.value}>
-                  {z.label}
-                </option>
-              ))}
-            </select>
-          </label>
+        <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
+          <p className="label-mono text-muted">Calendario</p>
+
+          <div ref={menuRef} className="relative mt-4 inline-block">
+            <h1 className="display text-5xl sm:text-8xl">
+              <button
+                type="button"
+                onClick={() => setOpen((o) => !o)}
+                aria-expanded={open}
+                aria-haspopup="menu"
+                className="inline-flex items-baseline gap-3 text-left outline-none transition-colors hover:text-volt focus-visible:text-volt sm:gap-5"
+              >
+                <span>Corridas</span>
+                <span
+                  className={`text-volt transition-transform ${open ? "rotate-180" : ""}`}
+                  aria-hidden
+                >
+                  ▾
+                </span>
+              </button>
+            </h1>
+
+            {open && (
+              <div
+                role="menu"
+                aria-label="Filtrar por zona"
+                className="absolute left-0 top-full z-30 mt-3 min-w-[15rem] border hairline bg-asphalt"
+              >
+                {ZONE_ITEMS.map((item) => (
+                  <button
+                    key={item.value}
+                    type="button"
+                    role="menuitem"
+                    onClick={() => pickZone(item.value)}
+                    aria-current={zone === item.value}
+                    className={`label-mono block w-full px-4 py-3 text-left transition-colors hover:bg-black ${
+                      zone === item.value
+                        ? "text-volt"
+                        : "text-ink hover:text-volt"
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+                <div className="border-t hairline" />
+                <button
+                  type="button"
+                  role="menuitem"
+                  onClick={goToAbriTuClub}
+                  className="label-mono block w-full px-4 py-3 text-left text-volt transition-colors hover:bg-black"
+                >
+                  Abrí tu club →
+                </button>
+              </div>
+            )}
+          </div>
+
+          <p className="label-mono mt-6 text-muted">
+            Zona: <span className="text-volt">{currentZoneLabel(zone)}</span>
+          </p>
+
+          <p className="mt-6 max-w-xl text-muted">
+            Un club de correr con calendario de verdad: el domingo de siempre en
+            San José, más Cartago y Guanacaste activos. Elegí tu zona en el
+            título. Todo se confirma primero en Instagram y WhatsApp.
+          </p>
         </div>
       </section>
 
@@ -239,8 +336,8 @@ export function CorridasList({ events }: { events: ClubEvent[] }) {
         <section className="border-b hairline">
           <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
             <p className="max-w-xl text-muted">
-              Todavía no corremos por acá. Unite al newsletter y al WhatsApp
-              para enterarte primero cuando arranquemos en tu zona.
+              Todavía no corremos por acá. Unite al newsletter y al WhatsApp para
+              enterarte primero cuando arranquemos en tu zona.
             </p>
           </div>
         </section>

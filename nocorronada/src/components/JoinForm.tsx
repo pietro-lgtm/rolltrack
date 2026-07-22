@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import { site } from "@/config/site";
-import { VoltLink, GhostLink } from "@/components/ui";
+import { waiver } from "@/data/waiver";
+import { SectionLabel, VoltLink, GhostLink } from "@/components/ui";
 
 type JoinSuccess = {
   whatsappUrl: string;
-  waiverUrl: string;
   stravaUrl: string;
 };
 
@@ -26,9 +26,16 @@ export function JoinForm({ source }: { source: string }) {
 
     const data = new FormData(e.currentTarget);
     const payload = {
-      name: String(data.get("name") ?? ""),
-      email: String(data.get("email") ?? ""),
-      phone: String(data.get("phone") ?? ""),
+      nombre: String(data.get("nombre") ?? ""),
+      apellido: String(data.get("apellido") ?? ""),
+      edad: String(data.get("edad") ?? ""),
+      cedula: String(data.get("cedula") ?? ""),
+      nivel: String(data.get("nivel") ?? ""),
+      meta5k: String(data.get("meta5k") ?? ""),
+      correo: String(data.get("correo") ?? ""),
+      telefono: String(data.get("telefono") ?? ""),
+      aceptaSalud: data.get("aceptaSalud") !== null,
+      aceptaAcuerdo: data.get("aceptaAcuerdo") !== null,
       website: String(data.get("website") ?? ""),
       source,
     };
@@ -44,7 +51,6 @@ export function JoinForm({ source }: { source: string }) {
       if (res.ok && json?.ok) {
         setSuccess({
           whatsappUrl: json.whatsappUrl,
-          waiverUrl: json.waiverUrl,
           stravaUrl: json.stravaUrl,
         });
         return;
@@ -69,9 +75,11 @@ export function JoinForm({ source }: { source: string }) {
       <div>
         <p className="label-mono text-muted">Registro recibido</p>
         <p className="display mt-4 text-5xl sm:text-6xl">Ya casi.</p>
-        <p className="mt-6 max-w-md text-muted">
-          Te tenemos en la lista. Faltan tres pasos y quedás oficialmente
-          adentro:
+        <p className="mt-6 max-w-md text-volt">
+          Exoneración firmada ✓ — quedás registrado.
+        </p>
+        <p className="mt-4 max-w-md text-muted">
+          Faltan dos pasos y quedás oficialmente adentro:
         </p>
 
         <ol className="mt-10 flex flex-col gap-8">
@@ -88,17 +96,6 @@ export function JoinForm({ source }: { source: string }) {
 
           <li className="border-t hairline pt-6">
             <span className="label-mono text-muted">Paso 02</span>
-            <p className="mt-2 mb-4">
-              Firmá la exoneración de responsabilidad. Es rápido y va una sola
-              vez.
-            </p>
-            <GhostLink href={success.waiverUrl} external>
-              Firmar la exoneración
-            </GhostLink>
-          </li>
-
-          <li className="border-t hairline pt-6">
-            <span className="label-mono text-muted">Paso 03</span>
             <p className="mt-2 mb-4">
               Seguinos en Strava y sumate a los +4,000 que ya corren con
               nosotros.
@@ -130,28 +127,113 @@ export function JoinForm({ source }: { source: string }) {
       </div>
 
       <div className="flex flex-col gap-2">
-        <label htmlFor="name" className="label-mono text-muted">
+        <label htmlFor="nombre" className="label-mono text-muted">
           Nombre
         </label>
         <input
-          id="name"
-          name="name"
+          id="nombre"
+          name="nombre"
           type="text"
           required
           minLength={2}
-          maxLength={80}
-          autoComplete="name"
+          maxLength={60}
+          autoComplete="given-name"
           className={inputCls}
         />
       </div>
 
       <div className="flex flex-col gap-2">
-        <label htmlFor="email" className="label-mono text-muted">
+        <label htmlFor="apellido" className="label-mono text-muted">
+          Apellido
+        </label>
+        <input
+          id="apellido"
+          name="apellido"
+          type="text"
+          required
+          minLength={2}
+          maxLength={60}
+          autoComplete="family-name"
+          className={inputCls}
+        />
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <label htmlFor="edad" className="label-mono text-muted">
+          Edad
+        </label>
+        <input
+          id="edad"
+          name="edad"
+          type="number"
+          required
+          min={10}
+          max={99}
+          inputMode="numeric"
+          className={inputCls}
+        />
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <label htmlFor="cedula" className="label-mono text-muted">
+          Cédula
+        </label>
+        <input
+          id="cedula"
+          name="cedula"
+          type="text"
+          required
+          inputMode="numeric"
+          autoComplete="off"
+          className={inputCls}
+        />
+        <p className="label-mono text-muted">para la exoneración</p>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <label htmlFor="nivel" className="label-mono text-muted">
+          Nivel de correr
+        </label>
+        <select
+          id="nivel"
+          name="nivel"
+          required
+          defaultValue=""
+          className={`${inputCls} appearance-none`}
+        >
+          <option value="" disabled>
+            Elegí tu nivel
+          </option>
+          {site.join.nivelOptions.map((n) => (
+            <option key={n} value={n}>
+              {n}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <label htmlFor="meta5k" className="label-mono text-muted">
+          ¿En cuánto querés correr tu 5K?
+        </label>
+        <input
+          id="meta5k"
+          name="meta5k"
+          type="text"
+          required
+          maxLength={40}
+          placeholder="25:00 · o 'ni idea'"
+          className={inputCls}
+        />
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <label htmlFor="correo" className="label-mono text-muted">
           Correo
         </label>
         <input
-          id="email"
-          name="email"
+          id="correo"
+          name="correo"
           type="email"
           required
           autoComplete="email"
@@ -160,36 +242,58 @@ export function JoinForm({ source }: { source: string }) {
       </div>
 
       <div className="flex flex-col gap-2">
-        <label htmlFor="phone" className="label-mono text-muted">
+        <label htmlFor="telefono" className="label-mono text-muted">
           Teléfono
         </label>
         <input
-          id="phone"
-          name="phone"
+          id="telefono"
+          name="telefono"
           type="tel"
-          required
           inputMode="tel"
           autoComplete="tel"
           placeholder="+506 8888 8888"
           className={inputCls}
         />
-        <p className="label-mono text-muted">
-          para agregarte al grupo de WhatsApp
-        </p>
+        <p className="label-mono text-muted">para el grupo de WhatsApp</p>
       </div>
 
-      <label className="flex cursor-pointer items-start gap-3 text-sm text-muted">
-        <input
-          type="checkbox"
-          name="consent"
-          required
-          className="mt-0.5 h-4 w-4 shrink-0 accent-volt"
-        />
-        <span>
-          Acepto recibir correos del club y firmar la exoneración de
-          responsabilidad.
-        </span>
-      </label>
+      {/* Waiver */}
+      <div className="mt-2 flex flex-col gap-4">
+        <SectionLabel>La exoneración</SectionLabel>
+
+        <div className="max-h-64 overflow-y-auto border hairline bg-asphalt p-5">
+          <p className="label-mono text-volt">{waiver.title}</p>
+          <p className="mt-4 whitespace-pre-line text-sm text-muted">
+            {waiver.body}
+          </p>
+        </div>
+
+        <label className="flex cursor-pointer items-start gap-3 text-sm text-muted">
+          <input
+            type="checkbox"
+            name="aceptaSalud"
+            required
+            className="mt-0.5 h-4 w-4 shrink-0 accent-volt"
+          />
+          <span>
+            Acepto que NO PASA NADA ni ninguna de las marcas, organizaciones o
+            partes asociadas son responsables por mi salud
+          </span>
+        </label>
+
+        <label className="flex cursor-pointer items-start gap-3 text-sm text-muted">
+          <input
+            type="checkbox"
+            name="aceptaAcuerdo"
+            required
+            className="mt-0.5 h-4 w-4 shrink-0 accent-volt"
+          />
+          <span>
+            Acepto el &ldquo;Acuerdo y Liberación de Responsabilidad de No Corro
+            Nada Runners&rdquo;
+          </span>
+        </label>
+      </div>
 
       {error && (
         <div

@@ -6,6 +6,7 @@ import { SectionLabel, VoltLink, GhostLink, Bib } from "@/components/ui";
 import { Marquee } from "@/components/Marquee";
 import { FilmBlock } from "@/components/FilmBlock";
 import { AdRail } from "@/components/AdRail";
+import { MerchCards } from "@/components/MerchCards";
 
 export const metadata: Metadata = {
   // Home keeps the site-wide default title shape — bypass the layout template.
@@ -14,6 +15,9 @@ export const metadata: Metadata = {
     "NO CORRO NADA es el run club de Costa Rica: gratis, sin niveles, todos los domingos 8:00 AM en San José. Un club de running que arranca — sumate y corré el BUNKER GP.",
   alternates: { canonical: "/" },
 };
+
+// FilmBlock reads content (code default + /admin override); keep it fresh.
+export const revalidate = 60;
 
 const paceGroups = ["5:30", "7:30", "9:00+"];
 
@@ -254,11 +258,19 @@ export default function Home() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
 
-          <div className="mt-8">
-            <GhostLink href={site.merchUrl} external>
-              Merch · shop.nopasanada.com ↗
-            </GhostLink>
+      {/* 7b — MERCH · training plans */}
+      <section className="border-b hairline">
+        <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
+          <SectionLabel>Merch · NCN x Athals</SectionLabel>
+          <h2 className="display mt-6 text-4xl sm:text-6xl">
+            Entrená con el club
+          </h2>
+
+          <div className="mt-10">
+            <MerchCards />
           </div>
         </div>
       </section>

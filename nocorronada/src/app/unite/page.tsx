@@ -20,7 +20,7 @@ const requirements: { k: string; v: string }[] = [
   { k: "WhatsApp", v: "Tu número para el grupo. Ahí se coordina todo cada domingo." },
   {
     k: "Exoneración",
-    v: "Firmás la exoneración de responsabilidad. Corrés bajo tu propio riesgo.",
+    v: "La firmás aquí mismo, una sola vez. Corrés bajo tu propio riesgo.",
   },
 ];
 
