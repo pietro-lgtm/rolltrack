@@ -305,6 +305,23 @@ export function EventCard({
             </div>
           </div>
 
+          {/* Featured on home hero */}
+          <div className="border-t hairline pt-6">
+            <label className="flex cursor-pointer items-start gap-3">
+              <input
+                type="checkbox"
+                checked={Boolean(ev.featured)}
+                onChange={(e) => onChange({ featured: e.target.checked })}
+                className="mt-0.5 h-4 w-4 shrink-0 accent-volt"
+              />
+              <span className="text-sm text-muted">
+                <span className="label-mono text-ink">Próxima corrida en portada</span>
+                {" — "}aparece destacada bajo los botones del inicio. Solo una a
+                la vez: marcar esta desmarca las demás.
+              </span>
+            </label>
+          </div>
+
           {/* Delete */}
           <div className="border-t hairline pt-6">
             <button

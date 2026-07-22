@@ -24,11 +24,11 @@ export const site = {
     substack: "https://nopasanadaoficial.substack.com/s/no-corro-nada",
   },
 
-  // EDIT to manage sponsors shown on the home page. TODO: confirm current roster.
+  // EDIT to manage sponsors. Logos live in public/sponsors/ (shown white on black).
   sponsors: [
-    { name: "HOKA", note: "Official HOKA CR Run Club" },
-    { name: "Heineken 0.0", note: "Powered by" },
-    { name: "Zepol", note: "Powered by" },
+    { name: "Heineken 0.0", note: "Powered by", logo: "/sponsors/heineken00.svg" },
+    { name: "HOKA", note: "Official HOKA CR Run Club", logo: "/sponsors/hoka.svg" },
+    { name: "Zepol", note: "Powered by", logo: "/sponsors/zepol.png" },
   ],
 
   /**

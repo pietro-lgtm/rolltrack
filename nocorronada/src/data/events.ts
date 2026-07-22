@@ -131,7 +131,6 @@ export const events: ClubEvent[] = [
     description:
       "La primera carrera de NO CORRO NADA: un circuito dentro de un parqueo subterráneo. Vueltas, rampas, neón y cemento. Nuestro primer evento pagado — cupos limitados. Los miembros del club se enteran primero.",
     status: "announced",
-    featured: true,
   },
 ];
 

@@ -95,7 +95,14 @@ export function EventsEditor() {
 
   function patchRow(id: string, patch: Partial<ClubEvent>) {
     setRows((rs) =>
-      rs.map((r) => (r.id === id ? { ...r, ev: { ...r.ev, ...patch } } : r)),
+      rs.map((r) => {
+        if (r.id === id) return { ...r, ev: { ...r.ev, ...patch } };
+        // "Featured" is single-select: flagging one run unflags the rest.
+        if (patch.featured === true && r.ev.featured) {
+          return { ...r, ev: { ...r.ev, featured: false } };
+        }
+        return r;
+      }),
     );
   }
 

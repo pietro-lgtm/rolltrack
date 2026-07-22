@@ -16,6 +16,25 @@ const nextConfig: NextConfig = {
       { source: "/eventos", destination: "/corridas", permanent: true },
     ];
   },
+  async headers() {
+    return [
+      {
+        source: "/(.*)",
+        headers: [
+          // Force HTTPS for two years, subdomains included.
+          { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
+          // Never sniff content types.
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          // The site never needs to be embedded in someone else's frame.
+          { key: "X-Frame-Options", value: "DENY" },
+          // Send only the origin as referrer to external sites.
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          // We don't use these browser APIs; lock them off.
+          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=()" },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;

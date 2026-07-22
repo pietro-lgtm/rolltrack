@@ -1,11 +1,20 @@
 import Link from "next/link";
 import { site } from "@/config/site";
 import { Marquee } from "@/components/Marquee";
+import { SponsorStrip } from "@/components/SponsorStrip";
 
 export function Footer() {
   return (
     <footer className="border-t hairline">
-      <Marquee text="NO CORRO NADA" className="border-b hairline py-3 text-muted" />
+      {/* Official sponsors — on every page */}
+      <div className="border-b hairline">
+        <SponsorStrip compact />
+      </div>
+      <Marquee
+        text="NO CORRO NADA"
+        className="border-b hairline py-3 text-muted"
+        durationSeconds={60}
+      />
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:grid-cols-3 sm:px-6">
         <div>
           <p className="display text-2xl">NCN</p>

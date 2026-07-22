@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { site } from "@/config/site";
-import { getEvent } from "@/data/events";
 import { essentialFaqs } from "@/data/faq";
+import { getContent, getEventFrom } from "@/lib/content";
 import { SectionLabel, VoltLink, GhostLink, Bib } from "@/components/ui";
 import { Marquee } from "@/components/Marquee";
 import { FilmBlock } from "@/components/FilmBlock";
 import { AdRail } from "@/components/AdRail";
 import { MerchCards } from "@/components/MerchCards";
+import { SponsorStrip } from "@/components/SponsorStrip";
 
 export const metadata: Metadata = {
   // Home keeps the site-wide default title shape — bypass the layout template.
@@ -46,8 +48,28 @@ const stats = [
   { n: "₡0", label: "Para siempre", volt: true },
 ];
 
-export default function Home() {
-  const domingo = getEvent("domingo-sj")!;
+/** es-CR short date for the hero flag. */
+function flagDate(iso?: string, recurrence?: string): string {
+  if (iso) {
+    return new Intl.DateTimeFormat("es-CR", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+      timeZone: "America/Costa_Rica",
+    }).format(new Date(iso));
+  }
+  return recurrence ?? "Fecha por anunciar";
+}
+
+export default async function Home() {
+  const { events } = await getContent();
+  const domingo = getEventFrom(events, "domingo-sj") ?? events[0];
+  // Hero flag: the run marked "featured" in /admin (single-select toggle).
+  const featured =
+    events.find((e) => e.featured && e.status !== "past") ?? domingo;
 
   return (
     <>
@@ -81,6 +103,30 @@ export default function Home() {
               Seguinos en Strava ↗
             </GhostLink>
           </div>
+
+          {/* NEXT-RUN FLAG — the run toggled as "portada" in /admin */}
+          <Link
+            href={featured.slug === "bunker-gp" ? "/bunker-gp" : "/corridas"}
+            className="group mt-8 inline-flex max-w-full flex-wrap items-center gap-x-4 gap-y-2 border hairline border-l-4 border-l-volt bg-asphalt px-5 py-4 transition-colors hover:border-volt"
+          >
+            <span className="relative flex h-2 w-2 shrink-0" aria-hidden>
+              <span className="absolute inline-flex h-full w-full animate-ping bg-volt opacity-60" />
+              <span className="relative inline-flex h-2 w-2 bg-volt" />
+            </span>
+            <span className="label-mono text-volt">Próxima corrida</span>
+            <span className="display text-lg text-ink sm:text-xl">
+              {featured.title}
+            </span>
+            <span className="label-mono text-muted">
+              {flagDate(featured.dateISO, featured.recurrence)}
+            </span>
+            <span
+              className="label-mono text-muted transition-colors group-hover:text-volt"
+              aria-hidden
+            >
+              →
+            </span>
+          </Link>
         </div>
       </section>
 
@@ -89,8 +135,13 @@ export default function Home() {
         <Marquee
           text="Siempre gratis — Domingos 8AM — Buena actitud y cero excusas"
           className="text-volt"
-          durationSeconds={32}
+          durationSeconds={75}
         />
+      </div>
+
+      {/* 2b — SPONSORS */}
+      <div className="border-b hairline">
+        <SponsorStrip />
       </div>
 
       {/* 3 — PRÓXIMO ENTRENO */}
