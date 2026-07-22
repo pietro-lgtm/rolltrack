@@ -63,8 +63,14 @@ Point the domain's DNS at Vercel when registered. `site.url` must match the fina
 
 ## 7. SEO off-site checklist (the part the code can't do)
 
-- **Google Business Profile**: create one, category **"Running club"** (specificity is a
-  ranking factor), San José. Add every Sunday run as a GBP Event. Respond to reviews <24h.
+- ✅ **Google Search Console**: DONE (2026-07-22) — domain property verified via a
+  TXT record in Vercel DNS; sitemap.xml submitted (6 pages, status Success).
+- 🟡 **Google Business Profile**: created (name NO CORRO NADA, category "Athletic
+  club" — GBP has no "Running club" category; service areas San José/Cartago/
+  Guanacaste, website attached) but **pending verification**: log into
+  business.google.com and enter a real mailing address for the verification
+  postcard (no P.O. boxes; a phone/video option may appear instead). Then add
+  every Sunday run as a GBP Event and respond to reviews <24h.
 - Put the site URL in the **Instagram bio**, **TikTok bio**, **Strava club description**,
   and Substack about page (these become `sameAs` corroboration → Knowledge Panel).
 - NAP consistency: same name "NO CORRO NADA" everywhere.
