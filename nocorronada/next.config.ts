@@ -6,6 +6,11 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.join(__dirname),
   },
+  images: {
+    // Admin-uploaded art is served via /api/img?p=<blob-path>. The route only
+    // serves the uploads/ prefix, so allowing its query string here is safe.
+    localPatterns: [{ pathname: "/api/img" }, { pathname: "/**", search: "" }],
+  },
   async redirects() {
     return [
       { source: "/eventos", destination: "/corridas", permanent: true },

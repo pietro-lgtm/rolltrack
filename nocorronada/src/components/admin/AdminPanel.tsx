@@ -4,14 +4,16 @@ import { useState } from "react";
 import { SolicitudesTab } from "@/components/admin/SolicitudesTab";
 import { WaiversTab } from "@/components/admin/WaiversTab";
 import { ContenidoTab } from "@/components/admin/ContenidoTab";
+import { MediaTab } from "@/components/admin/MediaTab";
 import { UsuariosTab } from "@/components/admin/UsuariosTab";
 
-type TabId = "solicitudes" | "waivers" | "contenido" | "usuarios";
+type TabId = "solicitudes" | "waivers" | "contenido" | "media" | "usuarios";
 
 const TABS: { id: TabId; label: string }[] = [
   { id: "solicitudes", label: "Solicitudes" },
   { id: "waivers", label: "Waivers" },
   { id: "contenido", label: "Contenido" },
+  { id: "media", label: "Media" },
   { id: "usuarios", label: "Usuarios" },
 ];
 
@@ -48,6 +50,7 @@ export function AdminPanel() {
         {tab === "solicitudes" && <SolicitudesTab />}
         {tab === "waivers" && <WaiversTab />}
         {tab === "contenido" && <ContenidoTab />}
+        {tab === "media" && <MediaTab />}
         {tab === "usuarios" && <UsuariosTab />}
       </div>
     </div>

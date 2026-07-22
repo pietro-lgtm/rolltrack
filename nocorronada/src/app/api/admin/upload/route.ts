@@ -6,8 +6,9 @@ export const runtime = "nodejs";
 const MAX_BYTES = 3_500_000; // ~3.5MB decoded — art is client-compressed JPEG
 
 /**
- * Admin image upload. Body: {filename, dataUrl} where dataUrl is a JPEG/PNG/WebP
- * data URL (the admin UI crops/resizes to 1080x1350 on a canvas before sending).
+ * Admin image upload. Body: {filename, dataUrl, folder?} where dataUrl is a
+ * JPEG/PNG/WebP data URL (the admin UI resizes on a canvas before sending) and
+ * folder is "events" (default) or "media".
  * Stores in the private Blob store under uploads/, returns the public proxy path.
  */
 export async function POST(req: Request) {
@@ -16,7 +17,7 @@ export async function POST(req: Request) {
     return Response.json({ ok: false, error: "No autorizado." }, { status: 401 });
   }
 
-  let body: { filename?: unknown; dataUrl?: unknown };
+  let body: { filename?: unknown; dataUrl?: unknown; folder?: unknown };
   try {
     body = await req.json();
   } catch {
@@ -42,9 +43,10 @@ export async function POST(req: Request) {
     );
   }
 
+  const folder = body.folder === "media" ? "media" : "events";
   const safe = filename.toLowerCase().replace(/[^a-z0-9._-]+/g, "-").slice(0, 60);
   const ext = contentType === "image/png" ? "png" : contentType === "image/webp" ? "webp" : "jpg";
-  const pathname = `uploads/events/${Date.now()}-${safe.replace(/\.[a-z]+$/, "")}.${ext}`;
+  const pathname = `uploads/${folder}/${Date.now()}-${safe.replace(/\.[a-z]+$/, "")}.${ext}`;
 
   await put(pathname, buffer, {
     access: "private" as never,

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { media, type MediaItem } from "@/data/media";
+import type { MediaItem } from "@/data/media";
+import { getContent } from "@/lib/content";
 import { SectionLabel, GhostLink, VoltLink } from "@/components/ui";
 import { site } from "@/config/site";
 
@@ -88,7 +89,11 @@ function ImageCell({ item }: { item: MediaItem }) {
   );
 }
 
-export default function MediaPage() {
+// Media is managed from /admin (overrides in Blob); refresh within a minute.
+export const revalidate = 60;
+
+export default async function MediaPage() {
+  const { media } = await getContent();
   const videos = media.filter((m) => m.type === "video");
   const images = media.filter((m) => m.type === "image");
   const isEmpty = media.length === 0;

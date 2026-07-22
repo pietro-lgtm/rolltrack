@@ -3,8 +3,10 @@ import { getSession } from "@/lib/auth";
 import { readJson, writeJson, OVERRIDES_DOC } from "@/lib/store";
 import type { ContentOverrides } from "@/lib/content";
 import type { ClubEvent } from "@/data/events";
+import type { MediaItem } from "@/data/media";
 import { site } from "@/config/site";
 import { events as defaultEvents } from "@/data/events";
+import { media as defaultMedia } from "@/data/media";
 
 export const runtime = "nodejs";
 
@@ -20,13 +22,14 @@ export async function GET() {
   return NextResponse.json({
     ok: true,
     overrides,
-    defaults: { film: site.film, events: defaultEvents },
+    defaults: { film: site.film, events: defaultEvents, media: defaultMedia },
   });
 }
 
 type PutBody = {
   film?: unknown;
   events?: unknown;
+  media?: unknown;
 };
 
 function isStr(v: unknown): v is string {
@@ -62,6 +65,24 @@ function parseEvents(v: unknown): { events: ClubEvent[] } | { error: string } {
   return { events: v as ClubEvent[] };
 }
 
+/** Validate a media override array. Returns a clean array or an error string. */
+function parseMedia(v: unknown): { media: MediaItem[] } | { error: string } {
+  if (!Array.isArray(v)) return { error: "La media debe ser una lista." };
+  for (let i = 0; i < v.length; i++) {
+    const m = v[i] as Record<string, unknown>;
+    if (!m || typeof m !== "object") {
+      return { error: `El ítem #${i + 1} no es válido.` };
+    }
+    if (m.type !== "image" && m.type !== "video") {
+      return { error: `El ítem #${i + 1} necesita type "image" o "video".` };
+    }
+    if (!isStr(m.src) || m.src.length === 0) {
+      return { error: `El ítem #${i + 1} necesita un src.` };
+    }
+  }
+  return { media: v as MediaItem[] };
+}
+
 export async function PUT(req: Request) {
   const s = await getSession();
   if (!s) return bad("No autorizado.", 401);
@@ -92,6 +113,16 @@ export async function PUT(req: Request) {
       const parsed = parseEvents(body.events);
       if ("error" in parsed) return bad(parsed.error);
       overrides.events = parsed.events;
+    }
+  }
+
+  if ("media" in body) {
+    if (body.media === null) {
+      delete overrides.media;
+    } else {
+      const parsed = parseMedia(body.media);
+      if ("error" in parsed) return bad(parsed.error);
+      overrides.media = parsed.media;
     }
   }
 
