@@ -6,7 +6,7 @@ export const site = {
   tagline: "Contenido que vende. Producción que se nota.",
   description:
     "Estudio de producción de contenido para marcas. Campañas y retainers mensuales de video, foto y social media. San José, Ciudad de México y Nueva York.",
-  url: "https://nadaestudios.com",
+  url: "https://nadaestudios.com", // domain live as of 2026-07-24
   email: "pietro@nopasanada.com",
   whatsapp: "+50688888888", // TODO: real WhatsApp business number
   whatsappUrl: "https://wa.me/50688888888", // TODO: real number
