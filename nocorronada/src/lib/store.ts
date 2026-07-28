@@ -59,6 +59,38 @@ export type WaiverRecord = {
   waiverVersion: string;
 };
 
+export type Member = {
+  /** Lowercased email — the member key. */
+  email: string;
+  nombre: string;
+  telefono?: string;
+  firstSeenAt: string;
+  /** Denormalized attendance count (kept in sync by /api/checkin). */
+  checkins: number;
+  lastCheckinAt?: string;
+};
+
+export type CheckinSession = {
+  /** Short id used in the QR URL, e.g. "a7f3k9". */
+  id: string;
+  /** Which corrida this session is for (slug from events, or free title). */
+  eventSlug?: string;
+  title: string;
+  openedAt: string;
+  /** Check-ins rejected after this moment. */
+  expiresAt: string;
+  openedBy: string;
+};
+
+export type Checkin = {
+  sessionId: string;
+  email: string;
+  nombre: string;
+  at: string;
+  /** True when this check-in created the member record. */
+  firstTime: boolean;
+};
+
 export type ClubApplication = {
   nombre: string;
   apellido: string;
@@ -75,3 +107,6 @@ export const USERS_DOC = "admin/users.json";
 export const WAIVERS_DOC = "data/waivers.json";
 export const CLUB_APPS_DOC = "data/club-apps.json";
 export const OVERRIDES_DOC = "data/overrides.json";
+export const MEMBERS_DOC = "data/members.json";
+export const CHECKIN_SESSIONS_DOC = "data/checkin-sessions.json";
+export const CHECKINS_DOC = "data/checkins.json";
