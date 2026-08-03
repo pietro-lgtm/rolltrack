@@ -26,6 +26,8 @@ function emptyItem(order: number): PortfolioItem {
 
 export function PortafolioTab() {
   const [items, setItems] = useState<PortfolioItem[] | null>(null);
+  // Last-saved snapshot, used only to detect unsaved edits (see `dirty` below).
+  const [saved, setSaved] = useState<PortfolioItem[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -34,13 +36,32 @@ export function PortafolioTab() {
     let alive = true;
     fetchContent()
       .then((c) => {
-        if (alive) setItems([...c.portfolio].sort((a, b) => a.order - b.order));
+        if (!alive) return;
+        const sorted = [...c.portfolio].sort((a, b) => a.order - b.order);
+        setItems(sorted);
+        setSaved(sorted);
       })
       .catch(() => alive && setError("No pudimos cargar el portafolio."));
     return () => {
       alive = false;
     };
   }, []);
+
+  const dirty = items !== null && saved !== null && JSON.stringify(items) !== JSON.stringify(saved);
+
+  // Deleting/editing only changes local state — warn before an accidental
+  // refresh or tab close throws away unsaved work (this is the exact failure
+  // mode that makes "Eliminar proyecto" look broken: it worked, it just
+  // wasn't saved yet).
+  useEffect(() => {
+    if (!dirty) return;
+    const handler = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = "";
+    };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [dirty]);
 
   if (error) return <p className="text-mid">{error}</p>;
   if (items === null) return <p className="label-mono text-mid">Cargando…</p>;
@@ -93,7 +114,8 @@ export function PortafolioTab() {
     setError(null);
     setStatus(null);
     try {
-      await saveContentSlice("portfolio", items);
+      const next = await saveContentSlice("portfolio", items);
+      setSaved([...next.portfolio].sort((a, b) => a.order - b.order));
       setStatus("Guardado. Los cambios aparecen en el sitio en ~1 minuto.");
     } catch (err) {
       setError((err as Error).message);
@@ -104,7 +126,14 @@ export function PortafolioTab() {
 
   return (
     <div className="flex max-w-4xl flex-col gap-8">
-      <p className="label-mono text-mid">Portafolio · {items.length} proyectos</p>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <p className="label-mono text-mid">Portafolio · {items.length} proyectos</p>
+        {dirty && (
+          <p className="label-mono bg-accent px-3 py-1 text-ink">
+            Cambios sin guardar — hacé clic en Guardar
+          </p>
+        )}
+      </div>
 
       <div className="flex flex-col gap-6">
         {items.map((item, i) => (
@@ -241,7 +270,12 @@ export function PortafolioTab() {
         <button type="button" onClick={addItem} className="btn btn-ghost">
           + Agregar proyecto
         </button>
-        <button type="button" onClick={save} disabled={busy} className="btn disabled:cursor-not-allowed disabled:opacity-60">
+        <button
+          type="button"
+          onClick={save}
+          disabled={busy}
+          className={`btn disabled:cursor-not-allowed disabled:opacity-60 ${dirty ? "btn-accent" : ""}`}
+        >
           {busy ? "Guardando…" : "Guardar"}
         </button>
       </div>
