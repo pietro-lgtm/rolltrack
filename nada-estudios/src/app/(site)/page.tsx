@@ -5,6 +5,7 @@ import { packages, formatUsd } from "@/data/services";
 import { getContent } from "@/lib/content";
 import { Marquee } from "@/components/site/Marquee";
 import { Reveal } from "@/components/site/Reveal";
+import { WorkCarousel } from "@/components/home/WorkCarousel";
 
 // ISR: pick up admin content edits without a redeploy.
 export const revalidate = 300;
@@ -134,42 +135,21 @@ export default async function Home() {
       </section>
 
       {/* ---- Featured work ----------------------------------------------- */}
-      <section className="mx-auto max-w-7xl px-4 pb-24 sm:px-6">
-        <Reveal>
-          <div className="flex flex-wrap items-end justify-between gap-4 border-b-2 border-ink pb-4">
-            <h2 className="display text-5xl sm:text-7xl">Trabajo</h2>
-            <Link href="/trabajo" className="label-mono link-under">
-              ver todo ({portfolio.length}) →
-            </Link>
-          </div>
-        </Reveal>
-
-        <div className="mt-8 grid gap-6 sm:grid-cols-2">
-          {featured.map((item, i) => (
-            <Reveal key={item.slug} delay={i * 0.06}>
-              <Link
-                href={`/trabajo/${item.slug}`}
-                className={`group block border-2 border-ink p-6 transition-colors sm:p-8 ${
-                  i === 0
-                    ? "bg-ink text-paper hover:bg-accent hover:text-ink"
-                    : "hover:bg-ink hover:text-paper"
-                }`}
-              >
-                <div className="flex items-baseline justify-between gap-4">
-                  <p className="label-mono opacity-60">{item.tags.join(" / ")}</p>
-                  <p className="label-mono opacity-60">{item.year}</p>
-                </div>
-                <p className="display mt-16 text-4xl sm:mt-24 sm:text-5xl">
-                  {item.client}
-                </p>
-                <p className="mt-3 max-w-sm text-sm opacity-70">{item.title}</p>
-                <p className="label-mono mt-6 opacity-0 transition-opacity group-hover:opacity-100">
-                  ver caso →
-                </p>
+      <section className="pb-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <Reveal>
+            <div className="flex flex-wrap items-end justify-between gap-4 border-b-2 border-ink pb-4">
+              <h2 className="display text-5xl sm:text-7xl">Trabajo</h2>
+              <Link href="/trabajo" className="label-mono link-under">
+                ver todo ({portfolio.length}) →
               </Link>
-            </Reveal>
-          ))}
+            </div>
+          </Reveal>
         </div>
+
+        <Reveal delay={0.08} className="mt-8">
+          <WorkCarousel items={featured} />
+        </Reveal>
       </section>
 
       {/* ---- Pricing honesty --------------------------------------------- */}
