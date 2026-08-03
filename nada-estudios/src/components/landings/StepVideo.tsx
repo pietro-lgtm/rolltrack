@@ -9,6 +9,13 @@ function toEmbedUrl(url: string): string | null {
   if (vimeo) return `https://player.vimeo.com/video/${vimeo[1]}`;
   if (url.includes("player.vimeo.com")) return url;
 
+  // Accepts any Drive share link (file/d/<id>/view, /preview, or open?id=<id>)
+  // and normalizes to Drive's embeddable player. The file must be shared as
+  // "Anyone with the link" — private/restricted files render an access error.
+  const drive = url.match(/drive\.google\.com\/(?:file\/d\/|open\?id=)([\w-]{10,})/);
+  if (drive) return `https://drive.google.com/file/d/${drive[1]}/preview`;
+  if (url.includes("drive.google.com/file/") && url.includes("/preview")) return url;
+
   return null;
 }
 

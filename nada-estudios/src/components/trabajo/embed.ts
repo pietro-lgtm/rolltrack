@@ -17,6 +17,14 @@ export function resolveEmbed(url: string): EmbedSpec {
     return { kind: "iframe", src: `https://player.vimeo.com/video/${vimeo[1]}` };
   }
 
+  // Accepts any Drive share link (file/d/<id>/view, /preview, or open?id=<id>)
+  // and normalizes to Drive's embeddable player. The file must be shared as
+  // "Anyone with the link" — private/restricted files render an access error.
+  const drive = url.match(/drive\.google\.com\/(?:file\/d\/|open\?id=)([\w-]{10,})/);
+  if (drive) {
+    return { kind: "iframe", src: `https://drive.google.com/file/d/${drive[1]}/preview` };
+  }
+
   if (/\.(mp4|webm|mov)(\?.*)?$/i.test(url)) {
     return { kind: "video", src: url };
   }

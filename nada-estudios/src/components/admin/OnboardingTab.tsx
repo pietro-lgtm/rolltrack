@@ -92,7 +92,7 @@ export function OnboardingTab() {
                   className={inputCls}
                   value={s.videoUrl ?? ""}
                   onChange={(e) => updateStep(i, { videoUrl: e.target.value || null })}
-                  placeholder="https://…"
+                  placeholder="YouTube, Vimeo, Drive (compartir → cualquiera con el enlace), o .mp4"
                 />
               </div>
               <div className="flex flex-col gap-1">

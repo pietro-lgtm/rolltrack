@@ -156,7 +156,7 @@ export function PortafolioTab() {
                   className={inputCls}
                   value={item.videoUrl ?? ""}
                   onChange={(e) => update(i, { videoUrl: e.target.value || null })}
-                  placeholder="https://…"
+                  placeholder="YouTube, Vimeo, Drive (compartir → cualquiera con el enlace), o .mp4"
                 />
               </div>
               <div className="flex flex-col gap-1">
