@@ -102,7 +102,7 @@ export default async function CasoPage({ params }: Props) {
           ) : item.image ? (
             <div className="relative aspect-[16/10] w-full border-2 border-ink">
               <Image
-                src={`/api/img?p=${encodeURIComponent(item.image)}`}
+                src={item.image}
                 alt={item.client}
                 fill
                 sizes="(min-width: 1024px) 960px, 100vw"

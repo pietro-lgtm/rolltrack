@@ -111,7 +111,7 @@ export default async function NosotrosPage() {
                   <div className="relative aspect-[4/5] w-full border-b-2 border-ink bg-smoke">
                     {member.photo ? (
                       <Image
-                        src={`/api/img?p=${encodeURIComponent(member.photo)}`}
+                        src={member.photo}
                         alt={member.name}
                         fill
                         sizes="(min-width: 1024px) 360px, (min-width: 640px) 50vw, 100vw"

@@ -34,7 +34,7 @@ export function PortfolioCard({
         className="group relative block aspect-[4/5] w-full overflow-hidden border-2 border-ink"
       >
         <Image
-          src={`/api/img?p=${encodeURIComponent(item.image)}`}
+          src={item.image}
           alt={item.client}
           fill
           sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
