@@ -22,6 +22,7 @@ export function PackageCard({ pkg }: { pkg: Package }) {
       <p className="label-mono mb-6 text-mid">{pkg.name}</p>
 
       <p className="display mb-2 text-4xl sm:text-5xl">
+        <span className="label-mono mr-2 align-top text-base text-mid">desde</span>
         {formatUsd(pkg.price)}
         <span className="label-mono ml-2 align-top text-mid">/mes</span>
       </p>
@@ -56,12 +57,12 @@ export function PackageCard({ pkg }: { pkg: Package }) {
               id: `paquete-${pkg.id}`,
               name: pkg.name,
               price: pkg.price,
-              priceLabel: `${formatUsd(pkg.price)} /mes`,
+              priceLabel: `desde ${formatUsd(pkg.price)} /mes`,
             })
           }
           className={`btn w-full ${pkg.featured ? "btn-accent" : ""}`}
         >
-          Agregar al carrito
+          Me interesa
         </button>
         <Link
           href="/empezar?src=servicios"

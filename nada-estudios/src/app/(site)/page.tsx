@@ -120,7 +120,7 @@ export default async function Home() {
                 {packages.map((p) => (
                   <div key={p.id} className="leader">
                     <span className="leader-name">{p.name}</span>
-                    <span className="leader-price">{formatUsd(p.price)}/mes</span>
+                    <span className="leader-price">desde {formatUsd(p.price)}/mes</span>
                   </div>
                 ))}
               </div>

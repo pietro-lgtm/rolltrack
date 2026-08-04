@@ -25,8 +25,8 @@ export default function ServiciosPage() {
           </h1>
           <p className="label-mono max-w-xl text-mid">
             Ninguna otra productora en Costa Rica o México te muestra precios reales.
-            Nosotros sí — retainers y add-ons con números fijos, no un formulario de
-            &ldquo;cotizar&rdquo;.
+            Nosotros sí — retainers desde números reales, add-ons a precio fijo. Nada
+            de formulario de &ldquo;cotizar&rdquo; a ciegas.
           </p>
         </Reveal>
       </section>

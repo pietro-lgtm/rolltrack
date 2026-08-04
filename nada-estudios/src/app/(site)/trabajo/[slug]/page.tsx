@@ -38,6 +38,11 @@ export default async function CasoPage({ params }: Props) {
   const item = items[index];
   const next = items[(index + 1) % items.length];
   const embed = item.videoUrl ? resolveEmbed(item.videoUrl) : null;
+  // Instagram/LinkedIn/etc. can't be embedded inline — resolveEmbed flags
+  // those as "external" instead of a doomed iframe. Prefer the real photo
+  // for the hero and link out to the original post for those.
+  const inlineEmbed = embed && embed.kind !== "external" ? embed : null;
+  const externalVideoUrl = embed?.kind === "external" ? embed.src : null;
 
   return (
     <article>
@@ -80,10 +85,10 @@ export default async function CasoPage({ params }: Props) {
 
       <section className="mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-16">
         <Reveal>
-          {embed ? (
-            embed.kind === "video" ? (
+          {inlineEmbed ? (
+            inlineEmbed.kind === "video" ? (
               <video
-                src={embed.src}
+                src={inlineEmbed.src}
                 controls
                 playsInline
                 className="aspect-video w-full border-2 border-ink bg-ink"
@@ -91,7 +96,7 @@ export default async function CasoPage({ params }: Props) {
             ) : (
               <div className="aspect-video w-full border-2 border-ink">
                 <iframe
-                  src={embed.src}
+                  src={inlineEmbed.src}
                   title={item.client}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -100,16 +105,37 @@ export default async function CasoPage({ params }: Props) {
               </div>
             )
           ) : item.image ? (
-            <div className="relative aspect-[16/10] w-full border-2 border-ink">
-              <Image
-                src={item.image}
-                alt={item.client}
-                fill
-                sizes="(min-width: 1024px) 960px, 100vw"
-                className="object-cover"
-                priority
-              />
+            <div>
+              <div className="relative aspect-[16/10] w-full border-2 border-ink">
+                <Image
+                  src={item.image}
+                  alt={item.client}
+                  fill
+                  sizes="(min-width: 1024px) 960px, 100vw"
+                  className="object-cover"
+                  priority
+                />
+              </div>
+              {externalVideoUrl && (
+                <a
+                  href={externalVideoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="label-mono link-under mt-4 inline-block"
+                >
+                  Ver publicación original ↗
+                </a>
+              )}
             </div>
+          ) : externalVideoUrl ? (
+            <a
+              href={externalVideoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex aspect-[16/9] w-full items-center justify-center border-2 border-ink bg-smoke px-6 text-center transition-colors hover:bg-ink hover:text-paper"
+            >
+              <span className="label-mono">Ver publicación original ↗</span>
+            </a>
           ) : (
             <div className="flex aspect-[16/9] w-full items-center justify-center border-2 border-ink bg-smoke px-6 text-center">
               <p className="display text-5xl text-ink/10 sm:text-8xl">

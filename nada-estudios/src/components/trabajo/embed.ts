@@ -1,8 +1,11 @@
-/** Turn a stored video URL into something we can render: an mp4/webm/mov file
- * or a YouTube/Vimeo embed iframe src. */
+/** Turn a stored video URL into something we can render: an mp4/webm/mov file,
+ * a YouTube/Vimeo/Drive embed iframe src, or (for platforms that block iframe
+ * embedding — Instagram, LinkedIn, TikTok, X/Facebook) an external link to
+ * open instead of trying and failing to embed it inline. */
 export type EmbedSpec =
   | { kind: "video"; src: string }
-  | { kind: "iframe"; src: string };
+  | { kind: "iframe"; src: string }
+  | { kind: "external"; src: string };
 
 export function resolveEmbed(url: string): EmbedSpec {
   const youtube = url.match(
@@ -29,6 +32,9 @@ export function resolveEmbed(url: string): EmbedSpec {
     return { kind: "video", src: url };
   }
 
-  // Fallback: assume it's already an embeddable URL.
-  return { kind: "iframe", src: url };
+  // Everything else (Instagram, LinkedIn, TikTok, X, Facebook, ...) sets
+  // X-Frame-Options/CSP blocking iframe embedding — attempting it renders
+  // that platform's own broken/login page inside the frame, not the post.
+  // Link out instead of pretending it's embeddable.
+  return { kind: "external", src: url };
 }
