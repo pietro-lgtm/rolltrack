@@ -27,7 +27,9 @@ export default async function Home() {
   return (
     <>
       {/* ---- Hero ------------------------------------------------------- */}
-      <section className="flex min-h-[calc(100svh-3.5rem)] flex-col justify-between px-4 pt-10 pb-6 sm:px-6">
+      {/* Natural height, not forced to fill the viewport — on wide/short
+          screens a full-height hero left a dead gap below the CTAs. */}
+      <section className="px-4 pt-10 pb-14 sm:px-6 sm:pb-20">
         <div className="mx-auto w-full max-w-7xl">
           <div className="rise flex flex-wrap items-baseline justify-between gap-2 border-b-2 border-ink pb-3">
             <span className="label-mono">NADA estudios</span>
@@ -61,7 +63,7 @@ export default async function Home() {
           </div>
         </div>
 
-        <div className="rise mx-auto w-full max-w-7xl" style={{ "--rise-delay": "0.3s" } as React.CSSProperties}>
+        <div className="rise mx-auto mt-12 w-full max-w-7xl sm:mt-16" style={{ "--rise-delay": "0.3s" } as React.CSSProperties}>
           <p className="label-mono text-mid">scroll ↓</p>
         </div>
       </section>
