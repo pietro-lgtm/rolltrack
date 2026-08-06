@@ -8,8 +8,8 @@ export const site = {
     "Estudio de producción de contenido para marcas. Campañas y retainers mensuales de video, foto y social media. San José, Ciudad de México y Nueva York.",
   url: "https://nadaestudios.com", // domain live as of 2026-07-24
   email: "pietro@nopasanada.com",
-  whatsapp: "+50688888888", // TODO: real WhatsApp business number
-  whatsappUrl: "https://wa.me/50688888888", // TODO: real number
+  whatsapp: "+5215513996584",
+  whatsappUrl: "https://wa.me/5215513996584",
   instagram: "https://instagram.com/nopasanada",
   cities: ["San José", "Ciudad de México", "Nueva York"] as const,
   parent: "No Pasa Nada",
