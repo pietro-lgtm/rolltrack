@@ -15,14 +15,11 @@ function AddOnRow({ addOn }: { addOn: AddOn }) {
   const { add } = useCart();
 
   return (
-    <div className="flex items-center gap-4 py-3">
-      <div className="leader flex-1">
-        <span className="leader-name">
-          {addOn.name}
-          {addOn.recurring ? <span className="text-mid"> · mensual</span> : null}
-        </span>
-        <span className="leader-price">{addOn.priceLabel}</span>
-      </div>
+    <div className="flex items-center justify-between gap-4 py-3">
+      <span className="label-mono">
+        {addOn.name}
+        {addOn.recurring ? <span className="text-mid"> · mensual</span> : null}
+      </span>
       <button
         type="button"
         onClick={() =>

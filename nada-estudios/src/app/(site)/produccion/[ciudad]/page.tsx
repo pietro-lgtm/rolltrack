@@ -2,16 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { site } from "@/config/site";
-import { packages, formatUsd } from "@/data/services";
+import { packages } from "@/data/services";
 import { Reveal } from "@/components/site/Reveal";
 import { JsonLd, serviceJsonLd } from "@/components/seo/JsonLd";
 
 const CITIES = ["san-jose", "cdmx", "nueva-york"] as const;
 type Ciudad = (typeof CITIES)[number];
-
-const paqueteA = packages.find((p) => p.id === "a")!;
-const paqueteB = packages.find((p) => p.id === "b")!;
-const paqueteC = packages.find((p) => p.id === "c")!;
 
 type CityContent = {
   lang: "es" | "en";
@@ -39,7 +35,7 @@ const content: Record<Ciudad, CityContent> = {
     countryFlag: "CR",
     headline: ["Productora audiovisual", "en San José, Costa Rica."],
     intro:
-      "Somos el estudio de producción de contenido detrás de campañas para las marcas líderes de Costa Rica: Heineken, Dos Pinos, Banco Promerica. Video, foto y social media, con precio publicado — nada de cotizar por teléfono.",
+      "Somos el estudio de producción de contenido detrás de campañas para las marcas líderes de Costa Rica: Heineken, Dos Pinos, Banco Promerica. Video, foto y social media — contanos qué necesitás y te armamos una propuesta.",
     clients: ["Heineken", "Dos Pinos", "Banco Promerica", "Universal", "Mercado de Valores"],
     clientsLabel: "Marcas que ya confían en nosotros en Costa Rica",
     servicesLabel: "Lo que producimos desde San José",
@@ -48,7 +44,7 @@ const content: Record<Ciudad, CityContent> = {
     ctaSub: "Contanos qué necesitás y te recomendamos el paquete correcto.",
     metaTitle: "Productora audiovisual en San José, Costa Rica",
     metaDescription:
-      "Agencia de contenido y productora audiovisual en Costa Rica. Video, foto y manejo de redes sociales para marcas como Heineken, Dos Pinos y Banco Promerica. Precios publicados.",
+      "Agencia de contenido y productora audiovisual en Costa Rica. Video, foto y manejo de redes sociales para marcas como Heineken, Dos Pinos y Banco Promerica.",
     keywords: [
       "productora audiovisual costa rica",
       "agencia de contenido costa rica",
@@ -63,7 +59,7 @@ const content: Record<Ciudad, CityContent> = {
     countryFlag: "MX",
     headline: ["Productora audiovisual", "y agencia de contenido en CDMX."],
     intro:
-      "Producimos video, foto y contenido para redes desde Ciudad de México, con el mismo estándar que usamos con marcas como Heineken y Banco Promerica en Centroamérica. Tú ves el precio antes de escribirnos, no después de tres llamadas.",
+      "Producimos video, foto y contenido para redes desde Ciudad de México, con el mismo estándar que usamos con marcas como Heineken y Banco Promerica en Centroamérica. Nos cuentas qué necesitas y te armamos una propuesta a tu medida.",
     clients: ["Heineken", "Dos Pinos", "Universal", "AR Holdings"],
     clientsLabel: "Marcas con las que hemos trabajado",
     servicesLabel: "Lo que producimos desde CDMX",
@@ -72,7 +68,7 @@ const content: Record<Ciudad, CityContent> = {
     ctaSub: "Cuéntanos qué necesitas y te recomendamos el paquete correcto.",
     metaTitle: "Productora audiovisual y agencia de contenido en CDMX",
     metaDescription:
-      "Productora audiovisual en CDMX. Video, foto y manejo de redes sociales para marcas, con precios publicados desde $2,200/mes. Agencia de contenido con oficinas en CDMX, San José y Nueva York.",
+      "Productora audiovisual en CDMX. Video, foto y manejo de redes sociales para marcas. Agencia de contenido con oficinas en CDMX, San José y Nueva York.",
     keywords: ["productora audiovisual cdmx", "agencia de contenido cdmx"],
   },
   "nueva-york": {
@@ -82,16 +78,16 @@ const content: Record<Ciudad, CityContent> = {
     countryFlag: "US",
     headline: ["Content production for US brands,", "produced in LatAm."],
     intro:
-      "Same timezone. US quality bar. LatAm cost. We run production out of San José and CDMX and manage US accounts from our New York office — video, photo and social content, delivered on published pricing instead of a discovery call.",
+      "Same timezone. US quality bar. LatAm cost. We run production out of San José and CDMX and manage US accounts from our New York office — video, photo and social content. Tell us what you need and we'll send a proposal, no discovery call required.",
     clients: ["Heineken", "Dos Pinos", "Banco Promerica", "Universal"],
     clientsLabel: "Brands we've produced for",
-    servicesLabel: "What we produce, priced in USD",
+    servicesLabel: "What we produce",
     proofLabel: "Proof, not adjectives",
     ctaLabel: "Start a project",
     ctaSub: "Tell us what you need and we'll recommend the right package.",
     metaTitle: "Nearshore Content Production — New York / Costa Rica / CDMX",
     metaDescription:
-      "Nearshore content production agency for US brands. Video, photo and social media production out of Costa Rica and CDMX, managed same-timezone from New York. Published USD pricing.",
+      "Nearshore content production agency for US brands. Video, photo and social media production out of Costa Rica and CDMX, managed same-timezone from New York.",
     keywords: [
       "content production agency costa rica",
       "video production company costa rica",
@@ -138,14 +134,12 @@ export default async function ProduccionCiudadPage({
   const t =
     c.lang === "en"
       ? {
-          months: "/mo",
-          seeAll: "See full rate card →",
+          seeAll: "See all services →",
           startCta: "Start →",
           packageWord: "Package",
         }
       : {
-          months: "/mes",
-          seeAll: "Ver rate card completo →",
+          seeAll: "Ver todos los servicios →",
           startCta: "Empezar →",
           packageWord: "Paquete",
         };
@@ -157,11 +151,6 @@ export default async function ProduccionCiudadPage({
           name: `${site.name} — ${c.cityName}`,
           description: c.metaDescription,
           url: `${site.url}/produccion/${ciudad}`,
-          offers: [
-            { name: paqueteA.name, price: paqueteA.price },
-            { name: paqueteB.name, price: paqueteB.price },
-            { name: paqueteC.name, price: paqueteC.price },
-          ],
         })}
       />
 
@@ -199,15 +188,9 @@ export default async function ProduccionCiudadPage({
           <div className="divide-y-2 divide-ink border-y-2 border-ink">
             {packages.map((p, i) => (
               <Reveal key={p.id} delay={i * 0.05}>
-                <div className="leader py-5">
-                  <span className="leader-name text-base sm:text-lg">
-                    {t.packageWord} {p.name.replace("Paquete ", "")} — {p.summary}
-                  </span>
-                  <span className="leader-price text-base sm:text-lg">
-                    {formatUsd(p.price)}
-                    {t.months}
-                  </span>
-                </div>
+                <p className="py-5 text-base sm:text-lg">
+                  {t.packageWord} {p.name.replace("Paquete ", "")} — {p.summary}
+                </p>
               </Reveal>
             ))}
           </div>

@@ -1,47 +1,31 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { site } from "@/config/site";
-import { packages, addOns, terms, formatUsd } from "@/data/services";
 import { Reveal } from "@/components/site/Reveal";
 import { JsonLd, faqJsonLd } from "@/components/seo/JsonLd";
 
 export const metadata: Metadata = {
-  title: "Preguntas y precios",
+  title: "Preguntas frecuentes",
   description:
-    "Cuánto cuesta manejar las redes de una empresa en Costa Rica, cuánto cuesta un video para redes, cómo funciona el contrato. Precios reales, sin cotizar.",
+    "Cómo funciona un retainer, qué incluye, cómo armamos una propuesta y en cuánto tiempo. Producción de video, foto y social media en San José, CDMX y Nueva York.",
   alternates: { canonical: `${site.url}/faq` },
 };
-
-const paqueteA = packages.find((p) => p.id === "a")!;
-const paqueteC = packages.find((p) => p.id === "c")!;
-const grabacionMedioDia = addOns.find((a) => a.id === "medio-dia-grabacion")!;
-const edicionMin = addOns.find((a) => a.id === "edicion-1")!;
-const fotosCorp = addOns.find((a) => a.id === "fotos-corp-15")!;
 
 const faqs = [
   {
     question: "¿Cuánto cuesta manejar las redes de una empresa en Costa Rica?",
-    answer: `Si andás averiguando cuánto cobra una agencia de marketing en Costa Rica, la respuesta honesta es que casi ninguna te lo dice — nosotros sí. Depende de cuánto contenido necesitás al mes, no de cuánto "vale tu marca" — así que no cotizamos por teléfono, publicamos precios. Nuestros paquetes mensuales van de ${formatUsd(
-      paqueteA.price,
-    )} a ${formatUsd(paqueteC.price)} al mes (contrato mínimo 3 meses), e incluyen video, foto y piezas gráficas. Si solo necesitás algo puntual, los add-ons empiezan desde ${formatUsd(
-      edicionMin.price!,
-    )}. Todo con precio publicado en /servicios — nada de "contanos tu presupuesto".`,
+    answer:
+      'Depende de cuánto contenido necesitás al mes, no de cuánto "vale tu marca" — por eso no tenemos una tarifa genérica que aplicar a ciegas. Contanos tu proyecto en /empezar (2 minutos) y te armamos una propuesta a tu medida, normalmente en 24–48 horas. Nada de llamada de descubrimiento para llegar a esa respuesta.',
   },
   {
     question: "¿Cuánto cuesta un video para redes?",
-    answer: `Como pieza suelta: edición de un video corto (1–119 seg) desde ${formatUsd(
-      edicionMin.price!,
-    )}, un día de grabación completo desde ${formatUsd(
-      addOns.find((a) => a.id === "dia-grabacion")!.price!,
-    )}, medio día desde ${formatUsd(
-      grabacionMedioDia.price!,
-    )}. Si necesitás varios videos al mes de forma constante, sale más barato en un paquete: el Paquete A (${formatUsd(
-      paqueteA.price,
-    )}/mes) ya incluye 8 videos verticales, foto y gráfica.`,
+    answer:
+      "Varía según duración, cantidad de tomas y si es una pieza suelta o parte de un volumen mensual constante (que siempre sale más eficiente en un retainer). Contanos qué necesitás y te cotizamos exactamente eso — sin sorpresas.",
   },
   {
     question: "¿Cómo funciona el contrato?",
-    answer: `${terms.join(". ")}. Sin letra chiquita: firmás, pagás el 50%, empezamos a producir. El resto se paga al inicio del mes de servicio.`,
+    answer:
+      "Contrato mínimo 3 meses, 50% al firmar y 50% al inicio de cada mes de servicio, cancelación con 30 días de anticipación. Sin letra chiquita: firmás, pagás el primer 50%, empezamos a producir.",
   },
   {
     question: "¿Trabajan fuera de Costa Rica?",
@@ -51,27 +35,22 @@ const faqs = [
   {
     question: "¿Qué incluye un retainer?",
     answer:
-      "Un retainer es el paquete mensual: un volumen fijo de videos, fotos y piezas gráficas cada mes, más días de grabación incluidos, revisiones y (según el paquete) consultoría estratégica y reporte de rendimiento. Es la forma más económica de tener contenido constante — ver el detalle exacto de cada paquete en /servicios.",
+      "Un retainer es el paquete mensual: un volumen fijo de videos, fotos y piezas gráficas cada mes, más días de grabación incluidos, revisiones y (según el paquete) consultoría estratégica y reporte de rendimiento. Es la forma más eficiente de tener contenido constante — ver el detalle de cada paquete en /servicios.",
   },
   {
     question: "¿Hacen solo una sesión de fotos?",
-    answer: `Sí, no todo tiene que ser retainer. Fotos corporativas van desde ${formatUsd(
-      fotosCorp.price!,
-    )} (15 fotos editadas), y fotos de producto desde ${
-      addOns.find((a) => a.id === "fotos-prod-studio")!.priceLabel
-    } en estudio. Cobertura de un evento puntual: desde ${
-      addOns.find((a) => a.id === "cobertura-evento")!.priceLabel
-    }.`,
+    answer:
+      "Sí, no todo tiene que ser retainer. Fotos corporativas, fotos de producto en estudio o afuera, cobertura de un evento puntual — todo disponible como servicio individual, sin contrato.",
   },
   {
-    question: "¿Por qué publican precios si nadie más lo hace?",
+    question: "¿Cómo sé cuánto me va a costar?",
     answer:
-      "Porque la mayoría de agencias en Costa Rica y México te hacen agendar una llamada para 'entender tu necesidad' antes de hablar de plata — y eso casi siempre significa que el precio depende de cuánto creen que podés pagar. Nosotros tenemos un rate card fijo. Vos decidís si te sirve sin perder una semana en reuniones.",
+      "Nos contás qué necesitás en /empezar y te armamos una propuesta a tu medida — normalmente en 24–48 horas. Preferimos entender bien el proyecto antes de tirar un número, para que la propuesta se ajuste a lo que realmente necesitás, no a un paquete genérico.",
   },
   {
     question: "¿Qué pasa si necesito más de lo que incluye mi paquete?",
     answer:
-      "Los entregables del paquete no son acumulables mes a mes, pero podés agregar cualquier add-on del rate card (grabación extra, edición extra, fotos, campañas especiales) al precio publicado. Revisiones adicionales a las incluidas: $75 c/u.",
+      "Los entregables del paquete no son acumulables mes a mes, pero podés agregar cualquier add-on (grabación extra, edición extra, fotos, campañas especiales) a tu retainer. Lo cotizamos junto con tu propuesta.",
   },
   {
     question: "¿Cuánto se demora en empezar un proyecto?",
@@ -93,15 +72,14 @@ export default function FaqPage() {
       <section className="border-b-2 border-ink px-4 py-16 sm:px-6 sm:py-24">
         <div className="mx-auto max-w-4xl">
           <Reveal>
-            <p className="label-mono mb-4 text-mid">Preguntas y precios</p>
+            <p className="label-mono mb-4 text-mid">Preguntas frecuentes</p>
             <h1 className="display text-5xl sm:text-6xl md:text-7xl">
               Lo que preguntan
               <br />
               antes de escribirnos.
             </h1>
             <p className="mt-6 max-w-2xl text-lg text-mid">
-              Sin llamada de descubrimiento para saber cuánto cuesta. Las
-              respuestas están acá, con números reales.
+              Respuestas directas, sin necesidad de agendar una llamada primero.
             </p>
           </Reveal>
         </div>
@@ -125,12 +103,12 @@ export default function FaqPage() {
           <div>
             <p className="label-mono mb-2 text-accent">¿Algo más?</p>
             <h2 className="display text-3xl sm:text-4xl">
-              Mirá el rate card completo.
+              Mirá todos los servicios.
             </h2>
           </div>
           <div className="flex flex-wrap gap-3">
             <Link href="/servicios" className="btn btn-accent">
-              Ver precios →
+              Ver servicios →
             </Link>
             <Link href="/empezar" className="btn btn-ghost !border-paper !text-paper hover:!bg-paper hover:!text-ink">
               Empezar

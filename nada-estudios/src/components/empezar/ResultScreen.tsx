@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { packages, formatUsd } from "@/data/services";
+import { packages } from "@/data/services";
 import { site } from "@/config/site";
 import { Reveal } from "@/components/site/Reveal";
 import type { Recommendation } from "./scoring";
@@ -40,10 +40,7 @@ export function ResultScreen({
         <div className="mt-8 border-2 border-ink p-6 sm:p-8">
           {pkg ? (
             <>
-              <div className="leader">
-                <span className="leader-name display text-2xl sm:text-3xl">{pkg.name}</span>
-                <span className="leader-price label-mono">{formatUsd(pkg.price)} / mes</span>
-              </div>
+              <p className="display text-2xl sm:text-3xl">{pkg.name}</p>
               <p className="label-mono mt-2 text-mid">{pkg.summary}</p>
               <ul className="mt-6 space-y-2">
                 {pkg.features.map((f) => (
@@ -55,19 +52,17 @@ export function ResultScreen({
                   </li>
                 ))}
               </ul>
-              <p className="label-mono mt-6 text-mid">
-                Renovación {formatUsd(pkg.renewalPrice)} / mes · contrato mínimo 3 meses
-              </p>
+              <p className="label-mono mt-6 text-mid">Contrato mínimo 3 meses</p>
             </>
           ) : (
             <>
               <h2 className="display text-2xl sm:text-3xl">Servicios individuales</h2>
               <p className="label-mono mt-2 text-mid">
-                Sin retainer. Pagás por lo que necesitás, precio publicado.
+                Sin retainer. Pagás por lo que necesitás.
               </p>
               <p className="mt-4 text-sm sm:text-base">
                 Grabación por día, edición por pieza, fotos de producto, cobertura de
-                eventos y más — cada uno con precio fijo. Sin llamadas misteriosas.
+                eventos y más — te armamos una propuesta a tu medida.
               </p>
             </>
           )}

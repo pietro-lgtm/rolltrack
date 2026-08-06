@@ -63,11 +63,10 @@ export function Footer() {
           NADA
         </p>
 
-        <div className="mt-8 flex flex-col gap-2 border-t border-paper/20 pt-6 md:flex-row md:items-center md:justify-between">
+        <div className="mt-8 border-t border-paper/20 pt-6">
           <p className="label-mono text-paper/50">
             © {new Date().getFullYear()} {site.legalName} — {site.parent}
           </p>
-          <p className="label-mono text-paper/50">Precios en USD + IVA</p>
         </div>
       </div>
     </footer>

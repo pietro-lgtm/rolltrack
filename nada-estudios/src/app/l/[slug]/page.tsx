@@ -100,7 +100,7 @@ export default async function LandingPage({ params }: Props) {
           <div className="mx-auto flex max-w-5xl flex-col gap-2 px-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
             <p className="label-mono text-mid">{site.cities.join(" · ")}</p>
             <p className="label-mono text-mid">
-              Precios publicados. Sin llamadas misteriosas.
+              Propuesta a tu medida. Sin llamadas misteriosas.
             </p>
           </div>
         </section>
@@ -127,14 +127,13 @@ export default async function LandingPage({ params }: Props) {
 
       {/* Minimal mono footer line */}
       <footer className="py-6">
-        <div className="mx-auto flex max-w-5xl flex-col gap-2 px-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6">
           <a
             href={`mailto:${site.email}`}
             className="label-mono link-under"
           >
             {site.email}
           </a>
-          <p className="label-mono text-mid">Precios en USD + IVA</p>
         </div>
       </footer>
     </>

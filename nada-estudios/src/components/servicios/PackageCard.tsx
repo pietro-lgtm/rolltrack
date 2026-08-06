@@ -19,13 +19,7 @@ export function PackageCard({ pkg }: { pkg: Package }) {
         </span>
       )}
 
-      <p className="label-mono mb-6 text-mid">{pkg.name}</p>
-
-      <p className="display mb-2 text-4xl sm:text-5xl">
-        <span className="label-mono mr-2 align-top text-base text-mid">desde</span>
-        {formatUsd(pkg.price)}
-        <span className="label-mono ml-2 align-top text-mid">/mes</span>
-      </p>
+      <p className="display mb-2 text-3xl sm:text-4xl">{pkg.name}</p>
 
       <p className="label-mono mb-6 text-mid">{pkg.summary}</p>
 
@@ -39,15 +33,6 @@ export function PackageCard({ pkg }: { pkg: Package }) {
           </li>
         ))}
       </ul>
-
-      <div className="mb-6 space-y-1 border-t-2 border-ink/10 pt-4">
-        <p className="label-mono text-mid">
-          renovación 3+ meses: {formatUsd(pkg.renewalPrice)}/mes
-        </p>
-        <p className="label-mono text-mid">
-          total primer trimestre: {formatUsd(pkg.totalFirstTerm)}
-        </p>
-      </div>
 
       <div className="flex flex-col gap-3">
         <button

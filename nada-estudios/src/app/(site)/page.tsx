@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { clients, site } from "@/config/site";
-import { packages, formatUsd } from "@/data/services";
+import { packages } from "@/data/services";
 import { getContent } from "@/lib/content";
 import { Marquee } from "@/components/site/Marquee";
 import { Reveal } from "@/components/site/Reveal";
@@ -49,8 +49,8 @@ export default async function Home() {
           <div className="rise mt-10 grid gap-6 md:grid-cols-2" style={{ "--rise-delay": "0.2s" } as React.CSSProperties}>
             <p className="label-mono max-w-md leading-relaxed normal-case text-mid">
               Producción de video, foto y social media para marcas que no tienen
-              tiempo que perder. Campañas y paquetes mensuales — con precios
-              publicados, como debería ser.
+              tiempo que perder. Campañas y paquetes mensuales, con una propuesta
+              a tu medida.
             </p>
             <div className="flex flex-wrap items-start gap-3 md:justify-end">
               <Link href="/empezar?src=home" className="btn btn-accent">
@@ -97,11 +97,11 @@ export default async function Home() {
                 Un lanzamiento, un evento, una temporada. Producción puntual de
                 principio a fin: concepto, grabación, edición, entrega.
               </p>
-              <div className="mt-6 space-y-2 text-sm">
-                <div className="leader"><span className="leader-name">Cobertura de evento</span><span className="leader-price">$1,400</span></div>
-                <div className="leader"><span className="leader-name">Sesión de fotos corporativas</span><span className="leader-price">desde $800</span></div>
-                <div className="leader"><span className="leader-name">Campaña especial</span><span className="leader-price">desde $3,000</span></div>
-              </div>
+              <ul className="mt-6 space-y-2 text-sm text-mid">
+                <li>— Cobertura de evento</li>
+                <li>— Sesión de fotos corporativas</li>
+                <li>— Campaña especial</li>
+              </ul>
               <div className="mt-auto pt-8">
                 <Link href="/servicios#addons" className="label-mono link-under">
                   Ver todos los servicios →
@@ -118,14 +118,11 @@ export default async function Home() {
                 Tu equipo de contenido, sin contratar un equipo. Video, foto y
                 diseño todos los meses, con calendario editorial y reportes.
               </p>
-              <div className="mt-6 space-y-2 text-sm">
+              <ul className="mt-6 space-y-2 text-sm text-paper/70">
                 {packages.map((p) => (
-                  <div key={p.id} className="leader">
-                    <span className="leader-name">{p.name}</span>
-                    <span className="leader-price">desde {formatUsd(p.price)}/mes</span>
-                  </div>
+                  <li key={p.id}>— {p.name}</li>
                 ))}
-              </div>
+              </ul>
               <div className="mt-auto pt-8">
                 <Link href="/servicios" className="label-mono link-under text-accent">
                   Ver paquetes completos →
@@ -154,23 +151,22 @@ export default async function Home() {
         </Reveal>
       </section>
 
-      {/* ---- Pricing honesty --------------------------------------------- */}
+      {/* ---- Propuesta rápida --------------------------------------------- */}
       <section className="border-y-2 border-ink bg-accent">
         <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
           <Reveal>
-            <p className="label-mono">( precios )</p>
+            <p className="label-mono">( cómo empezar )</p>
             <h2 className="display mt-4 max-w-4xl text-5xl sm:text-8xl">
-              Precios publicados. En serio.
+              Contanos qué necesitás.
             </h2>
             <p className="label-mono mt-6 max-w-lg leading-relaxed normal-case">
-              Ninguna otra productora en el mercado publica sus precios. Nosotros
-              sí: paquetes desde {formatUsd(packages[0].price)}/mes y servicios
-              individuales desde $80. Sin cotizaciones misteriosas, sin llamadas
-              de ventas eternas.
+              Sin llamada de descubrimiento, sin cuestionarios eternos. Nos contás
+              tu proyecto y te armamos una propuesta a tu medida — normalmente en
+              24–48 horas.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/servicios" className="btn">
-                Ver precios completos →
+                Ver servicios →
               </Link>
               <Link href="/faq" className="btn btn-ghost">
                 Preguntas frecuentes

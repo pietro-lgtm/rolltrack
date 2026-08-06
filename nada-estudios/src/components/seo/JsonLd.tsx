@@ -52,12 +52,10 @@ export function serviceJsonLd({
   name,
   description,
   url,
-  offers,
 }: {
   name: string;
   description: string;
   url: string;
-  offers: { name: string; price: number; priceCurrency?: string }[];
 }) {
   return {
     "@context": "https://schema.org",
@@ -72,13 +70,6 @@ export function serviceJsonLd({
       url: site.url,
     },
     areaServed: ["Costa Rica", "México", "Estados Unidos"],
-    offers: offers.map((o) => ({
-      "@type": "Offer",
-      name: o.name,
-      price: o.price,
-      priceCurrency: o.priceCurrency ?? "USD",
-      url,
-    })),
   };
 }
 

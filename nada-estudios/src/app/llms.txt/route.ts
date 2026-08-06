@@ -1,5 +1,5 @@
 import { site, clients } from "@/config/site";
-import { packages, addOns, formatUsd } from "@/data/services";
+import { packages, addOns } from "@/data/services";
 
 export const dynamic = "force-static";
 
@@ -13,20 +13,20 @@ export async function GET() {
   );
   lines.push("");
   lines.push(
-    "Editorial content production studio. Video, photo and social media production sold as fixed monthly retainers and one-off add-ons, all with published USD pricing — no discovery call required.",
+    "Editorial content production studio. Video, photo and social media production sold as monthly retainers and one-off add-ons. No published price list — send a project brief via /empezar and get a proposal back within 24-48 hours.",
   );
   lines.push("");
 
-  lines.push("## Services & pricing (USD, IVA/tax not included)");
+  lines.push("## Services");
   lines.push("");
   for (const p of packages) {
-    lines.push(`- **${p.name}** — ${p.summary}: ${formatUsd(p.price)}/mo (${formatUsd(p.renewalPrice)}/mo after month 3, ${formatUsd(p.totalFirstTerm)} first 3-month term)`);
+    lines.push(`- **${p.name}** — ${p.summary}`);
   }
   lines.push("");
   lines.push("### Add-ons (one-off unless noted)");
   lines.push("");
   for (const a of addOns) {
-    lines.push(`- ${a.name}: ${a.priceLabel}${a.recurring ? " (monthly)" : ""}`);
+    lines.push(`- ${a.name}${a.recurring ? " (monthly)" : ""}`);
   }
   lines.push("");
 
@@ -51,10 +51,10 @@ export async function GET() {
   lines.push("");
   lines.push(`- Home: ${site.url}/`);
   lines.push(`- Work / portfolio: ${site.url}/trabajo`);
-  lines.push(`- Services & pricing: ${site.url}/servicios`);
+  lines.push(`- Services: ${site.url}/servicios`);
   lines.push(`- Start a project: ${site.url}/empezar`);
   lines.push(`- About: ${site.url}/nosotros`);
-  lines.push(`- FAQ & pricing questions: ${site.url}/faq`);
+  lines.push(`- FAQ: ${site.url}/faq`);
   lines.push(`- English landing (nearshore): ${site.url}/en`);
   lines.push(`- San José: ${site.url}/produccion/san-jose`);
   lines.push(`- CDMX: ${site.url}/produccion/cdmx`);

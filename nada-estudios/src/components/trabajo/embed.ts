@@ -15,7 +15,12 @@ export function resolveEmbed(url: string): EmbedSpec {
     return { kind: "iframe", src: `https://www.youtube.com/embed/${youtube[1]}` };
   }
 
-  const vimeo = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+  // Matches any vimeo.com URL shape (bare ID, /video/ID, /manage/videos/ID,
+  // /channels/x/ID, ...) by pulling the trailing numeric ID out of the path —
+  // Vimeo IDs are always 6+ digits. The /manage/... studio URL people copy
+  // from their own dashboard isn't public, but the same ID always resolves
+  // on the public player regardless of which URL shape it was copied from.
+  const vimeo = url.match(/vimeo\.com\/(?:[^?]*\/)?(\d{6,})/);
   if (vimeo) {
     return { kind: "iframe", src: `https://player.vimeo.com/video/${vimeo[1]}` };
   }

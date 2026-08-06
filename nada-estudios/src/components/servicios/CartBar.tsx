@@ -3,10 +3,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/components/cart/CartProvider";
-import { formatUsd } from "@/data/services";
 
 export function CartBar() {
-  const { items, count, subtotal, hasQuoteItems, remove, setQty } = useCart();
+  const { items, count, remove, setQty } = useCart();
   const [open, setOpen] = useState(false);
 
   if (count === 0) return null;
@@ -21,10 +20,7 @@ export function CartBar() {
                 key={item.id}
                 className="flex flex-wrap items-center justify-between gap-3 py-3"
               >
-                <div>
-                  <p className="label-mono">{item.name}</p>
-                  <p className="label-mono text-mid">{item.priceLabel}</p>
-                </div>
+                <p className="label-mono">{item.name}</p>
                 <div className="flex items-center gap-3">
                   <button
                     type="button"
@@ -54,11 +50,6 @@ export function CartBar() {
               </li>
             ))}
           </ul>
-          {hasQuoteItems && (
-            <p className="label-mono mt-4 text-mid">
-              incluye ítems por cotización — confirmamos precio antes de facturar
-            </p>
-          )}
         </div>
       )}
 
@@ -68,8 +59,7 @@ export function CartBar() {
           onClick={() => setOpen((v) => !v)}
           className="label-mono text-left"
         >
-          carrito — {count} {count === 1 ? "item" : "items"} — {formatUsd(subtotal)}
-          {hasQuoteItems ? "+" : ""}
+          seleccionado — {count} {count === 1 ? "item" : "items"}
           <span className="ml-2 text-mid">{open ? "[ cerrar ]" : "[ ver ]"}</span>
         </button>
         <Link href="/servicios/checkout" className="btn btn-accent shrink-0">

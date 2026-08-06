@@ -10,7 +10,7 @@ export const revalidate = 300;
 export const metadata: Metadata = {
   title: "Trabajo",
   description:
-    "Contenido de marca para Heineken, Dos Pinos, Banco Promerica, Universal y más. Producción de nivel internacional, precios publicados.",
+    "Contenido de marca para Heineken, Dos Pinos, Banco Promerica, Universal y más. Producción de nivel internacional en San José, CDMX y Nueva York.",
 };
 
 export default async function TrabajoPage() {

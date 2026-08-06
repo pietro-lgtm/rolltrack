@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { site, clients } from "@/config/site";
-import { packages, addOns, formatUsd } from "@/data/services";
+import { packages } from "@/data/services";
 import { Reveal } from "@/components/site/Reveal";
 import { Marquee } from "@/components/site/Marquee";
 import { JsonLd, serviceJsonLd } from "@/components/seo/JsonLd";
@@ -9,7 +9,7 @@ import { JsonLd, serviceJsonLd } from "@/components/seo/JsonLd";
 export const metadata: Metadata = {
   title: "NADA Estudios — Nearshore Content Production, Costa Rica / CDMX / NYC",
   description:
-    "Content production for US brands, produced in LatAm at LatAm cost, US quality bar. Video, photo and social content out of Costa Rica and Mexico City, managed same-timezone from New York. Published USD pricing.",
+    "Content production for US brands, produced in LatAm at LatAm cost, US quality bar. Video, photo and social content out of Costa Rica and Mexico City, managed same-timezone from New York.",
   keywords: [
     "content production agency costa rica",
     "video production company costa rica",
@@ -38,8 +38,6 @@ const paquetes = packages.map((p) => ({
     p.id === "a" ? "1–10 person marketing teams" : p.id === "b" ? "growing brands" : "multi-market accounts",
 }));
 
-const addonSample = addOns.slice(0, 6);
-
 export default function EnPage() {
   return (
     <>
@@ -49,7 +47,6 @@ export default function EnPage() {
           description:
             "Content production for US brands, produced in LatAm at LatAm cost, US quality bar.",
           url: `${site.url}/en`,
-          offers: packages.map((p) => ({ name: p.name, price: p.price })),
         })}
       />
 
@@ -63,8 +60,8 @@ export default function EnPage() {
               A content studio in Costa Rica, Mexico City &amp; New York.
             </h1>
             <p className="mt-6 max-w-2xl text-lg text-mid">
-              Published pricing. Tier-1 brands. Content production for US
-              brands, produced in LatAm at LatAm cost, US quality bar.
+              Tier-1 brands. Content production for US brands, produced in
+              LatAm at LatAm cost, US quality bar.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/empezar?src=en" className="btn btn-accent">
@@ -121,42 +118,30 @@ export default function EnPage() {
       <section className="border-b-2 border-ink px-4 py-14 sm:px-6 sm:py-20">
         <div className="mx-auto max-w-4xl">
           <Reveal>
-            <p className="label-mono mb-2 text-mid">Monthly retainers, USD</p>
+            <p className="label-mono mb-2 text-mid">Monthly retainers</p>
             <h2 className="display mb-8 text-3xl sm:text-4xl">
-              Published pricing. No sales call required.
+              Tell us what you need. We'll send a proposal.
             </h2>
           </Reveal>
           <div className="divide-y-2 divide-ink border-y-2 border-ink">
             {paquetes.map((p, i) => (
               <Reveal key={p.id} delay={i * 0.05}>
                 <div className="py-6">
-                  <div className="leader">
-                    <span className="leader-name text-base sm:text-lg">
-                      {p.name} — {p.summary}
-                    </span>
-                    <span className="leader-price text-base sm:text-lg">
-                      {formatUsd(p.price)}/mo
-                    </span>
-                  </div>
-                  <p className="label-mono mt-2 text-mid">
-                    Best for {p.usdRange} · {formatUsd(p.renewalPrice)}/mo after month 3
+                  <p className="label-mono text-base sm:text-lg">
+                    {p.name} — {p.summary}
                   </p>
+                  <p className="label-mono mt-2 text-mid">Best for {p.usdRange}</p>
                 </div>
               </Reveal>
             ))}
           </div>
           <Reveal delay={0.2}>
-            <p className="label-mono mt-6 mb-3 text-mid">Add-ons, sample</p>
-            <div className="divide-y divide-ink/20">
-              {addonSample.map((a) => (
-                <div key={a.id} className="leader py-2">
-                  <span className="leader-name">{a.name}</span>
-                  <span className="leader-price">{a.priceLabel}</span>
-                </div>
-              ))}
-            </div>
+            <p className="label-mono mt-6 text-mid">
+              One-off shoots, editing, and event coverage also available — no retainer
+              required.
+            </p>
             <Link href="/servicios" className="link-under label-mono mt-6 inline-block">
-              See the full rate card →
+              See all services →
             </Link>
           </Reveal>
         </div>
@@ -189,7 +174,7 @@ export default function EnPage() {
                 },
                 {
                   title: "Cost",
-                  body: "LatAm production cost with a fixed, published rate card — no US agency markup, no surprise invoices.",
+                  body: "LatAm production cost, US agency output — no US agency markup, no surprise invoices.",
                 },
                 {
                   title: "Quality bar",
@@ -211,7 +196,7 @@ export default function EnPage() {
           <div>
             <p className="label-mono mb-2 text-accent">Let's talk</p>
             <h2 className="display text-3xl sm:text-4xl">
-              Tell us what you need, in USD.
+              Tell us what you need.
             </h2>
           </div>
           <div className="flex flex-wrap gap-3">

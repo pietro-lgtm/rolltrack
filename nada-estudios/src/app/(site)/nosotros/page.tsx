@@ -12,7 +12,7 @@ export const revalidate = 300;
 export const metadata: Metadata = {
   title: "Nosotros",
   description:
-    "NADA Estudios es el estudio de trabajo para marcas de No Pasa Nada. Producción de nivel internacional, precios publicados, tres ciudades.",
+    "NADA Estudios es el estudio de trabajo para marcas de No Pasa Nada. Producción de nivel internacional, respuesta rápida, tres ciudades.",
 };
 
 const NUMBERS = [
@@ -62,7 +62,7 @@ export default async function NosotrosPage() {
         </Reveal>
         <Reveal delay={0.2}>
           <p className="label-mono mt-8 text-mid">
-            Producción nivel internacional — precios publicados — tres ciudades
+            Producción nivel internacional — respuesta rápida — tres ciudades
           </p>
         </Reveal>
       </section>

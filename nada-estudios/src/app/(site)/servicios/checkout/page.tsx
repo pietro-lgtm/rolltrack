@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/components/cart/CartProvider";
-import { formatUsd } from "@/data/services";
 import { site } from "@/config/site";
 import { Reveal } from "@/components/site/Reveal";
 
@@ -20,7 +19,7 @@ type ContactForm = {
 const EMPTY_FORM: ContactForm = { name: "", company: "", email: "", phone: "", notes: "" };
 
 export default function CheckoutPage() {
-  const { items, subtotal, hasQuoteItems, setQty, remove, clear } = useCart();
+  const { items, setQty, remove, clear } = useCart();
   const [status, setStatus] = useState<Status>("idle");
   const [errorMsg, setErrorMsg] = useState("");
   const [form, setForm] = useState<ContactForm>(EMPTY_FORM);
@@ -120,10 +119,7 @@ export default function CheckoutPage() {
                   key={item.id}
                   className="flex flex-wrap items-center justify-between gap-3 p-4"
                 >
-                  <div>
-                    <p className="label-mono">{item.name}</p>
-                    <p className="label-mono text-mid">{item.priceLabel}</p>
-                  </div>
+                  <p className="label-mono">{item.name}</p>
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
@@ -153,19 +149,9 @@ export default function CheckoutPage() {
                 </li>
               ))}
             </ul>
-
-            <div className="leader mb-2 text-lg">
-              <span className="leader-name">Subtotal</span>
-              <span className="leader-price">
-                {formatUsd(subtotal)}
-                {hasQuoteItems ? "+" : ""}
-              </span>
-            </div>
-            {hasQuoteItems && (
-              <p className="label-mono text-mid">
-                Si incluye ítems por cotización te confirmamos precio antes de facturar.
-              </p>
-            )}
+            <p className="label-mono text-mid">
+              Revisamos tu selección y te escribimos con una propuesta a tu medida.
+            </p>
           </div>
         </Reveal>
 

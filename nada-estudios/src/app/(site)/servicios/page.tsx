@@ -6,10 +6,14 @@ import { AddOnsSection } from "@/components/servicios/AddOnsSection";
 import { ServiciosPageShell } from "@/components/servicios/ServiciosPageShell";
 
 export const metadata: Metadata = {
-  title: "Servicios y precios",
+  title: "Servicios",
   description:
-    "Retainers mensuales desde $2,200 y add-ons desde $80 — precios publicados, sin llamadas misteriosas. Video, foto, edición y cobertura de eventos en San José, CDMX y Nueva York.",
+    "Retainers mensuales y add-ons de video, foto, edición y cobertura de eventos en San José, CDMX y Nueva York. Contanos qué necesitás y te armamos una propuesta.",
 };
+
+// Contract terms without a dollar figure attached — anything price-specific
+// (revision overage fees, etc.) lives in the proposal, not the public page.
+const publicTerms = terms.filter((t) => !t.includes("$"));
 
 export default function ServiciosPage() {
   return (
@@ -17,16 +21,15 @@ export default function ServiciosPage() {
       {/* Hero */}
       <section className="mx-auto max-w-7xl px-4 pt-16 pb-12 sm:px-6 sm:pt-24 sm:pb-16">
         <Reveal>
-          <p className="label-mono mb-4 text-mid">servicios · rate card</p>
+          <p className="label-mono mb-4 text-mid">servicios</p>
           <h1 className="display mb-6 text-5xl sm:text-7xl">
-            Precios publicados.
+            Elegí tu paquete.
             <br />
-            Como debería ser.
+            Armamos la propuesta.
           </h1>
           <p className="label-mono max-w-xl text-mid">
-            Ninguna otra productora en Costa Rica o México te muestra precios reales.
-            Nosotros sí — retainers desde números reales, add-ons a precio fijo. Nada
-            de formulario de &ldquo;cotizar&rdquo; a ciegas.
+            Contanos qué necesitás y te armamos una propuesta a tu medida — sin
+            llamada de descubrimiento, sin vueltas.
           </p>
         </Reveal>
       </section>
@@ -68,7 +71,7 @@ export default function ServiciosPage() {
           <div className="border-2 border-ink bg-smoke p-6 sm:p-8">
             <p className="label-mono mb-4">Condiciones</p>
             <ul className="space-y-2">
-              {terms.map((term) => (
+              {publicTerms.map((term) => (
                 <li key={term} className="label-mono text-mid">
                   — {term}
                 </li>

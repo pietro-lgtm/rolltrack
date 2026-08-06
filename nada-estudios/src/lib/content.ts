@@ -182,7 +182,7 @@ export const defaultContent: SiteContent = {
       slug: "contenido-mensual",
       headline: "Tu marca necesita contenido todos los días. Nosotros lo producimos.",
       subhead:
-        "Paquetes mensuales de video, foto y diseño desde $2,200/mes. Producción del nivel de Heineken y Banco Promerica, con precios publicados.",
+        "Paquetes mensuales de video, foto y diseño. Producción del nivel de Heineken y Banco Promerica, con propuesta a tu medida.",
       body: "Contanos qué necesitás y te decimos exactamente cuál paquete te sirve — en 2 minutos, sin llamadas de ventas.",
       proof: ["Heineken", "Dos Pinos", "Banco Promerica", "Universal"],
       ctaLabel: "Ver mi paquete ideal",
