@@ -51,21 +51,7 @@ export default function ServiciosPage() {
         </div>
       </section>
 
-      {/* Add-ons */}
-      <section className="mx-auto max-w-4xl px-4 py-12 sm:px-6" id="addons">
-        <Reveal>
-          <p className="label-mono mb-2">Add-ons</p>
-          <p className="label-mono mb-8 text-mid">
-            Servicios individuales, sin contrato. Se pagan una vez o por mes según
-            corresponda.
-          </p>
-        </Reveal>
-        <Reveal delay={0.05}>
-          <AddOnsSection />
-        </Reveal>
-      </section>
-
-      {/* Terms */}
+      {/* Terms — right after the packages they govern, before add-ons */}
       <section className="mx-auto max-w-4xl px-4 py-12 sm:px-6">
         <Reveal>
           <div className="border-2 border-ink bg-smoke p-6 sm:p-8">
@@ -78,6 +64,20 @@ export default function ServiciosPage() {
               ))}
             </ul>
           </div>
+        </Reveal>
+      </section>
+
+      {/* Add-ons */}
+      <section className="mx-auto max-w-4xl px-4 py-12 sm:px-6" id="addons">
+        <Reveal>
+          <p className="label-mono mb-2">Add-ons</p>
+          <p className="label-mono mb-8 text-mid">
+            Servicios individuales, sin contrato. Se pagan una vez o por mes según
+            corresponda.
+          </p>
+        </Reveal>
+        <Reveal delay={0.05}>
+          <AddOnsSection />
         </Reveal>
       </section>
     </ServiciosPageShell>

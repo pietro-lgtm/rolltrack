@@ -7,6 +7,7 @@ import { ContactStep, type ContactValue } from "./ContactStep";
 import { ResultScreen } from "./ResultScreen";
 import { QUESTIONS, TOTAL_STEPS } from "./questions";
 import { qualify, parseAnswers, type Answers, type Recommendation } from "./scoring";
+import { saveContact } from "@/lib/savedContact";
 import styles from "./empezar.module.css";
 
 type AnswersState = Partial<Record<keyof Answers, string>>;
@@ -93,6 +94,7 @@ export function Questionnaire({ src }: { src: string | null }) {
     const { recommendation: rec } = qualify(parsed);
     setContact(value);
     setRecommendation(rec);
+    saveContact(value);
     setStep(totalQuestions + 1);
     setAnimKey((k) => k + 1);
 

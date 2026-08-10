@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getContent } from "@/lib/content";
+import { getContent, publishedPortfolio } from "@/lib/content";
 import { Reveal } from "@/components/site/Reveal";
 import { PortfolioCard } from "@/components/trabajo/PortfolioCard";
 
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 export default async function TrabajoPage() {
   const content = await getContent();
-  const items = [...content.portfolio].sort((a, b) => a.order - b.order);
+  const items = publishedPortfolio(content.portfolio);
 
   // Alternate typographic treatments; reserve accent (yellow) for exactly one
   // card, and only on an item without a photo.
@@ -40,17 +40,30 @@ export default async function TrabajoPage() {
           <p className="label-mono mt-4 text-mid">
             ({items.length} proyecto{items.length === 1 ? "" : "s"})
           </p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Link href="/trabajo" className="label-mono border-2 border-ink bg-ink px-4 py-2 text-paper">
+              Todo
+            </Link>
+            <Link
+              href="/empresarial"
+              className="label-mono border-2 border-ink px-4 py-2 transition-colors hover:bg-ink hover:text-paper"
+            >
+              Empresarial
+            </Link>
+            <Link
+              href="/restaurantes"
+              className="label-mono border-2 border-ink px-4 py-2 transition-colors hover:bg-ink hover:text-paper"
+            >
+              Restaurantes
+            </Link>
+          </div>
         </Reveal>
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 lg:gap-6">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 sm:gap-6">
           {cards.map(({ item, treatment }, i) => (
-            <Reveal
-              key={item.slug}
-              delay={(i % 6) * 0.06}
-              className={item.featured ? "sm:col-span-2 lg:col-span-2" : ""}
-            >
+            <Reveal key={item.slug} delay={(i % 6) * 0.06}>
               <PortfolioCard item={item} index={i} treatment={treatment} />
             </Reveal>
           ))}

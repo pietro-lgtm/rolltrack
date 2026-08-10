@@ -41,7 +41,7 @@ export function PortfolioCard({
           className="object-cover transition-transform duration-300 group-hover:scale-105"
         />
         <div className="absolute inset-0 flex flex-col justify-end bg-ink/0 p-6 transition-colors duration-200 group-hover:bg-ink/85">
-          <p className="display translate-y-2 text-3xl text-paper opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100 sm:text-4xl">
+          <p className="display translate-y-2 text-2xl text-paper opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100 sm:text-3xl">
             {item.client}
           </p>
           <p className="label-mono mt-2 translate-y-2 text-paper/0 opacity-0 transition-all delay-75 duration-200 group-hover:translate-y-0 group-hover:text-paper/70 group-hover:opacity-100">
@@ -55,7 +55,7 @@ export function PortfolioCard({
   return (
     <Link
       href={`/trabajo/${item.slug}`}
-      className={`group flex h-full min-h-[300px] flex-col justify-between border-2 border-ink p-6 transition-colors sm:p-8 ${TREATMENT_CLASSES[treatment]}`}
+      className={`group flex h-full min-h-[220px] flex-col justify-between border-2 border-ink p-6 transition-colors sm:p-8 ${TREATMENT_CLASSES[treatment]}`}
     >
       <div className="label-mono flex items-start justify-between gap-4">
         <span className={TREATMENT_MUTED[treatment]}>
@@ -64,7 +64,7 @@ export function PortfolioCard({
         <span className={TREATMENT_MUTED[treatment]}>{item.year}</span>
       </div>
 
-      <p className="display text-4xl leading-[0.95] sm:text-5xl lg:text-6xl">
+      <p className="display text-3xl leading-[0.95] sm:text-4xl">
         {item.client}
       </p>
 

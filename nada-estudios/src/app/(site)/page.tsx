@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { clients, site } from "@/config/site";
 import { packages } from "@/data/services";
-import { getContent } from "@/lib/content";
+import { getContent, publishedPortfolio } from "@/lib/content";
 import { Marquee } from "@/components/site/Marquee";
 import { Reveal } from "@/components/site/Reveal";
 import { WorkCarousel } from "@/components/home/WorkCarousel";
@@ -18,7 +18,8 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const { portfolio } = await getContent();
+  const content = await getContent();
+  const portfolio = publishedPortfolio(content.portfolio);
   const featured = portfolio
     .filter((p) => p.featured)
     .sort((a, b) => a.order - b.order)
@@ -66,6 +67,21 @@ export default async function Home() {
         <div className="rise mx-auto mt-12 w-full max-w-7xl sm:mt-16" style={{ "--rise-delay": "0.3s" } as React.CSSProperties}>
           <p className="label-mono text-mid">scroll ↓</p>
         </div>
+      </section>
+
+      {/* ---- Reel ------------------------------------------------------- */}
+      <section className="mx-auto max-w-7xl px-4 pb-14 sm:px-6 sm:pb-20">
+        <Reveal>
+          <div className="aspect-video w-full border-2 border-ink bg-ink">
+            <iframe
+              src="https://player.vimeo.com/video/1217062866"
+              title="NADA Estudios — reel"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="h-full w-full"
+            />
+          </div>
+        </Reveal>
       </section>
 
       {/* ---- Client marquee --------------------------------------------- */}

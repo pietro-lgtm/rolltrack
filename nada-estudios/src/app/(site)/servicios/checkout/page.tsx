@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/components/cart/CartProvider";
 import { site } from "@/config/site";
 import { Reveal } from "@/components/site/Reveal";
+import { loadSavedContact, saveContact } from "@/lib/savedContact";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -27,6 +28,18 @@ export default function CheckoutPage() {
   function updateField<K extends keyof ContactForm>(key: K, value: ContactForm[K]) {
     setForm((f) => ({ ...f, [key]: value }));
   }
+
+  useEffect(() => {
+    const saved = loadSavedContact();
+    if (!saved) return;
+    setForm((f) => ({
+      name: f.name || saved.name,
+      company: f.company || saved.company,
+      email: f.email || saved.email,
+      phone: f.phone || saved.phone,
+      notes: f.notes,
+    }));
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -55,6 +68,7 @@ export default function CheckoutPage() {
       }
 
       setStatus("success");
+      saveContact({ name: form.name, company: form.company, email: form.email, phone: form.phone });
       clear();
     } catch {
       setErrorMsg("Algo falló. Intentá de nuevo o escribinos por WhatsApp.");
@@ -117,10 +131,10 @@ export default function CheckoutPage() {
               {items.map((item) => (
                 <li
                   key={item.id}
-                  className="flex flex-wrap items-center justify-between gap-3 p-4"
+                  className="grid grid-cols-[1fr_auto] items-center gap-3 p-4"
                 >
                   <p className="label-mono">{item.name}</p>
-                  <div className="flex items-center gap-2">
+                  <div className="flex shrink-0 items-center gap-2 whitespace-nowrap">
                     <button
                       type="button"
                       onClick={() => setQty(item.id, item.qty - 1)}

@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { defaultContent, getContent } from "@/lib/content";
+import { defaultContent, getContent, publishedPortfolio } from "@/lib/content";
 import { Reveal } from "@/components/site/Reveal";
 import { resolveEmbed } from "@/components/trabajo/embed";
+import { verticals } from "@/data/verticals";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -31,7 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function CasoPage({ params }: Props) {
   const { slug } = await params;
   const content = await getContent();
-  const items = [...content.portfolio].sort((a, b) => a.order - b.order);
+  const items = publishedPortfolio(content.portfolio);
   const index = items.findIndex((p) => p.slug === slug);
   if (index === -1) notFound();
 
@@ -43,6 +44,9 @@ export default async function CasoPage({ params }: Props) {
   // for the hero and link out to the original post for those.
   const inlineEmbed = embed && embed.kind !== "external" ? embed : null;
   const externalVideoUrl = embed?.kind === "external" ? embed.src : null;
+  const matchedVertical = Object.values(verticals).find(
+    (v) => v.caseSlug.toLowerCase() === item.slug.toLowerCase(),
+  );
 
   return (
     <article>
@@ -65,6 +69,14 @@ export default async function CasoPage({ params }: Props) {
             <span aria-hidden>—</span>
             <span>{item.year}</span>
           </div>
+          {matchedVertical && (
+            <Link
+              href={`/${matchedVertical.slug}`}
+              className="label-mono link-under mt-6 inline-block"
+            >
+              Ver {matchedVertical.eyebrow.toLowerCase()} →
+            </Link>
+          )}
         </Reveal>
       </section>
 

@@ -52,6 +52,8 @@ export async function GET() {
   lines.push(`- Home: ${site.url}/`);
   lines.push(`- Work / portfolio: ${site.url}/trabajo`);
   lines.push(`- Services: ${site.url}/servicios`);
+  lines.push(`- Corporate content (vertical): ${site.url}/empresarial`);
+  lines.push(`- Restaurant content (vertical): ${site.url}/restaurantes`);
   lines.push(`- Start a project: ${site.url}/empezar`);
   lines.push(`- About: ${site.url}/nosotros`);
   lines.push(`- FAQ: ${site.url}/faq`);

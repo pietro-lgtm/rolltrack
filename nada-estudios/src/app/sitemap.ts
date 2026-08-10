@@ -1,10 +1,11 @@
 import type { MetadataRoute } from "next";
 import { site } from "@/config/site";
-import { defaultContent } from "@/lib/content";
+import { getContent, publishedPortfolio } from "@/lib/content";
 
 const CIUDADES = ["san-jose", "cdmx", "nueva-york"] as const;
+const VERTICALES = ["empresarial", "restaurantes"] as const;
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
   const staticRoutes: MetadataRoute.Sitemap = [
@@ -25,11 +26,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  const portfolioRoutes: MetadataRoute.Sitemap = defaultContent.portfolio.map((item) => ({
+  // Live portfolio (admin-managed), not the code defaults — the sitemap must
+  // never advertise slugs that 404 after content edits.
+  const { portfolio } = await getContent();
+  const portfolioRoutes: MetadataRoute.Sitemap = publishedPortfolio(portfolio).map((item) => ({
     url: `${site.url}/trabajo/${item.slug}`,
     lastModified: now,
     changeFrequency: "monthly",
     priority: 0.6,
+  }));
+
+  const verticalRoutes: MetadataRoute.Sitemap = VERTICALES.map((v) => ({
+    url: `${site.url}/${v}`,
+    lastModified: now,
+    changeFrequency: "monthly",
+    priority: 0.8,
   }));
 
   const produccionRoutes: MetadataRoute.Sitemap = CIUDADES.map((ciudad) => ({
@@ -39,5 +50,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  return [...staticRoutes, ...portfolioRoutes, ...produccionRoutes];
+  return [...staticRoutes, ...verticalRoutes, ...portfolioRoutes, ...produccionRoutes];
 }

@@ -221,6 +221,25 @@ export const defaultContent: SiteContent = {
   },
 };
 
+/**
+ * Portfolio entries safe to render publicly: complete (non-empty slug and
+ * client) and slug-unique (first occurrence wins). Admin drafts — entries
+ * saved mid-edit with missing fields or a duplicated slug — stay reachable
+ * in the admin panel but never produce blank cards or colliding links on
+ * the public site.
+ */
+export function publishedPortfolio(portfolio: PortfolioItem[]): PortfolioItem[] {
+  const seen = new Set<string>();
+  return [...portfolio]
+    .sort((a, b) => a.order - b.order)
+    .filter((p) => {
+      const slug = p.slug.trim();
+      if (!slug || !p.client.trim() || seen.has(slug)) return false;
+      seen.add(slug);
+      return true;
+    });
+}
+
 // ---- Read / write ----------------------------------------------------------
 
 /** Merged content: Blob overrides win, defaults fill the gaps. */

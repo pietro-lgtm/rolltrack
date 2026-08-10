@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { loadSavedContact } from "@/lib/savedContact";
 
 export type ContactValue = { name: string; company: string; email: string; phone: string };
 
@@ -17,6 +18,22 @@ export function ContactStep({
   onSubmit: (value: ContactValue) => void;
 }) {
   const [value, setValue] = useState(initial);
+
+  // Prefill from a previously saved contact (checkout, another vertical intake,
+  // an earlier quiz run). Runs after mount only — this component is server-
+  // rendered first, so reading localStorage in the useState initializer would
+  // cause a hydration mismatch. Merges only into fields still empty so it never
+  // clobbers something the user already typed on this screen.
+  useEffect(() => {
+    const saved = loadSavedContact();
+    if (!saved) return;
+    setValue((prev) => ({
+      name: prev.name || saved.name,
+      company: prev.company || saved.company,
+      email: prev.email || saved.email,
+      phone: prev.phone || saved.phone,
+    }));
+  }, []);
 
   function update<K extends keyof ContactValue>(key: K, v: string) {
     setValue((prev) => ({ ...prev, [key]: v }));
