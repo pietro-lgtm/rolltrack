@@ -15,5 +15,47 @@
       "port": 5173,
       "cwd": "client"
     }
+    ,{
+      "name": "yt-packager",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["app.py"],
+      "port": 5050,
+      "cwd": "youtube-podcast-tool"
+    },
+    {
+      "name": "npn-dashboard",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["vite"],
+      "port": 5174,
+      "cwd": "content-dashboard/client"
+    },
+    {
+      "name": "nada-sales-server",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["tsx", "src/index.ts"],
+      "port": 3001,
+      "cwd": "nada-sales/server"
+    },
+    {
+      "name": "nada-sales-client",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["vite"],
+      "port": 5175,
+      "cwd": "nada-sales/client"
+    },
+    {
+      "name": "nocorronada",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--", "-p", "3020"],
+      "port": 3020,
+      "cwd": "nocorronada"
+    },
+    {
+      "name": "san-jose-map",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--", "-p", "3002"],
+      "port": 3002,
+      "cwd": "../san-jose-map"
+    }
   ]
 }

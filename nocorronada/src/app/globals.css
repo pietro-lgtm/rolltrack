@@ -1,0 +1,98 @@
+@import "tailwindcss";
+
+:root {
+  --black: #0a0a0a;
+  --asphalt: #141414;
+  --ink: #e7e7e2;
+  --muted: #8f8f88;
+  --volt: #c6ff00;
+  --line: rgba(231, 231, 226, 0.14);
+}
+
+@theme inline {
+  --color-black: var(--black);
+  --color-asphalt: var(--asphalt);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-volt: var(--volt);
+  --color-line: var(--line);
+  --font-sans: var(--font-archivo), system-ui, sans-serif;
+  --font-mono: var(--font-space-mono), ui-monospace, monospace;
+}
+
+body {
+  background: var(--black);
+  color: var(--ink);
+  font-family: var(--font-archivo), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--volt);
+  color: var(--black);
+}
+
+/* Oversized expanded-caps display type (Archivo variable wdth axis) */
+.display {
+  font-stretch: 125%;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 0.92;
+}
+
+/* Mono micro-label: dates, distances, bib numbers, nav */
+.label-mono {
+  font-family: var(--font-space-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+}
+
+/* Full-bleed marquee ticker */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee var(--marquee-duration, 28s) linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
+
+/* Film-grain overlay, sits on top of everything, never intercepts clicks */
+.grain::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Checkered strip — BUNKER GP / finish-line motif */
+.checker {
+  height: 12px;
+  background: repeating-conic-gradient(var(--ink) 0% 25%, var(--black) 0% 50%) 0 0 /
+    24px 24px;
+}
+.checker-volt {
+  height: 12px;
+  background: repeating-conic-gradient(var(--volt) 0% 25%, var(--black) 0% 50%) 0 0 /
+    24px 24px;
+}
+
+/* Hairline divider */
+.hairline {
+  border-color: var(--line);
+}
