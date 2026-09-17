@@ -91,6 +91,26 @@ export type Checkin = {
   firstTime: boolean;
 };
 
+export type RaceTeamMember = {
+  nombre: string;
+  correo: string;
+  cedula: string;
+  /** Average pace, min/km, as "5:30". */
+  pace: string;
+};
+
+export type RaceTeam = {
+  id: string;
+  teamName: string;
+  /** First member is the captain — invites go to this address. */
+  captainEmail: string;
+  members: RaceTeamMember[];
+  /** Seconds between the fastest and slowest member, for the variety nudge. */
+  paceSpreadSeconds: number;
+  submittedAt: string;
+  status: "pending" | "invited";
+};
+
 export type ClubApplication = {
   nombre: string;
   apellido: string;
@@ -110,3 +130,4 @@ export const OVERRIDES_DOC = "data/overrides.json";
 export const MEMBERS_DOC = "data/members.json";
 export const CHECKIN_SESSIONS_DOC = "data/checkin-sessions.json";
 export const CHECKINS_DOC = "data/checkins.json";
+export const RACE_TEAMS_DOC = "data/race-teams.json";

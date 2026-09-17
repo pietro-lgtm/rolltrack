@@ -19,6 +19,8 @@ export type ClubEvent = {
   zone: Zone;
   /** ISO date-time in Costa Rica time, e.g. "2026-08-15T18:00:00-06:00". Omit if TBA. */
   dateISO?: string;
+  /** True when the day is confirmed but the start time isn't — hides the hour. */
+  timeTBA?: boolean;
   /** Human-readable recurrence for weekly runs, e.g. "Todos los domingos · 8:00 AM". */
   recurrence?: string;
   location: {
@@ -122,15 +124,17 @@ export const events: ClubEvent[] = [
     title: "BUNKER GP",
     type: "race",
     zone: "san-jose",
-    // TODO: set real date when confirmed, e.g. "2026-09-12T19:00:00-06:00"
-    dateISO: undefined,
+    // Day confirmed (first Saturday of November). Hour still TBA — see timeTBA.
+    dateISO: "2026-11-07T07:00:00-06:00",
+    timeTBA: true,
     location: {
       name: "Parqueo subterráneo · ubicación por anunciar",
       mapsUrl: "",
     },
     description:
-      "La primera carrera de NO CORRO NADA: un circuito dentro de un parqueo subterráneo. Vueltas, rampas, neón y cemento. Nuestro primer evento pagado — cupos limitados. Los miembros del club se enteran primero.",
-    status: "announced",
+      "La primera carrera de NO CORRO NADA: un circuito dentro de un parqueo subterráneo. Vueltas, rampas, neón y cemento. Se corre en equipos de 6 — inscribí al tuyo y esperá la invitación.",
+    status: "upcoming",
+    signupUrl: "/bunker-gp/inscripcion",
   },
 ];
 

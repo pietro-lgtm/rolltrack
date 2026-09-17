@@ -47,6 +47,7 @@ function cleanEvent(ev: ClubEvent, slug: string): ClubEvent {
     status: ev.status,
   };
   if (ev.dateISO) out.dateISO = ev.dateISO;
+  if (ev.timeTBA) out.timeTBA = true;
   if (ev.recurrence?.trim()) out.recurrence = ev.recurrence.trim();
   if (ev.location.mapsUrl?.trim()) out.location.mapsUrl = ev.location.mapsUrl.trim();
   if (typeof ev.distanceKm === "number") out.distanceKm = ev.distanceKm;

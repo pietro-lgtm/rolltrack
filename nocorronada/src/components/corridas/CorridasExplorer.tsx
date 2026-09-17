@@ -44,6 +44,16 @@ function formatEventDate(dateISO: string): string {
   return `${date} · ${time}`;
 }
 
+/** Weekday/day/month only — for events whose day is confirmed but hour isn't. */
+function formatEventDay(dateISO: string): string {
+  return new Intl.DateTimeFormat("es-CR", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    timeZone: "America/Costa_Rica",
+  }).format(new Date(dateISO));
+}
+
 /** Status pill wording for the weekly runs. */
 function weeklyStatus(status: EventStatus): { label: string; live: boolean } {
   switch (status) {
@@ -241,7 +251,15 @@ function RaceCard({ event, round }: { event: ClubEvent; round: number }) {
       <h3 className="display mt-5 text-3xl sm:text-4xl">{event.title}</h3>
 
       <p className="label-mono mt-4 text-muted">
-        {event.dateISO ? formatEventDate(event.dateISO) : "Fecha por anunciar"}
+        {event.dateISO ? (
+          event.timeTBA ? (
+            <>{formatEventDay(event.dateISO)} · Hora por confirmar</>
+          ) : (
+            formatEventDate(event.dateISO)
+          )
+        ) : (
+          "Fecha por anunciar"
+        )}
       </p>
       <p className="label-mono mt-1 text-muted">{event.location.name}</p>
       <NavLinks location={event.location} />

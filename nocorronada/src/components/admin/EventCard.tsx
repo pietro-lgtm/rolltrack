@@ -292,6 +292,18 @@ export function EventCard({
                 }
               />
               <span className={labelCls}>vacío = por anunciar</span>
+              <label className="mt-1 flex cursor-pointer items-start gap-3">
+                <input
+                  type="checkbox"
+                  checked={Boolean(ev.timeTBA)}
+                  onChange={(e) => onChange({ timeTBA: e.target.checked })}
+                  className="mt-0.5 h-4 w-4 shrink-0 accent-volt"
+                />
+                <span className="text-sm text-muted">
+                  <span className="label-mono text-ink">Hora por confirmar</span>
+                  {" — "}marcado = el sitio muestra solo la fecha.
+                </span>
+              </label>
             </div>
 
             <div className={`${fieldWrap} sm:col-span-2`}>

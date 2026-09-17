@@ -14,28 +14,38 @@ export const metadata: Metadata = {
 
 const event = getEvent("bunker-gp");
 
-function formatDate(iso?: string): string | null {
+/** "Sábado 7 de noviembre" — day/month, no year, no hour. Costa Rica time. */
+function formatDayLabel(iso?: string): string | null {
   if (!iso) return null;
-  return new Intl.DateTimeFormat("es-CR", {
-    day: "2-digit",
+  const raw = new Intl.DateTimeFormat("es-CR", {
+    weekday: "long",
+    day: "numeric",
     month: "long",
-    year: "numeric",
+    timeZone: "America/Costa_Rica",
   }).format(new Date(iso));
+  const clean = raw.replace(",", "");
+  return clean.charAt(0).toUpperCase() + clean.slice(1);
 }
 
-const facts: { bay: string; k: string; v: string }[] = [
+const facts: { bay: string; k: string; v: string; sub?: string }[] = [
   {
     bay: "B01",
     k: "Ubicación",
     v: event?.location.name ?? "Parqueo subterráneo · por anunciar",
   },
-  { bay: "B02", k: "Fecha", v: formatDate(event?.dateISO) ?? "Por anunciar" },
+  {
+    bay: "B02",
+    k: "Fecha",
+    v: formatDayLabel(event?.dateISO) ?? "Por anunciar",
+    ...(event?.timeTBA ? { sub: "Hora por confirmar" } : {}),
+  },
   {
     bay: "B03",
     k: "Distancia",
     v: event?.distanceKm ? `${event.distanceKm} K` : "Vueltas al circuito",
   },
   { bay: "B04", k: "Cupos", v: "Limitados" },
+  { bay: "B05", k: "Formato", v: "Equipos de 6" },
 ];
 
 const specChips = [
@@ -47,11 +57,11 @@ const specChips = [
 const info: { q: string; a: string }[] = [
   {
     q: "Categorías",
-    a: "General para arrancar. Categorías por edad y por equipos: por definir. Si querés que haya categoría de disfraces, insistí en el grupo.",
+    a: "General para arrancar. Lo que buscamos son equipos de ritmos mezclados: metelé gente rápida y gente que recién empieza, no seis copias del mismo corredor. Categorías por edad y por equipo: por definir.",
   },
   {
     q: "Inscripción",
-    a: "El primer evento pagado del club. Precio y fecha de apertura: por anunciar. Los miembros del club tienen prioridad de cupo — otra razón para unirte antes.",
+    a: "Equipos de exactamente 6 corredores — cada uno con nombre, correo, cédula y ritmo promedio. Se inscriben acá mismo, en el formulario del equipo. Las invitaciones se mandan por correo al capitán o capitana, y solo cuando el equipo está completo. Precio: por anunciar.",
   },
   {
     q: "Qué incluye",
@@ -93,8 +103,8 @@ export default function BunkerGpPage() {
           </p>
 
           <div className="mt-8">
-            <span className="label-mono inline-block border hairline px-3 py-2 text-muted">
-              Aún no anunciado · estás temprano
+            <span className="label-mono inline-block border border-volt px-3 py-2 text-volt">
+              Inscripciones abiertas
             </span>
           </div>
         </div>
@@ -127,6 +137,9 @@ export default function BunkerGpPage() {
                 <p className="display mt-6 text-xl leading-tight sm:text-2xl">
                   {f.v}
                 </p>
+                {f.sub && (
+                  <p className="label-mono mt-2 text-muted">{f.sub}</p>
+                )}
               </div>
             ))}
           </div>
@@ -214,7 +227,8 @@ export default function BunkerGpPage() {
             de WhatsApp. El parqueo es chico y la fila, larga.
           </p>
           <div className="mt-10 flex flex-wrap gap-4">
-            <VoltLink href="/unite?source=bunker-gp">Avisame primero</VoltLink>
+            <VoltLink href="/bunker-gp/inscripcion">Inscribir mi equipo</VoltLink>
+            <GhostLink href="/unite?source=bunker-gp">Avisame de todo</GhostLink>
             <GhostLink href="/corridas">Ver todas las corridas</GhostLink>
           </div>
         </div>

@@ -55,13 +55,20 @@ export function OrgJsonLd() {
  */
 export function EventJsonLd({ event }: { event: ClubEvent }) {
   if (!event.dateISO) return null;
+  // Day confirmed but hour TBA: emit a date-only startDate (no false-precision
+  // timestamp), computed in Costa Rica time so the calendar day is never off.
+  const startDate = event.timeTBA
+    ? new Intl.DateTimeFormat("en-CA", { timeZone: "America/Costa_Rica" }).format(
+        new Date(event.dateISO),
+      )
+    : event.dateISO;
   return (
     <JsonLd
       data={{
         "@context": "https://schema.org",
         "@type": "SportsEvent",
         name: `${event.title} — ${site.name}`,
-        startDate: event.dateISO,
+        startDate,
         eventStatus: "https://schema.org/EventScheduled",
         eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
         description: event.description,

@@ -70,6 +70,28 @@ export const site = {
     kitFormId: "", // TODO: Kit form id (recommended, enables double opt-in)
   },
 
+  /**
+   * BUNKER GP team registration.
+   * Teams are exactly 6 runners. Submissions always save to the site's own
+   * storage (visible in /admin → Carrera); when googleFormId is filled in they
+   * are ALSO pushed into the Google Form so the data lands in Drive/Sheets.
+   * Run scripts/create-bunker-gp-form.gs to generate that form + its entry IDs.
+   */
+  race: {
+    name: "BUNKER GP",
+    teamSize: 6,
+    dateLabel: "Sábado 7 de noviembre, 2026",
+    googleFormId: "", // TODO: paste the form id printed by the Apps Script
+    googleFormEntries: {
+      teamName: "",
+      // One entry id per runner field, in order 1..6.
+      nombre: ["", "", "", "", "", ""],
+      correo: ["", "", "", "", "", ""],
+      cedula: ["", "", "", "", "", ""],
+      pace: ["", "", "", "", "", ""],
+    },
+  },
+
   club: {
     // "Abrí tu club" applications: stored in Blob (visible in /admin) and,
     // optionally, forwarded to a Google Form — create one and fill these in

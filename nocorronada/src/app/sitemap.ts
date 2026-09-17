@@ -17,6 +17,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/corridas", changeFrequency: "weekly", priority: 0.9 },
     { path: "/unite", changeFrequency: "monthly", priority: 0.9 },
     { path: "/bunker-gp", changeFrequency: "monthly", priority: 0.8 },
+    { path: "/bunker-gp/inscripcion", changeFrequency: "weekly", priority: 0.9 },
     { path: "/media", changeFrequency: "weekly", priority: 0.7 },
     { path: "/faq", changeFrequency: "monthly", priority: 0.6 },
   ];

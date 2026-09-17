@@ -33,8 +33,14 @@ export const faqs: Faq[] = [
   },
   {
     q: "¿Qué es el BUNKER GP?",
-    a: "Nuestra primera carrera: un circuito dentro de un parqueo subterráneo. Es el primer evento pagado del club, con cupos limitados. La fecha y las inscripciones se anuncian primero al newsletter y al grupo de WhatsApp.",
+    a: "Nuestra primera carrera: un circuito dentro de un parqueo subterráneo. Se corre el sábado 7 de noviembre de 2026, en equipos de 6 personas. Cupos limitados — la hora exacta y la ubicación se anuncian pronto.",
     link: { href: "/bunker-gp", label: "Conocé el BUNKER GP" },
+    category: "bunker-gp",
+  },
+  {
+    q: "¿Cómo inscribo mi equipo al BUNKER GP?",
+    a: "Se corre en equipos de 6. Necesitás el nombre, correo, cédula y ritmo promedio de las 6 personas, y los inscribís de una sola vez en la página de inscripción. Buscamos equipos con ritmos variados — mezclá gente rápida con gente que no corre nada. Las invitaciones se envían por correo al capitán o capitana del equipo, y solo a equipos completos.",
+    link: { href: "/bunker-gp/inscripcion", label: "Inscribir mi equipo" },
     category: "bunker-gp",
   },
   {

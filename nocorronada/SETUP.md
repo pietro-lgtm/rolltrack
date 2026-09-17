@@ -92,6 +92,22 @@ Research conclusion (July 2026):
 - **Merch**: Gumroad pays out to CR banks (simplest, ~10% cut). Shopify works but needs a
   local gateway (Shopify Payments unavailable in CR) + ~2% surcharge.
 
+## 8a. BUNKER GP — inscripción de equipos
+
+- Página pública: `/bunker-gp/inscripcion` (equipos de 6: nombre, correo, cédula y
+  ritmo promedio por persona). Carrera: **sábado 7 de noviembre 2026**, hora y
+  ubicación por confirmar.
+- Los equipos siempre se guardan en el almacenamiento del sitio y aparecen en
+  **/admin → Carrera** (con mezcla de ritmos, CSV y "copiar correos de capitanes"
+  para mandar las invitaciones).
+- **Para que además caigan en un Google Form / Sheet:** abrí
+  [script.google.com](https://script.google.com) → Nuevo proyecto → pegá
+  [scripts/create-bunker-gp-form.gs](scripts/create-bunker-gp-form.gs) → Ejecutar.
+  El script crea el formulario completo (26 campos) + su hoja de respuestas y, en
+  el registro de ejecución, imprime el bloque `race: { … }` listo para pegar en
+  [src/config/site.ts](src/config/site.ts). Mientras `googleFormId` esté vacío no
+  se pierde nada: todo queda en el panel.
+
 ## 8b. Admin panel (nocorronada.com/admin)
 
 - Login: user `pietro` (initial password was set in chat — **change it after first
