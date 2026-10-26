@@ -1,0 +1,29 @@
+{
+  "rights": {
+    "basis": "fair_use",
+    "note": "Short excerpts of crowd footage from the 25 Oct 2026 run-off night, used to report that result, attributed on screen. Sources: youtube.com/watch?v=l9uXeg__BM8, youtube.com/watch?v=asINtZH9vAI."
+  },
+  "layout": "overlay",
+  "credit": "Imágenes: TBD (canal de YouTube)",
+  "audio": "none",
+  "clips": [
+    {"src": "../sources/l9uXeg__BM8.mp4", "in": 0.0, "out": 5.0},
+    {"src": "../sources/asINtZH9vAI.mp4", "in": 0.0, "out": 5.0},
+    {"src": "../sources/l9uXeg__BM8.mp4", "in": 10.0, "out": 15.0},
+    {"src": "../sources/asINtZH9vAI.mp4", "in": 10.0, "out": 15.0},
+    {"src": "../sources/l9uXeg__BM8.mp4", "in": 20.0, "out": 25.0},
+    {"src": "../sources/asINtZH9vAI.mp4", "in": 20.0, "out": 25.0}
+  ],
+  "card": {
+    "kicker": "Brasil",
+    "title": "Lula gana la *segunda vuelta*",
+    "deck": "51,76% frente al 48,24% de Flávio Bolsonaro, con el 99,77% escrutado (TSE).",
+    "start": 0,
+    "end": 9
+  },
+  "beats": [
+    {"text": "Perdió la primera vuelta. *Ganó la segunda.*", "start": 9, "end": 15},
+    {"text": "Cuarto mandato para Lula.", "start": 15, "end": 21},
+    {"text": "Flávio Bolsonaro *no reconoce* el resultado y dice que lo impugnará.", "start": 21, "end": 30}
+  ]
+}

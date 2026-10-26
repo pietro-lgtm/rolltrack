@@ -1,0 +1,83 @@
+name: reel
+
+# Downloads sources and renders reels on a runner with open internet.
+# Trigger: push a job file to reels/jobs/ (any branch), or run manually with a job path.
+# Results (info.json, contact sheets, mp4) are committed back to reels/out/ on the same branch.
+
+on:
+  push:
+    paths:
+      - "reels/jobs/**.json"
+  workflow_dispatch:
+    inputs:
+      job:
+        description: "Job file, e.g. reels/jobs/lula.json"
+        required: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: reel-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # yt-dlp needs a JavaScript runtime for YouTube
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      # Fonts live in reels/fonts; only ffmpeg comes from apt. The mirror once hung 10+ min, hence the limits.
+      - name: Install tools
+        timeout-minutes: 8
+        run: |
+          pip install -q "yt-dlp[default]" pillow opencv-python-headless
+          if ! command -v ffmpeg >/dev/null; then
+            # Runs 2-3 hung silently in apt: fail fast on a held dpkg lock or a dead mirror instead
+            APT="sudo apt-get -o DPkg::Lock::Timeout=60 -o Acquire::Retries=2 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20"
+            timeout 180 $APT install -y --no-install-recommends ffmpeg \
+              || { timeout 180 $APT update && timeout 240 $APT install -y --no-install-recommends ffmpeg; }
+          fi
+          ffmpeg -hide_banner -version | head -1
+
+      - name: Optional YouTube cookies
+        env:
+          YT_COOKIES: ${{ secrets.YT_COOKIES }}
+        if: env.YT_COOKIES != ''
+        run: |
+          printf '%s' "$YT_COOKIES" > "$RUNNER_TEMP/cookies.txt"
+          echo "YT_COOKIES_FILE=$RUNNER_TEMP/cookies.txt" >> "$GITHUB_ENV"
+
+      - name: Run jobs
+        run: |
+          if [ -n "${{ github.event.inputs.job }}" ]; then
+            jobs="${{ github.event.inputs.job }}"
+          else
+            jobs=$(git diff --name-only --diff-filter=AM HEAD~1 HEAD -- 'reels/jobs/*.json')
+          fi
+          for j in $jobs; do
+            echo "::group::$j"
+            python reels/ci_job.py "$j"
+            echo "::endgroup::"
+          done
+
+      - name: Commit results
+        run: |
+          git config user.name "reel-bot"
+          git config user.email "reel-bot@users.noreply.github.com"
+          git add -f reels/out
+          if git diff --cached --quiet; then echo "nothing to commit"; exit 0; fi
+          git commit -m "reel: results for ${GITHUB_SHA::7}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
