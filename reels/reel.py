@@ -191,6 +191,8 @@ def validate(spec):
                       "Newsworthy is not a basis.")
     elif not rights.get("note"):
         errors.append("rights.note: write down what the basis is (who, what licence, which excerpt).")
+    elif rights["basis"] == "fair_use" and "TBD" in (spec.get("credit") or "TBD"):
+        errors.append("fair use needs attribution: set \"credit\" to the source channel(s).")
     if spec["layout"] not in ("overlay", "editorial"):
         errors.append("layout must be 'overlay' or 'editorial'")
     total = 0.0

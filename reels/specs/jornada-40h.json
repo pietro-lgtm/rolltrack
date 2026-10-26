@@ -1,0 +1,29 @@
+{
+  "rights": {
+    "basis": "fair_use",
+    "note": "Short excerpts of crowd footage from the 25 Oct 2026 run-off night, attributed on screen. Sources: youtube.com/watch?v=l9uXeg__BM8, youtube.com/watch?v=asINtZH9vAI. Weak fit: this footage is not of the workweek story."
+  },
+  "layout": "editorial",
+  "headline": "Brasil *reduce* la jornada laboral sin tocar salarios",
+  "credit": "Imágenes: TBD (canal de YouTube)",
+  "audio": "none",
+  "clips": [
+    {"src": "../sources/l9uXeg__BM8.mp4", "in": 0.0, "out": 5.0},
+    {"src": "../sources/asINtZH9vAI.mp4", "in": 0.0, "out": 5.0},
+    {"src": "../sources/l9uXeg__BM8.mp4", "in": 10.0, "out": 15.0},
+    {"src": "../sources/asINtZH9vAI.mp4", "in": 10.0, "out": 15.0},
+    {"src": "../sources/l9uXeg__BM8.mp4", "in": 20.0, "out": 25.0},
+    {"src": "../sources/asINtZH9vAI.mp4", "in": 20.0, "out": 25.0}
+  ],
+  "card": {
+    "title": "Brasil reduce la jornada laboral sin tocar salarios",
+    "deck": "De *44 a 40 horas* semanales.",
+    "start": 0,
+    "end": 8
+  },
+  "beats": [
+    {"text": "Fin de la escala 6x1: *dos días* de descanso pagados.", "start": 8, "end": 15},
+    {"text": "Gradual: 42 horas a los 60 días, *40 horas* un año después.", "start": 15, "end": 22},
+    {"text": "El Senado lo aprobó *75 a 1*.", "start": 22, "end": 30}
+  ]
+}
