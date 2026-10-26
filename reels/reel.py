@@ -51,6 +51,7 @@ BOLD_FONTS = [
     "C:/Windows/Fonts/arialbd.ttf",
     "/usr/share/fonts/truetype/msttcorefonts/Arial_Bold.ttf",
     "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf",  # Arial-metric clone
+    os.path.join(HERE, "fonts", "LiberationSans-Bold.ttf"),
 ]
 REGULAR_FONTS = [
     "/System/Library/Fonts/Supplemental/Arial.ttf",
@@ -58,6 +59,7 @@ REGULAR_FONTS = [
     "C:/Windows/Fonts/arial.ttf",
     "/usr/share/fonts/truetype/msttcorefonts/Arial.ttf",
     "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
+    os.path.join(HERE, "fonts", "LiberationSans-Regular.ttf"),
 ]
 
 

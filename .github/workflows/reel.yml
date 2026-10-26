@@ -19,7 +19,7 @@ permissions:
 
 concurrency:
   group: reel-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   render:
@@ -39,11 +39,14 @@ jobs:
         with:
           deno-version: v2.x
 
+      # Fonts live in reels/fonts; only ffmpeg comes from apt. The mirror once hung 10+ min, hence the limits.
       - name: Install tools
+        timeout-minutes: 8
         run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq ffmpeg fonts-liberation fonts-dejavu-core
           pip install -q "yt-dlp[default]" pillow opencv-python-headless
+          sudo apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout=20 update -qq
+          sudo apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout=20 install -y -qq --no-install-recommends ffmpeg
+          ffmpeg -hide_banner -version | head -1
 
       - name: Optional YouTube cookies
         env:

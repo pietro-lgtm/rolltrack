@@ -65,7 +65,7 @@ def contact_sheet(key, path, duration, every=2.0, cols=6, tile_w=320):
     sheet = Image.new("RGB", (cols * tw, rows * (th + 28)), "white")
     d = ImageDraw.Draw(sheet)
     try:
-        f = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 18)
+        f = ImageFont.truetype(os.path.join(HERE, "fonts", "LiberationSans-Bold.ttf"), 18)
     except OSError:
         f = ImageFont.load_default()
     for i, name in enumerate(frames):
