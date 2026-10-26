@@ -35,7 +35,13 @@ def fetch(key, url):
                "-o", path, "--write-info-json", "--no-playlist"]
         if os.environ.get("YT_COOKIES_FILE"):
             cmd += ["--cookies", os.environ["YT_COOKIES_FILE"]]
-        sh(cmd + [url])
+        try:
+            sh(cmd + [url])
+        except subprocess.CalledProcessError:
+            if not os.environ.get("YT_COOKIES_FILE"):
+                print("::error::Download failed. YouTube blocks datacenter IPs without a signed-in session: add a "
+                      "Netscape-format cookies.txt as the repo secret YT_COOKIES (see reels/README.md).")
+            raise
     raw = os.path.join(SRC, f"{key}.info.json")
     meta = json.load(open(raw)) if os.path.exists(raw) else {}
     info = {k: meta.get(k) for k in ("id", "title", "channel", "uploader", "upload_date", "duration",
