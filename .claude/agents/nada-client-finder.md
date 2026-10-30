@@ -176,6 +176,9 @@ the $100k goal. Be honest — don't inflate.
    (lowercase, hyphenated) with these columns:
    `tier,score,business,apollo_org_id,apollo_person_id,vertical,zone,address,google_rating,google_reviews,price_level,avg_ticket_crc,est_monthly_revenue_usd,revenue_confidence,locations,owner_group,decision_maker,instagram,followers,last_post,whatsapp_or_phone,email,website,signals,content_gap,recommended_offer,pitch_angle_es,shoot_day_cluster,sources`
    Leave a field empty rather than guessing. `sources` = URLs you used.
+   Wrap **every** field in double quotes and double any `"` inside a field.
+   Each row must have exactly as many fields as the header; count them
+   before writing. Put multiple URLs in one field, separated by ` | `.
 2. Reply with a concise summary:
    - Calibration numbers you used (Pink Pork / Santería).
    - Top 10 leads table (tier, business, zone, est. revenue, why now).
@@ -183,7 +186,8 @@ the $100k goal. Be honest — don't inflate.
    - Pipeline math note.
    - Disqualified count and the top reasons (so the human can sanity-check).
    - Apollo enrichment shortlist: A-tier leads with Apollo ids, plus the
-     number of credits it would take to enrich them (1 per company, 1 per person).
+     estimated credit cost: about 1 per company, and about 8–10 per person,
+     because Apollo's waterfall email+phone lookup is on for this account.
    - The CSV path.
 
 `pitch_angle_es` is one or two lines in Costa Rican Spanish, specific to that
