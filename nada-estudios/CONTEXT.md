@@ -27,6 +27,22 @@ Revenue lanes:
   editing, short vertical deliverables.
 - Prefer **recurring monthly** deals at ≥ $1,000/mo over one-offs.
 
+## SMB segments and offers
+The client finder sorts every lead into one of two segments.
+
+**GRUPO**: owner groups, multi-concept owners, 3+ locations, or one high-volume
+upscale venue (est. > $40k/month).
+- Monthly content retainer from $1,500, or a multi-brand bundle at ≥ $1,000 per brand.
+- Shoot all of a group's brands on one day where possible.
+
+**EXPRESS**: single or 2-location owner-run businesses (est. ~$12k–40k/month),
+like Pink Pork and Santería.
+- Fixed **Express pack, $1,000**: one slot on a batched shoot day (3–4
+  clients in the same zone), a templated edit with AI-assisted post, and
+  short vertical videos plus photos. Sold as a seasonal push or monthly.
+- Deliverables are fixed. Never customize them in a way that breaks the batch.
+- _Edit the exact deliverable counts here once they're settled._
+
 ## Current / recent SMB clients (do NOT prospect these — use them as lookalike anchors)
 | Client | Zone | Type | Ticket |
 |---|---|---|---|
