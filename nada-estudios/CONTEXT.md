@@ -11,6 +11,14 @@ freelancers or "community manager" packages.
 ## Goal
 **USD $100,000 / month billing in Costa Rica.**
 
+**Near-term target: NADA Estudios bills USD $50,000 in November 2026 and
+$50,000 in December 2026.**
+
+**Who finds leads:** the scheduled agent **Sonia** (Mon/Thu) is the main lead
+finder. Her instructions carry the GRUPO/EXPRESS rules below, and she hands
+leads to the Lead Tracker for Samantha and Mark. The `nada-client-finder`
+agent in this repo is a backup for one-off searches.
+
 Revenue lanes:
 | Lane | Examples | Typical ticket | Handled by |
 |---|---|---|---|
