@@ -1,0 +1,170 @@
+---
+/**
+ * Formulario de contacto / "quiero estar informado".
+ * Envía a SITE.formEndpoint (Formspree, Getform, backend propio). Si no hay endpoint, abre el
+ * correo del usuario con el mensaje armado (respaldo que nunca falla).
+ */
+import Icon from './Icon.astro';
+import { SITE } from '../data/site';
+import type { Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+  variant?: 'public' | 'gov' | 'press';
+  tone?: 'light' | 'dark';
+}
+const { lang, variant = 'public', tone = 'light' } = Astro.props;
+
+const c = {
+  es: {
+    name: 'Nombre',
+    contact: 'WhatsApp o correo',
+    canton: 'Cantón',
+    org: 'Institución o municipalidad',
+    outlet: 'Medio',
+    msg: 'Su pregunta o comentario (opcional)',
+    role: '¿Usted es…?',
+    roles: ['Vecino o vecina', 'Municipalidad', 'Institución pública', 'Empresa', 'Prensa', 'Otro'],
+    consent: 'Acepto que Repenergy me contacte sobre Orchidean One.',
+    submit: { public: 'Quiero estar informado', gov: 'Solicitar reunión técnica', press: 'Enviar solicitud' }[variant],
+    ok: '¡Gracias! Le escribiremos pronto.',
+    err: 'No pudimos enviar el formulario. Intente de nuevo o escríbanos por correo.',
+    subject: { public: 'Quiero información sobre Orchidean One', gov: 'Solicitud de reunión técnica — Orchidean One', press: 'Solicitud de prensa — Orchidean One' }[variant],
+  },
+  en: {
+    name: 'Name',
+    contact: 'WhatsApp or email',
+    canton: 'Canton / city',
+    org: 'Institution or municipality',
+    outlet: 'Outlet',
+    msg: 'Your question or comment (optional)',
+    role: 'You are…',
+    roles: ['Resident', 'Municipality', 'Public institution', 'Business', 'Press', 'Other'],
+    consent: 'I agree to be contacted by Repenergy about Orchidean One.',
+    submit: { public: 'Keep me informed', gov: 'Request a technical meeting', press: 'Send request' }[variant],
+    ok: 'Thank you! We’ll be in touch soon.',
+    err: 'We couldn’t send the form. Please try again or email us.',
+    subject: { public: 'Information about Orchidean One', gov: 'Technical meeting request — Orchidean One', press: 'Press request — Orchidean One' }[variant],
+  },
+}[lang];
+const to = variant === 'gov' ? SITE.govEmail : variant === 'press' ? SITE.pressEmail : SITE.email;
+---
+
+<form
+  class:list={['signup', `tone-${tone}`]}
+  method="post"
+  action={SITE.formEndpoint || `mailto:${to}`}
+  data-endpoint={SITE.formEndpoint}
+  data-mailto={to}
+  data-subject={c.subject}
+  data-ok={c.ok}
+  data-err={c.err}
+>
+  <input type="hidden" name="form" value={variant} />
+  <input type="hidden" name="lang" value={lang} />
+  <div class="f-row">
+    <label>
+      <span>{c.name}</span>
+      <input name="name" autocomplete="name" required />
+    </label>
+    <label>
+      <span>{c.contact}</span>
+      <input name="contact" autocomplete="email" inputmode="email" required />
+    </label>
+  </div>
+  <div class="f-row">
+    {
+      variant === 'public' ? (
+        <label>
+          <span>{c.canton}</span>
+          <input name="canton" autocomplete="address-level2" />
+        </label>
+      ) : (
+        <label>
+          <span>{variant === 'press' ? c.outlet : c.org}</span>
+          <input name="organization" autocomplete="organization" required />
+        </label>
+      )
+    }
+    {
+      variant === 'public' && (
+        <label>
+          <span>{c.role}</span>
+          <select name="role">
+            {c.roles.map((r) => (
+              <option>{r}</option>
+            ))}
+          </select>
+        </label>
+      )
+    }
+  </div>
+  <label>
+    <span>{c.msg}</span>
+    <textarea name="message" rows="3"></textarea>
+  </label>
+  <label class="f-check">
+    <input type="checkbox" name="consent" required />
+    <span>{c.consent}</span>
+  </label>
+  <!-- Campo trampa contra bots -->
+  <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true" />
+  <button class="btn btn-lg btn-sprout" type="submit">
+    {c.submit}
+    <Icon name="arrowRight" />
+  </button>
+  <p class="f-status" role="status" aria-live="polite"></p>
+</form>
+
+<style>
+  .signup { display: grid; gap: 16px; }
+  .f-row { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); }
+  label { display: grid; gap: 6px; font-family: var(--font-title); font-size: 15px; }
+  input:not([type='checkbox']), select, textarea {
+    font: inherit; font-family: var(--font-body); font-size: 17px;
+    min-height: 52px; padding: 12px 16px; border-radius: 14px;
+    border: 1.5px solid var(--line-strong); background: var(--paper); color: var(--ink);
+    width: 100%;
+  }
+  textarea { min-height: 96px; resize: vertical; }
+  input:focus, select:focus, textarea:focus { outline: 3px solid var(--sprout); outline-offset: 1px; border-color: var(--lago); }
+  .f-check { grid-template-columns: 24px 1fr; align-items: start; font-family: var(--font-body); font-size: 15.5px; gap: 10px; }
+  .f-check input { width: 22px; height: 22px; margin-top: 2px; accent-color: var(--lago); }
+  .hp { position: absolute; left: -9999px; opacity: 0; height: 0; width: 0; }
+  .signup .btn { justify-self: start; }
+  .f-status { margin: 0; font-family: var(--font-title); min-height: 1.4em; }
+  .tone-dark input:not([type='checkbox']), .tone-dark select, .tone-dark textarea { background: rgba(249, 246, 228, 0.96); border-color: transparent; }
+  .tone-dark .f-check input { accent-color: var(--sprout); }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>('form.signup').forEach((form) => {
+    form.addEventListener('submit', async (e) => {
+      const endpoint = form.dataset.endpoint;
+      const status = form.querySelector<HTMLElement>('.f-status')!;
+      const data = new FormData(form);
+      if ((data.get('_gotcha') as string)?.length) return e.preventDefault();
+      e.preventDefault();
+      if (!endpoint) {
+        const body = Array.from(data.entries())
+          .filter(([k]) => !['_gotcha', 'consent'].includes(k))
+          .map(([k, v]) => `${k}: ${v}`)
+          .join('\n');
+        location.href = `mailto:${form.dataset.mailto}?subject=${encodeURIComponent(form.dataset.subject || '')}&body=${encodeURIComponent(body)}`;
+        return;
+      }
+      const btn = form.querySelector<HTMLButtonElement>('button[type=submit]')!;
+      btn.disabled = true;
+      try {
+        const res = await fetch(endpoint, { method: 'POST', body: data, headers: { Accept: 'application/json' } });
+        if (!res.ok) throw new Error(String(res.status));
+        form.reset();
+        status.textContent = form.dataset.ok || 'OK';
+      } catch {
+        status.textContent = form.dataset.err || 'Error';
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  });
+</script>

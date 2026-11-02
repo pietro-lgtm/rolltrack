@@ -1,0 +1,221 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import Ref from '../components/Ref.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Sources from '../components/Sources.astro';
+import { ROUTES, type Lang } from '../lib/i18n';
+import { sourceList, type SourceKey } from '../data/facts';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const es = lang === 'es';
+const refs: SourceKey[] = [
+  'gen4000', 'ocde80', 'recycling', 'losPinos', 'colapsoGam', 'carpio', 'santaAna', 'desamparados', 'huazo', 'huazoLife', 'limon300', 'ghg', 'ley8839',
+];
+const r = (k: SourceKey) => refs.indexOf(k) + 1;
+
+const timeline = es
+  ? [
+      { when: 'Diciembre 2023', k: 'losPinos' as SourceKey, t: 'Cierra el relleno Los Pinos, en Cartago, al terminar su vida útil.', d: 'Cinco municipalidades de Cartago tienen que llevar su basura a El Huazo; para algunas, el viaje es de unos 60 km.' },
+      { when: 'Octubre 2024', k: 'colapsoGam' as SourceKey, t: 'El Ministerio de Salud advierte que los rellenos del Valle Central están al borde del colapso.', d: 'La Carpio y El Huazo recibían juntos cerca de 3.000 toneladas diarias.' },
+      { when: 'En curso', k: 'carpio' as SourceKey, t: 'El relleno de La Carpio entra en cierre técnico.', d: 'Recibe cada vez menos basura mientras se prepara su cierre definitivo.' },
+      { when: 'Diciembre 2025', k: 'santaAna' as SourceKey, t: 'En Santa Ana, el costo por tonelada pasa de ₡15.000 a ₡43.500.', d: 'La tarifa de recolección sube 45%. En Desamparados, sube 19%.' },
+      { when: 'Enero 2026', k: 'huazo' as SourceKey, t: 'La ministra de Salud advierte sobre la vida útil de El Huazo.', d: 'Es el relleno que recibe la basura de más de 35 municipalidades.' },
+      { when: 'Hoy', k: 'limon300' as SourceKey, t: 'Parte de la basura del Valle Central viaja más de 300 km hasta Limón.', d: 'Más camiones, más combustible y más comunidades molestas.' },
+    ]
+  : [
+      { when: 'December 2023', k: 'losPinos' as SourceKey, t: 'The Los Pinos landfill in Cartago closes at the end of its useful life.', d: 'Five Cartago municipalities have to haul their trash to El Huazo — for some, a trip of about 60 km.' },
+      { when: 'October 2024', k: 'colapsoGam' as SourceKey, t: 'The Ministry of Health warns that Central Valley landfills are on the verge of collapse.', d: 'La Carpio and El Huazo together were taking about 3,000 tonnes a day.' },
+      { when: 'Underway', k: 'carpio' as SourceKey, t: 'The La Carpio landfill enters technical closure.', d: 'It takes less and less trash as it prepares to close for good.' },
+      { when: 'December 2025', k: 'santaAna' as SourceKey, t: 'In Santa Ana, the cost per tonne jumps from ₡15,000 to ₡43,500.', d: 'The collection fee rises 45%. In Desamparados, 19%.' },
+      { when: 'January 2026', k: 'huazo' as SourceKey, t: 'The Health Minister raises the alarm over El Huazo’s remaining life.', d: 'It’s the landfill that serves more than 35 municipalities.' },
+      { when: 'Today', k: 'limon300' as SourceKey, t: 'Some Central Valley trash travels more than 300 km to Limón.', d: 'More trucks, more fuel and more upset communities.' },
+    ];
+
+const c = es
+  ? {
+      title: 'La crisis de la basura en Costa Rica, explicada',
+      desc: 'Costa Rica produce unas 4.000 toneladas de basura al día y 8 de cada 10 se entierran. Los rellenos del Valle Central se están llenando. Qué está pasando y por qué nos afecta a todos.',
+      share: 'Esto está pasando con la basura en Costa Rica y casi nadie lo sabe:',
+    }
+  : {
+      title: 'Costa Rica’s trash crisis, explained',
+      desc: 'Costa Rica produces about 4,000 tonnes of trash a day and 8 in 10 get buried. The Central Valley’s landfills are filling up. What’s going on and why it affects everyone.',
+      share: 'This is what’s happening with trash in Costa Rica, and almost nobody knows:',
+    };
+---
+
+<Base lang={lang} route="crisis" title={c.title} description={c.desc}>
+  <PageHero
+    lang={lang}
+    route="crisis"
+    crumb={es ? 'La crisis' : 'The crisis'}
+    tone="red"
+    eyebrow={es ? 'La crisis' : 'The crisis'}
+    title={es ? 'Costa Rica se está quedando sin lugar para su basura.' : 'Costa Rica is running out of places to put its trash.'}
+    lead={es ? 'No es un problema del futuro. Ya está pasando: rellenos que cierran, camiones que viajan cientos de kilómetros y tarifas que suben. Esto es lo que hay que saber.' : 'This isn’t a future problem. It’s happening now: landfills closing, trucks driving hundreds of kilometers and fees going up. Here’s what you need to know.'}
+  />
+
+  <!-- Cuánta basura -->
+  <section class="section">
+    <div class="wrap split">
+      <div data-listen>
+        <p class="eyebrow">{es ? 'Cuánta basura' : 'How much trash'}</p>
+        <h2>{es ? 'Cuatro millones de kilos. Cada día.' : 'Four million kilos. Every day.'}</h2>
+        <p class="lead">
+          {es ? 'Costa Rica produce unas 4.000 toneladas de basura al día. Es como llenar unos 400 camiones recolectores, todos los días del año.' : 'Costa Rica produces about 4,000 tonnes of trash a day. That’s like filling about 400 garbage trucks, every day of the year.'}<Ref n={r('gen4000')} />
+        </p>
+        <p>{es ? 'Y no deja de crecer: más gente, más consumo, más empaques.' : 'And it keeps growing: more people, more consumption, more packaging.'}</p>
+      </div>
+      <div class="trucks reveal" aria-hidden="true">
+        {Array.from({ length: 40 }).map(() => <Icon name="truck" size={30} />)}
+        <p class="trucks-cap">{es ? 'Cada ícono = 10 camiones' : 'Each icon = 10 trucks'}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- A dónde va -->
+  <section class="section bg-cream">
+    <div class="wrap">
+      <div class="measure mb-2" data-listen>
+        <p class="eyebrow">{es ? 'A dónde va' : 'Where it goes'}</p>
+        <h2>{es ? 'Casi todo se entierra.' : 'Almost all of it gets buried.'}</h2>
+        <p class="lead">{es ? 'Ocho de cada diez toneladas terminan en un relleno sanitario. Menos del 10% se recicla o se aprovecha.' : 'Eight out of ten tonnes end up in a landfill. Less than 10% is recycled or recovered.'}<Ref n={r('ocde80')} /><Ref n={r('recycling')} /></p>
+      </div>
+      <div class="bar reveal" role="img" aria-label={es ? 'Alrededor de 80% a rellenos, menos de 10% reciclado, el resto a otros destinos' : 'About 80% to landfills, under 10% recycled, the rest elsewhere'}>
+        <span class="b-land" style="width:80%"><strong>~80%</strong> {es ? 'Rellenos' : 'Landfills'}</span>
+        <span class="b-rec" style="width:8%"><strong>&lt;10%</strong></span>
+        <span class="b-other" style="width:12%"></span>
+      </div>
+      <ul class="legend">
+        <li><i class="b-land"></i>{es ? 'Enterrada en rellenos' : 'Buried in landfills'}</li>
+        <li><i class="b-rec"></i>{es ? 'Reciclada o aprovechada' : 'Recycled or recovered'}</li>
+        <li><i class="b-other"></i>{es ? 'Otros destinos (botaderos, quemas, lotes y ríos)' : 'Elsewhere (dumps, burning, empty lots and rivers)'}</li>
+      </ul>
+      <p class="source">{es ? 'Proporciones aproximadas con base en OCDE (2025) y Ministerio de Salud.' : 'Approximate shares based on OECD (2025) and the Ministry of Health.'}</p>
+    </div>
+  </section>
+
+  <!-- Línea de tiempo -->
+  <section class="section">
+    <div class="wrap">
+      <div class="measure mb-3" data-listen>
+        <p class="eyebrow">{es ? 'Qué ha pasado' : 'What has happened'}</p>
+        <h2>{es ? 'Los rellenos del Valle Central llegan al límite.' : 'The Central Valley’s landfills hit their limit.'}</h2>
+      </div>
+      <ol class="tl">
+        {
+          timeline.map((t) => (
+            <li class="reveal">
+              <span class="tl-when">{t.when}</span>
+              <div>
+                <p class="tl-t">
+                  {t.t}
+                  <Ref n={r(t.k)} />
+                </p>
+                <p class="tl-d">{t.d}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- Lo que nos cuesta -->
+  <section class="section on-night">
+    <div class="wrap">
+      <div class="measure mb-3" data-listen>
+        <p class="eyebrow">{es ? 'Lo que nos cuesta' : 'What it costs us'}</p>
+        <h2>{es ? 'Enterrar basura sale caro. Y lo pagamos todos.' : 'Burying trash is expensive. And we all pay.'}</h2>
+      </div>
+      <div class="grid grid-4">
+        <article class="card">
+          <span class="icon-badge"><Icon name="landmark" /></span>
+          <h3 class="ct">{es ? 'En su recibo' : 'On your bill'}</h3>
+          <p>{es ? 'Cuando el relleno queda más lejos o cobra más, la municipalidad sube la tarifa de recolección.' : 'When the landfill is farther away or charges more, the municipality raises the collection fee.'}<Ref n={r('santaAna')} /></p>
+        </article>
+        <article class="card">
+          <span class="icon-badge"><Icon name="droplets" /></span>
+          <h3 class="ct">{es ? 'En los ríos' : 'In the rivers'}</h3>
+          <p>{es ? 'La basura enterrada suelta lixiviados: un líquido contaminante que hay que contener para siempre para que no llegue al agua.' : 'Buried trash releases leachate: a polluting liquid that must be contained forever to keep it out of the water.'}</p>
+        </article>
+        <article class="card">
+          <span class="icon-badge"><Icon name="cloudRain" /></span>
+          <h3 class="ct">{es ? 'En el clima' : 'In the climate'}</h3>
+          <p>{es ? 'Los residuos generan casi el 15% de los gases de efecto invernadero del país, sobre todo metano de los rellenos.' : 'Waste produces almost 15% of the country’s greenhouse gases, mostly methane from landfills.'}<Ref n={r('ghg')} /></p>
+        </article>
+        <article class="card">
+          <span class="icon-badge"><Icon name="mountain" /></span>
+          <h3 class="ct">{es ? 'En la tierra' : 'In the land'}</h3>
+          <p>{es ? 'Cada relleno ocupa hectáreas que quedan inutilizables por décadas. Y ningún vecindario quiere uno nuevo.' : 'Every landfill takes up hectares that stay unusable for decades. And no neighborhood wants a new one.'}</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- La salida -->
+  <section class="section">
+    <div class="wrap split">
+      <div data-listen>
+        <p class="eyebrow">{es ? 'La salida' : 'The way out'}</p>
+        <h2>{es ? 'No se trata de enterrar más. Se trata de enterrar menos.' : 'It’s not about burying more. It’s about burying less.'}</h2>
+        <p class="lead">{es ? 'La Ley 8839 ya lo dice: enterrar es el último recurso. Antes hay que reducir, reciclar y valorizar, incluido el aprovechamiento energético.' : 'Costa Rica’s Law 8839 already says it: burying is the last resort. First comes reducing, recycling and recovering — including energy recovery.'}<Ref n={r('ley8839')} /></p>
+        <p>{es ? 'Orchidean One es la pieza que falta: convierte en electricidad lo que no se puede reciclar y que hoy termina bajo tierra.' : 'Orchidean One is the missing piece: it turns into electricity what can’t be recycled and today ends up underground.'}</p>
+        <div class="btn-row mt-2">
+          <a class="btn" href={ROUTES.plant[lang]}>{es ? 'Conozca la solución' : 'See the solution'}<Icon name="arrowRight" /></a>
+          <a class="btn btn-ghost" href={ROUTES.minute[lang]}><Icon name="play" />{es ? 'En 1 minuto' : 'In 1 minute'}</a>
+        </div>
+      </div>
+      <ol class="pyramid reveal" aria-label={es ? 'Jerarquía de la Ley 8839' : 'Law 8839 waste hierarchy'}>
+        <li style="--w:100%">{es ? 'Evitar' : 'Avoid'}</li>
+        <li style="--w:90%">{es ? 'Reducir' : 'Reduce'}</li>
+        <li style="--w:80%">{es ? 'Reutilizar' : 'Reuse'}</li>
+        <li style="--w:70%" class="hl">{es ? 'Valorizar · aquí entra Orchidean One' : 'Recover · this is Orchidean One'}</li>
+        <li style="--w:60%">{es ? 'Tratar' : 'Treat'}</li>
+        <li style="--w:50%" class="last">{es ? 'Enterrar (último recurso)' : 'Landfill (last resort)'}</li>
+      </ol>
+    </div>
+  </section>
+
+  <CtaBand
+    lang={lang}
+    route="crisis"
+    share={c.share}
+    next={{ key: 'plant', label: es ? 'Orchidean One: la planta por dentro' : 'Orchidean One: inside the plant', teaser: es ? 'Cómo se convierte la basura en luz, paso a paso.' : 'How trash becomes light, step by step.' }}
+  />
+  <Sources lang={lang} items={sourceList(refs)} />
+</Base>
+
+<style>
+  .trucks { display: grid; grid-template-columns: repeat(8, 1fr); gap: 10px; color: var(--volcano); padding: 28px; border-radius: var(--radius); background: var(--paper); border: 1px solid var(--line); }
+  .trucks-cap { grid-column: 1 / -1; margin: 10px 0 0; font-family: var(--font-title); font-size: 14px; color: var(--ink-soft); }
+
+  .bar { display: flex; height: 72px; border-radius: 18px; overflow: hidden; font-family: var(--font-title); }
+  .bar span { display: flex; align-items: center; gap: 8px; padding: 0 18px; white-space: nowrap; overflow: hidden; }
+  .b-land { background: var(--volcano); color: #fff; }
+  .b-rec { background: var(--verde); color: var(--lago-night); justify-content: center; padding: 0 !important; font-size: 14px; }
+  .b-other { background: #b8b39a; }
+  .legend { list-style: none; padding: 0; margin: 18px 0 0; display: flex; flex-wrap: wrap; gap: 10px 24px; font-family: var(--font-title); font-size: 15px; }
+  .legend i { display: inline-block; width: 14px; height: 14px; border-radius: 4px; margin-right: 8px; vertical-align: -2px; }
+
+  .tl { list-style: none; padding: 0; margin: 0; display: grid; gap: 0; border-left: 2px solid var(--volcano); margin-left: 8px; }
+  .tl li { display: grid; gap: 6px 32px; padding: 0 0 32px 28px; position: relative; }
+  .tl li::before { content: ''; position: absolute; left: -9px; top: 4px; width: 16px; height: 16px; border-radius: 50%; background: var(--volcano); box-shadow: 0 0 0 5px var(--sky); }
+  @media (min-width: 800px) { .tl li { grid-template-columns: 200px 1fr; } }
+  .tl-when { font-family: var(--font-title); font-weight: 500; color: var(--volcano-deep); }
+  .tl-t { font-size: var(--fs-sub); line-height: 1.3; margin-bottom: 4px; }
+  .tl-d { margin: 0; color: var(--ink-soft); }
+
+  .ct { font-family: var(--font-title); margin-top: 18px; }
+  .on-night :global(sup.ref a) { color: var(--sprout); }
+
+  .pyramid { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; justify-items: center; }
+  .pyramid li { width: var(--w); text-align: center; padding: 14px 10px; border-radius: 12px; background: var(--cream-2); font-family: var(--font-title); font-size: 15.5px; }
+  .pyramid .hl { background: var(--sprout); color: var(--lago-night); font-weight: 500; box-shadow: var(--shadow); min-width: min(100%, 300px); }
+  .pyramid .last { background: #e9d9d3; color: var(--volcano-deep); }
+</style>

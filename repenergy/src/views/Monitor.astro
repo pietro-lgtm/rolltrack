@@ -1,0 +1,223 @@
+---
+/**
+ * Monitoreo público — hoy: compromiso y vista previa. Mañana: el tablero operativo en vivo.
+ * Cuando la planta opere, conectar `src/data/monitor.ts` (o un fetch en cliente) al sistema de
+ * medición continua (CEMS). Ver README › Fase operativa.
+ * Regla: nunca mostrar números inventados como si fueran reales. La vista previa está rotulada.
+ */
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import Ref from '../components/Ref.astro';
+import SignupForm from '../components/SignupForm.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Sources from '../components/Sources.astro';
+import { ROUTES, type Lang } from '../lib/i18n';
+import { EU_LIMITS, sourceList, type SourceKey } from '../data/facts';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const es = lang === 'es';
+const refs: SourceKey[] = ['ied', 'dec39136'];
+const r = (k: SourceKey) => refs.indexOf(k) + 1;
+
+const ops = es
+  ? [
+      { icon: 'truck', l: 'Basura recibida hoy', u: 't' },
+      { icon: 'zap', l: 'Energía entregada hoy', u: 'MWh' },
+      { icon: 'home', l: 'Hogares equivalentes', u: '' },
+      { icon: 'mountain', l: 'Toneladas que no se enterraron este año', u: 't' },
+    ]
+  : [
+      { icon: 'truck', l: 'Trash received today', u: 't' },
+      { icon: 'zap', l: 'Energy delivered today', u: 'MWh' },
+      { icon: 'home', l: 'Equivalent homes', u: '' },
+      { icon: 'mountain', l: 'Tonnes not buried this year', u: 't' },
+    ];
+
+const promises = es
+  ? [
+      'Mediciones continuas en la chimenea, publicadas en línea.',
+      'Cada valor junto a su límite legal, para que cualquiera lo entienda.',
+      'Historial descargable para universidades, periodistas y organizaciones.',
+      'Auditorías independientes periódicas, con resultados públicos.',
+      'Aviso público si un valor supera el límite, con la explicación y la corrección.',
+    ]
+  : [
+      'Continuous stack measurements, published online.',
+      'Every value next to its legal limit, so anyone can understand it.',
+      'Downloadable history for universities, journalists and organizations.',
+      'Regular independent audits, with public results.',
+      'Public notice if any value exceeds its limit, with the explanation and the fix.',
+    ];
+
+// Serie ilustrativa para la vista previa (NO son datos reales)
+const pts = Array.from({ length: 48 }, (_, i) => 24 + Math.sin(i / 3) * 6 + Math.cos(i / 1.7) * 3);
+const path = pts.map((y, i) => `${i === 0 ? 'M' : 'L'}${(i / 47) * 600} ${200 - y * 2}`).join(' ');
+
+const c = es
+  ? {
+      title: 'Monitoreo público de emisiones de Orchidean One',
+      desc: 'Orchidean One publicará sus emisiones en línea, junto al límite legal de cada sustancia. Así funcionará el monitoreo público y qué podrá ver usted.',
+      share: 'La planta de basura a energía va a publicar sus emisiones en internet, en vivo. Mire:',
+    }
+  : {
+      title: 'Orchidean One public emissions monitoring',
+      desc: 'Orchidean One will publish its emissions online, next to each substance’s legal limit. How public monitoring will work and what you’ll be able to see.',
+      share: 'The waste-to-energy plant will publish its emissions online, live. Take a look:',
+    };
+---
+
+<Base lang={lang} route="monitor" title={c.title} description={c.desc}>
+  <PageHero
+    lang={lang}
+    route="monitor"
+    crumb={es ? 'Monitoreo' : 'Monitoring'}
+    tone="night"
+    eyebrow={es ? 'Monitoreo público' : 'Public monitoring'}
+    title={es ? 'No nos crea. Compruébelo.' : 'Don’t trust us. Check.'}
+    lead={es ? 'Cuando Orchidean One opere, esta página mostrará lo que sale por la chimenea, comparado con el límite legal, a la vista de cualquier persona.' : 'When Orchidean One operates, this page will show what leaves the stack, compared to the legal limit, for anyone to see.'}
+  />
+
+  <section class="section">
+    <div class="wrap">
+      <div class="status reveal">
+        <span class="dot"></span>
+        <p class="mb-0"><strong>{es ? 'Estado:' : 'Status:'}</strong> {es ? 'la planta está en fase de estudios. Los datos aparecerán aquí cuando inicie su operación.' : 'the plant is in the study phase. Data will appear here once it starts operating.'}</p>
+      </div>
+
+      <div class="measure mt-3 mb-2">
+        <p class="eyebrow">{es ? 'Así se verá' : 'What it will look like'}</p>
+        <h2>{es ? 'Cada sustancia, junto a su límite.' : 'Every substance, next to its limit.'}</h2>
+        <p class="lead">{es ? 'Promedios diarios comparados con los límites de la Directiva europea 2010/75/UE.' : 'Daily averages compared to the limits in EU Directive 2010/75/EU.'}<Ref n={r('ied')} /></p>
+      </div>
+
+      <div class="board">
+        {
+          EU_LIMITS.map((l) => (
+            <article class="gauge reveal">
+              <p class="g-name">{l[lang]}</p>
+              <p class="g-val">
+                <span class="g-now">—</span>
+                <span class="g-unit">{l.u}</span>
+              </p>
+              <div class="g-bar" aria-hidden="true">
+                <span />
+              </div>
+              <p class="g-lim">
+                {es ? 'Límite' : 'Limit'}: <strong>{lang === 'en' ? l.v.replace(',', '.') : l.v}</strong> {l.u}
+              </p>
+            </article>
+          ))
+        }
+      </div>
+      <p class="source">{es ? '“—” = sin datos todavía. Los valores se publicarán cuando la planta opere.' : '“—” = no data yet. Values will be published once the plant operates.'}</p>
+    </div>
+  </section>
+
+  <section class="section bg-cream">
+    <div class="wrap split">
+      <div class="chart-card reveal">
+        <span class="watermark">{es ? 'EJEMPLO ILUSTRATIVO · NO SON DATOS REALES' : 'ILLUSTRATIVE EXAMPLE · NOT REAL DATA'}</span>
+        <p class="chart-h">{es ? 'Partículas — promedio cada 30 minutos' : 'Particulates — 30-minute averages'}</p>
+        <svg viewBox="0 0 600 220" role="img" aria-label={es ? 'Gráfico ilustrativo de una medición por debajo del límite' : 'Illustrative chart of a reading below the limit'}>
+          <line x1="0" y1="40" x2="600" y2="40" stroke="#e03b47" stroke-width="2" stroke-dasharray="6 6" />
+          <text x="596" y="32" text-anchor="end" font-family="Poppins, sans-serif" font-size="14" fill="#b3252f">{es ? 'Límite' : 'Limit'}</text>
+          <path d={path} fill="none" stroke="#1b47b2" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" />
+          <line x1="0" y1="200" x2="600" y2="200" stroke="rgba(61,61,58,.2)" />
+        </svg>
+      </div>
+      <div>
+        <p class="eyebrow">{es ? 'Fácil de leer' : 'Easy to read'}</p>
+        <h2>{es ? 'Una línea, un límite.' : 'One line, one limit.'}</h2>
+        <p class="lead">{es ? 'Si la línea azul está por debajo de la roja, la planta cumple. Así de simple, para que nadie tenga que ser ingeniero para entenderlo.' : 'If the blue line is below the red one, the plant complies. That simple, so nobody needs to be an engineer to understand it.'}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="measure mb-2">
+        <p class="eyebrow">{es ? 'Operación' : 'Operations'}</p>
+        <h2>{es ? 'Y lo que la planta le devuelve al país.' : 'And what the plant gives back.'}</h2>
+      </div>
+      <div class="grid grid-4">
+        {
+          ops.map((o) => (
+            <article class="card reveal op">
+              <span class="icon-badge">
+                <Icon name={o.icon} />
+              </span>
+              <p class="num">—</p>
+              <p class="mb-0">
+                {o.l}
+                {o.u && <span class="op-u"> ({o.u})</span>}
+              </p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section on-dark">
+    <div class="wrap split split-40">
+      <div>
+        <p class="eyebrow">{es ? 'Nuestro compromiso' : 'Our commitment'}</p>
+        <h2>{es ? 'Transparencia por escrito.' : 'Transparency, in writing.'}</h2>
+        <p class="lead">{es ? 'Además de lo que exige el Ministerio de Salud, Orchidean One se compromete a:' : 'Beyond what the Ministry of Health requires, Orchidean One commits to:'}<Ref n={r('dec39136')} /></p>
+      </div>
+      <ul class="checklist">
+        {
+          promises.map((p) => (
+            <li>
+              <Icon name="check" />
+              {p}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section-tight bg-cream">
+    <div class="wrap split split-40">
+      <div>
+        <h2>{es ? 'Avísenme cuando haya datos.' : 'Tell me when there’s data.'}</h2>
+        <p>{es ? 'Le escribimos cuando el monitoreo esté en línea.' : 'We’ll write when monitoring goes live.'}</p>
+      </div>
+      <SignupForm lang={lang} />
+    </div>
+  </section>
+
+  <CtaBand
+    lang={lang}
+    route="monitor"
+    share={c.share}
+    next={{ key: 'air', label: es ? 'Cómo se limpia el aire' : 'How the air is cleaned', teaser: es ? 'Las barreras que atrapan lo que no debe salir.' : 'The barriers that catch what shouldn’t get out.' }}
+  />
+  <Sources lang={lang} items={sourceList(refs)} />
+</Base>
+
+<style>
+  .status { display: flex; align-items: center; gap: 14px; padding: 18px 22px; border-radius: 16px; background: var(--sprout); color: var(--lago-night); font-family: var(--font-title); }
+  .status .dot { width: 14px; height: 14px; border-radius: 50%; background: var(--lago); flex: none; box-shadow: 0 0 0 5px rgba(27, 71, 178, 0.18); animation: ping 2s ease-in-out infinite; }
+  @keyframes ping { 50% { box-shadow: 0 0 0 10px rgba(27, 71, 178, 0); } }
+  .board { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); }
+  .gauge { padding: 20px 22px; border-radius: 18px; background: var(--paper); border: 1px solid var(--line); }
+  .g-name { font-family: var(--font-title); font-weight: 500; font-size: 15px; margin-bottom: 8px; }
+  .g-val { display: flex; align-items: baseline; gap: 8px; margin-bottom: 12px; }
+  .g-now { font-family: var(--font-title); font-size: var(--fs-title); line-height: 1; color: var(--lago); }
+  .g-unit { font-family: var(--font-title); font-size: 13px; color: var(--ink-soft); }
+  .g-bar { height: 8px; border-radius: 999px; background: var(--cream-2); position: relative; margin-bottom: 10px; }
+  .g-bar::after { content: ''; position: absolute; right: 0; top: -4px; width: 3px; height: 16px; border-radius: 2px; background: var(--volcano); }
+  .g-lim { margin: 0; font-size: 14.5px; color: var(--ink-soft); }
+  .chart-card { position: relative; padding: 26px; border-radius: var(--radius); background: var(--paper); box-shadow: var(--shadow); overflow: hidden; }
+  .chart-h { font-family: var(--font-title); font-weight: 500; margin-bottom: 14px; }
+  .chart-card svg { width: 100%; height: auto; }
+  .watermark { display: inline-block; margin-bottom: 14px; padding: 6px 12px; border-radius: 999px; background: #f6e3df; color: var(--volcano-deep); font-family: var(--font-title); font-weight: 500; font-size: 12px; letter-spacing: 0.06em; }
+  .op .num { margin: 16px 0 6px; color: var(--lago); }
+  .op-u { color: var(--ink-soft); }
+</style>

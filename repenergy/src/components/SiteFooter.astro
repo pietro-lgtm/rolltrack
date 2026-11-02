@@ -1,0 +1,90 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { ROUTES, UI, other, type Lang, type RouteKey } from '../lib/i18n';
+import { SITE } from '../data/site';
+
+interface Props {
+  lang: Lang;
+  route: RouteKey;
+}
+const { lang, route } = Astro.props;
+const ui = UI[lang];
+const alt = other(lang);
+const explore: RouteKey[] = ['minute', 'crisis', 'plant', 'air', 'world', 'build', 'faq'];
+const audiences: { key: RouteKey; label: { es: string; en: string } }[] = [
+  { key: 'gov', label: { es: 'Municipalidades e instituciones', en: 'Municipalities & institutions' } },
+  { key: 'press', label: { es: 'Periodistas', en: 'Journalists' } },
+  { key: 'monitor', label: { es: 'Monitoreo público del aire', en: 'Public air monitoring' } },
+];
+const year = new Date().getFullYear();
+const socials = Object.entries(SITE.social).filter(([, v]) => v);
+---
+
+<footer class="site-footer on-night">
+  <div class="wrap">
+    <div class="top">
+      <div class="brandcol">
+        <Logo variant="blue" class="f-logo" />
+        <p class="tagline">{ui.footer.tagline}</p>
+        <a class="lang-pill" href={ROUTES[route][alt]} hreflang={alt} lang={alt} data-set-lang={alt}>
+          <Icon name="languages" size={18} />
+          {ui.langSwitch}
+        </a>
+      </div>
+      <nav aria-label={ui.footer.explore}>
+        <h2 class="f-h">{ui.footer.explore}</h2>
+        <ul>
+          {explore.map((k) => <li><a href={ROUTES[k][lang]}>{ui.nav[k]}</a></li>)}
+        </ul>
+      </nav>
+      <nav aria-label={ui.footer.forWhom}>
+        <h2 class="f-h">{ui.footer.forWhom}</h2>
+        <ul>
+          {audiences.map((a) => <li><a href={ROUTES[a.key][lang]}>{a.label[lang]}</a></li>)}
+        </ul>
+      </nav>
+      <div>
+        <h2 class="f-h">{ui.footer.contact}</h2>
+        <ul>
+          <li><a href={`mailto:${SITE.email}`}>{SITE.email}</a></li>
+          <li><a href={`mailto:${SITE.pressEmail}`}>{SITE.pressEmail}</a></li>
+          {SITE.whatsapp && (
+            <li>
+              <a href={`https://wa.me/${SITE.whatsapp}`} rel="noopener">WhatsApp</a>
+            </li>
+          )}
+        </ul>
+        {socials.length > 0 && (
+          <ul class="socials">
+            {socials.map(([k, v]) => (
+              <li>
+                <a href={v} rel="noopener" target="_blank">{k}</a>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
+    <div class="bottom">
+      <p class="note">{ui.footer.note}</p>
+      <p class="copy">© {year} Repenergy · Orchidean One. {ui.footer.rights}</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer { padding: clamp(56px, 7vw, 96px) 0 32px; }
+  .top { display: grid; gap: 40px; grid-template-columns: 1fr; }
+  @media (min-width: 720px) { .top { grid-template-columns: 1.4fr 1fr 1fr 1fr; } }
+  .site-footer :global(.f-logo) { height: 40px; width: auto; margin-bottom: 18px; }
+  .tagline { font-size: var(--fs-sub); line-height: 1.3; max-width: 22ch; color: var(--sky); }
+  .f-h { font-family: var(--font-title); font-weight: 500; font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sprout); margin: 0 0 14px; }
+  ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  a { color: var(--sky); text-decoration: none; font-family: var(--font-title); font-size: 15.5px; }
+  a:hover { color: var(--sprout); text-decoration: underline; }
+  .lang-pill { display: inline-flex; align-items: center; gap: 8px; margin-top: 8px; padding: 10px 16px; border-radius: 999px; border: 1.5px solid rgba(249, 246, 228, 0.4); }
+  .socials { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px; text-transform: capitalize; }
+  .bottom { margin-top: 56px; padding-top: 24px; border-top: 1px solid rgba(249, 246, 228, 0.16); display: grid; gap: 8px; }
+  .note, .copy { font-size: 14px; color: rgba(249, 246, 228, 0.7); margin: 0; max-width: 80ch; }
+</style>

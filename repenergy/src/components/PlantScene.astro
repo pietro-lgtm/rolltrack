@@ -1,0 +1,135 @@
+---
+/**
+ * Ilustración conceptual de Orchidean One: techo verde en forma de pétalo,
+ * chimenea con anillo de monitoreo, energía hacia la red y camiones cerrados.
+ * Es una ilustración de concepto, no un render de ingeniería.
+ */
+interface Props {
+  class?: string;
+  label: string;
+}
+const { class: cls = '', label } = Astro.props;
+---
+
+<svg class={`plant-scene ${cls}`} viewBox="0 0 1200 720" role="img" aria-label={label} preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="ps-sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e4eaf4" />
+      <stop offset="0.65" stop-color="#f9f6e4" />
+    </linearGradient>
+    <linearGradient id="ps-roof" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#b8d85a" />
+      <stop offset="1" stop-color="#8db333" />
+    </linearGradient>
+    <linearGradient id="ps-glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a5bd0" />
+      <stop offset="1" stop-color="#1b47b2" />
+    </linearGradient>
+    <radialGradient id="ps-sun" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#d1f462" stop-opacity="0.85" />
+      <stop offset="1" stop-color="#d1f462" stop-opacity="0.35" />
+    </radialGradient>
+    <filter id="ps-soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="6" /></filter>
+  </defs>
+
+  <rect width="1200" height="720" fill="url(#ps-sky)" />
+  <circle class="ps-sun" cx="880" cy="250" r="150" fill="url(#ps-sun)" />
+
+  <!-- Montañas lejanas -->
+  <path d="M0 420 C120 340 220 300 330 330 C430 360 520 262 640 242 C760 222 860 300 960 292 C1060 284 1140 232 1200 250 L1200 720 L0 720Z" fill="#cfe099" />
+  <path d="M0 470 C140 420 260 392 380 420 C500 448 600 380 720 372 C840 364 930 420 1040 410 C1110 404 1160 380 1200 384 L1200 720 L0 720Z" fill="#b9d371" />
+  <!-- Colinas -->
+  <path d="M0 520 C160 470 300 462 460 496 C620 530 760 466 900 458 C1040 450 1120 486 1200 478 L1200 720 L0 720Z" fill="#a1c93e" />
+
+  <!-- Línea de transmisión -->
+  <g stroke="#5e7d1d" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.9">
+    <path d="M948 610 L966 500 L984 610 M954 572 L978 572 M958 540 L974 540 M952 512 L980 512" />
+    <path d="M1088 594 L1102 506 L1116 594 M1092 562 L1112 562 M1094 534 L1110 534 M1088 514 L1116 514" />
+    <path d="M840 470 C890 500 930 508 952 512 M980 512 C1030 522 1060 518 1088 514 M1116 514 C1150 512 1180 506 1200 500" stroke-width="1.6" />
+  </g>
+
+  <!-- Casas iluminadas -->
+  <g class="ps-houses">
+    <path d="M1120 468 l22 -18 l22 18 v26 h-44z" fill="#f9f6e4" />
+    <rect x="1135" y="474" width="14" height="12" rx="2" fill="#d1f462" />
+    <path d="M1166 476 l18 -15 l18 15 v22 h-36z" fill="#f3efd6" />
+    <rect x="1178" y="481" width="12" height="10" rx="2" fill="#d1f462" />
+    <path d="M1060 482 l18 -15 l18 15 v22 h-36z" fill="#f3efd6" />
+    <rect x="1072" y="487" width="12" height="10" rx="2" fill="#d1f462" />
+  </g>
+
+  <!-- Terreno de la planta -->
+  <path d="M0 590 C200 560 420 556 600 566 C800 576 1000 562 1200 570 L1200 720 L0 720Z" fill="#8db333" />
+
+  <!-- Chimenea con anillo de monitoreo -->
+  <g class="ps-stack">
+    <g class="ps-vapor" filter="url(#ps-soft)" fill="#ffffff" opacity="0.75">
+      <ellipse cx="760" cy="226" rx="26" ry="14" />
+      <ellipse cx="796" cy="204" rx="34" ry="16" opacity="0.7" />
+      <ellipse cx="842" cy="186" rx="40" ry="16" opacity="0.45" />
+    </g>
+    <rect x="730" y="236" width="28" height="250" rx="14" fill="#f9f6e4" />
+    <rect x="730" y="236" width="10" height="250" rx="5" fill="#ffffff" opacity="0.6" />
+    <rect class="ps-ring" x="726" y="270" width="36" height="14" rx="7" fill="#d1f462" />
+    <circle class="ps-beacon" cx="744" cy="250" r="4" fill="#1b47b2" />
+  </g>
+
+  <!-- Edificio de apoyo / centro de visitantes -->
+  <rect x="292" y="520" width="100" height="58" rx="6" fill="#f3efd6" />
+  <rect x="302" y="534" width="80" height="18" rx="3" fill="url(#ps-glass)" opacity="0.9" />
+  <path d="M286 524 C320 504 360 502 398 520 L398 526 L286 526Z" fill="#a1c93e" />
+
+  <!-- Edificio principal -->
+  <rect x="396" y="466" width="436" height="112" rx="8" fill="#f9f6e4" />
+  <rect x="414" y="498" width="400" height="40" rx="4" fill="url(#ps-glass)" />
+  <g stroke="#f9f6e4" stroke-opacity="0.45" stroke-width="2">
+    <path d="M440 498v40M466 498v40M492 498v40M518 498v40M544 498v40M570 498v40M596 498v40M622 498v40M648 498v40M674 498v40M700 498v40M726 498v40M752 498v40M778 498v40" />
+  </g>
+  <rect x="580" y="546" width="70" height="32" rx="3" fill="#e6e1c4" />
+  <!-- Techo verde en forma de pétalo -->
+  <path d="M368 484 C466 420 556 388 640 394 C724 400 806 428 872 476 L872 490 L368 490Z" fill="url(#ps-roof)" />
+  <path d="M392 476 C486 422 566 400 640 404 C716 408 790 432 848 470" fill="none" stroke="#d1f462" stroke-width="3" stroke-linecap="round" opacity="0.9" />
+  <path d="M430 482 C510 440 576 422 640 425 C704 428 768 446 814 478" fill="none" stroke="#d1f462" stroke-width="2" stroke-linecap="round" opacity="0.55" />
+  <g fill="#6f9424">
+    <circle cx="520" cy="438" r="9" /><circle cx="536" cy="432" r="7" />
+    <circle cx="676" cy="414" r="8" /><circle cx="690" cy="420" r="6" />
+  </g>
+
+  <!-- Camino y camión cerrado -->
+  <path d="M-10 700 C180 668 300 616 470 588" fill="none" stroke="#ece7cd" stroke-width="20" stroke-linecap="round" />
+  <g class="ps-truck" transform="translate(210 610)">
+    <rect x="0" y="0" width="66" height="34" rx="6" fill="#1b47b2" />
+    <path d="M66 10 h18 l12 12 v12 h-30z" fill="#12317f" />
+    <rect x="72" y="13" width="10" height="9" rx="2" fill="#d1f462" />
+    <circle cx="18" cy="36" r="7" fill="#3d3d3a" /><circle cx="78" cy="36" r="7" fill="#3d3d3a" />
+    <path d="M10 12 h40" stroke="#d1f462" stroke-width="3" stroke-linecap="round" />
+  </g>
+
+  <!-- Árboles -->
+  <g>
+    <g fill="#6f9424"><circle cx="120" cy="560" r="34" /><circle cx="160" cy="548" r="28" /><circle cx="92" cy="578" r="24" /></g>
+    <g fill="#5e7d1d"><circle cx="900" cy="574" r="26" /><circle cx="932" cy="566" r="20" /></g>
+    <g fill="#7ea32a"><circle cx="250" cy="566" r="22" /><circle cx="1010" cy="584" r="24" /><circle cx="1040" cy="590" r="16" /></g>
+  </g>
+
+  <!-- Primer plano -->
+  <path d="M0 652 C220 622 460 642 700 652 C900 662 1060 632 1200 642 L1200 720 L0 720Z" fill="#6f9424" />
+  <path d="M0 690 C260 672 520 690 760 694 C960 698 1100 680 1200 686 L1200 720 L0 720Z" fill="#5e7d1d" />
+</svg>
+
+<style>
+  .plant-scene { width: 100%; height: 100%; }
+  .ps-vapor { animation: drift 9s ease-in-out infinite; transform-origin: 760px 226px; }
+  .ps-ring { animation: pulse 3.2s ease-in-out infinite; }
+  .ps-truck { animation: truck 14s linear infinite; }
+  .ps-sun { animation: breathe 10s ease-in-out infinite; transform-origin: 880px 250px; }
+  @keyframes drift { 0%, 100% { transform: translate(0, 0); opacity: 0.75; } 50% { transform: translate(14px, -8px); opacity: 0.5; } }
+  @keyframes pulse { 0%, 100% { fill: #d1f462; } 50% { fill: #eaff9a; } }
+  @keyframes breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.04); } }
+  @keyframes truck {
+    0% { transform: translate(-120px, 660px) rotate(-8deg); opacity: 0; }
+    8% { opacity: 1; }
+    60% { transform: translate(330px, 552px) rotate(-6deg); opacity: 1; }
+    70%, 100% { transform: translate(380px, 545px) rotate(-6deg); opacity: 0; }
+  }
+</style>

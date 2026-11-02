@@ -1,0 +1,161 @@
+---
+/**
+ * Sala de prensa — mensajes clave, datos verificables, descargas de marca y contacto.
+ * Ayuda a que la prensa (y Google) cuenten la historia con nuestros datos, no con rumores.
+ */
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import Logo from '../components/Logo.astro';
+import SignupForm from '../components/SignupForm.astro';
+import { ROUTES, fmt, type Lang } from '../lib/i18n';
+import { PROJECT } from '../data/facts';
+import { SITE } from '../data/site';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const es = lang === 'es';
+
+const boiler = es
+  ? `Repenergy es la empresa que desarrolla Orchidean One, una planta de valorización energética propuesta para Costa Rica. La planta convertiría hasta ${fmt(PROJECT.capacityTpd, 'es')} toneladas diarias de residuos sólidos ordinarios —que hoy terminan en rellenos sanitarios— en electricidad para la red nacional, con tratamiento de gases diseñado según los límites de la Unión Europea y publicación en línea de sus mediciones de emisiones.`
+  : `Repenergy is the company developing Orchidean One, a waste-to-energy plant proposed for Costa Rica. The plant would turn up to ${fmt(PROJECT.capacityTpd, 'en')} tonnes a day of ordinary solid waste — which today ends up in landfills — into electricity for the national grid, with flue-gas treatment designed to European Union limits and online publication of its emissions readings.`;
+
+const messages = es
+  ? [
+      'Costa Rica se está quedando sin espacio para su basura: 8 de cada 10 toneladas se entierran y los rellenos del Valle Central están al límite.',
+      'Orchidean One convierte en electricidad la basura que no se puede reciclar y que hoy se entierra.',
+      'Es tecnología probada: más de 3.000 plantas en el mundo, muchas en el centro de ciudades como Copenhague, Viena y Tokio.',
+      'El aire es lo primero: límites de la Unión Europea y mediciones publicadas en línea.',
+      'Complementa el reciclaje, no lo reemplaza: así lo establece la Ley 8839.',
+    ]
+  : [
+      'Costa Rica is running out of room for its trash: 8 in 10 tonnes are buried and Central Valley landfills are at their limit.',
+      'Orchidean One turns into electricity the trash that can’t be recycled and is buried today.',
+      'It’s proven technology: more than 3,000 plants worldwide, many in the center of cities like Copenhagen, Vienna and Tokyo.',
+      'Air comes first: European Union limits and readings published online.',
+      'It complements recycling, it doesn’t replace it — as Costa Rica’s Law 8839 sets out.',
+    ];
+
+const assets = [
+  { file: '/brand/repenergy-logo.svg', label: es ? 'Logo principal (SVG)' : 'Primary logo (SVG)', variant: 'light' as const, bg: 'var(--sky)' },
+  { file: '/brand/repenergy-logo-azul.svg', label: es ? 'Logo sobre azul (SVG)' : 'Logo on blue (SVG)', variant: 'blue' as const, bg: 'var(--lago)' },
+  { file: '/brand/repenergy-logo-rojo.svg', label: es ? 'Logo sobre rojo (SVG)' : 'Logo on red (SVG)', variant: 'red' as const, bg: 'var(--volcano)' },
+  { file: '/brand/repenergy-logo-verde.svg', label: es ? 'Logo sobre verde (SVG)' : 'Logo on green (SVG)', variant: 'green' as const, bg: 'var(--verde)' },
+];
+
+const c = es
+  ? {
+      title: 'Sala de prensa de Orchidean One y Repenergy',
+      desc: 'Información para periodistas sobre Orchidean One: descripción oficial, mensajes clave, datos con fuentes, logotipos descargables y contacto de prensa de Repenergy.',
+    }
+  : {
+      title: 'Orchidean One and Repenergy press room',
+      desc: 'Information for journalists about Orchidean One: official description, key messages, sourced data, downloadable logos and Repenergy press contact.',
+    };
+---
+
+<Base lang={lang} route="press" title={c.title} description={c.desc}>
+  <PageHero
+    lang={lang}
+    route="press"
+    crumb={es ? 'Prensa' : 'Press'}
+    eyebrow={es ? 'Sala de prensa' : 'Press room'}
+    title={es ? 'Para periodistas: datos claros, fuentes a la vista.' : 'For journalists: clear data, visible sources.'}
+    lead={es ? 'Descripción oficial, mensajes clave, logotipos y contacto directo. Todas las cifras del sitio enlazan a su fuente.' : 'Official description, key messages, logos and direct contact. Every figure on this site links to its source.'}
+  >
+    <Fragment slot="actions">
+      <a class="btn" href={`mailto:${SITE.pressEmail}`}><Icon name="mail" />{SITE.pressEmail}</a>
+    </Fragment>
+  </PageHero>
+
+  <section class="section">
+    <div class="wrap split split-40 top">
+      <div>
+        <p class="eyebrow">{es ? 'Descripción oficial' : 'Official description'}</p>
+        <h2>{es ? 'Sobre Orchidean One' : 'About Orchidean One'}</h2>
+      </div>
+      <div>
+        <blockquote class="boiler">{boiler}</blockquote>
+        <button type="button" class="btn btn-ghost copy-boiler" data-copied={es ? '¡Copiado!' : 'Copied!'}><Icon name="copy" />{es ? 'Copiar texto' : 'Copy text'}</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-cream">
+    <div class="wrap split split-40 top">
+      <div>
+        <p class="eyebrow">{es ? 'Mensajes clave' : 'Key messages'}</p>
+        <h2>{es ? 'Cinco ideas.' : 'Five ideas.'}</h2>
+        <p>{es ? 'Los datos y sus fuentes están en cada página del sitio:' : 'Data and sources are on every page of the site:'} <a href={ROUTES.crisis[lang]}>{es ? 'la crisis' : 'the crisis'}</a>, <a href={ROUTES.air[lang]}>{es ? 'aire y salud' : 'air & health'}</a>, <a href={ROUTES.world[lang]}>{es ? 'el mundo' : 'the world'}</a>.</p>
+      </div>
+      <ol class="msgs">
+        {messages.map((m) => <li>{m}</li>)}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="measure mb-3">
+        <p class="eyebrow">{es ? 'Marca' : 'Brand'}</p>
+        <h2>{es ? 'Logotipos para descargar.' : 'Logos to download.'}</h2>
+        <p>{es ? 'Use el logo sobre el fondo indicado. No lo deforme ni cambie sus colores.' : 'Use each logo on its intended background. Don’t distort it or change its colors.'}</p>
+      </div>
+      <div class="grid grid-4">
+        {
+          assets.map((a) => (
+            <a class="asset" href={a.file} download>
+              <span class="asset-prev" style={`background:${a.bg}`}>
+                <Logo variant={a.variant} />
+              </span>
+              <span class="asset-l">
+                <Icon name="download" size={18} />
+                {a.label}
+              </span>
+            </a>
+          ))
+        }
+      </div>
+      <p class="mt-2 small">{es ? 'Tipografías de marca: Poppins (títulos) y Georgia (textos). Colores: Lago Blue #1b47b2 · Sprout #d1f462 · Mountain Verde #a1c93e · Cartago Sky #f9f6e4 · Volcano #e03b47.' : 'Brand typefaces: Poppins (titles) and Georgia (text). Colors: Lago Blue #1b47b2 · Sprout #d1f462 · Mountain Verde #a1c93e · Cartago Sky #f9f6e4 · Volcano #e03b47.'}</p>
+    </div>
+  </section>
+
+  <section class="section on-dark">
+    <div class="wrap split split-40">
+      <div>
+        <p class="eyebrow">{es ? 'Contacto de prensa' : 'Press contact'}</p>
+        <h2>{es ? 'Entrevistas y solicitudes.' : 'Interviews and requests.'}</h2>
+        <p class="lead">{es ? 'Voceros, visitas técnicas, datos e imágenes.' : 'Spokespeople, technical visits, data and images.'}</p>
+      </div>
+      <SignupForm lang={lang} variant="press" tone="dark" />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .top { align-items: start; }
+  .boiler { margin: 0 0 18px; padding: 28px 30px; border-left: 4px solid var(--verde); background: var(--paper); border-radius: 0 var(--radius) var(--radius) 0; font-size: var(--fs-body); line-height: 1.6; box-shadow: var(--shadow); }
+  .msgs { margin: 0; padding: 0; list-style: none; counter-reset: m; display: grid; gap: 10px; }
+  .msgs li { counter-increment: m; display: grid; grid-template-columns: 44px 1fr; gap: 14px; align-items: start; padding: 18px 20px; border-radius: 16px; background: var(--paper); }
+  .msgs li::before { content: counter(m); width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--sprout); color: var(--lago-night); font-family: var(--font-title); font-weight: 500; }
+  .asset { display: grid; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line); background: var(--paper); text-decoration: none; color: var(--ink); transition: transform 0.25s var(--ease), box-shadow 0.25s; }
+  .asset:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+  .asset-prev { display: grid; place-items: center; aspect-ratio: 16 / 9; padding: 24px; }
+  .asset-prev :global(.logo) { width: 80%; height: auto; }
+  .asset-l { display: flex; align-items: center; gap: 8px; padding: 14px 16px; font-family: var(--font-title); font-size: 15px; }
+</style>
+
+<script>
+  document.querySelector<HTMLButtonElement>('.copy-boiler')?.addEventListener('click', async (e) => {
+    const btn = e.currentTarget as HTMLButtonElement;
+    const text = document.querySelector('.boiler')?.textContent || '';
+    try {
+      await navigator.clipboard.writeText(text.trim());
+      const original = btn.innerHTML;
+      btn.textContent = btn.dataset.copied || '✓';
+      setTimeout(() => (btn.innerHTML = original), 2000);
+    } catch {}
+  });
+</script>

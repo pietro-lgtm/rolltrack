@@ -1,0 +1,70 @@
+---
+/**
+ * Aviso discreto de idioma: si el navegador está en inglés y la persona está en la versión
+ * en español (o al revés), se ofrece la otra versión. Nunca redirige automáticamente
+ * (mejor para Google y para quien comparte enlaces).
+ */
+import Icon from './Icon.astro';
+import { ROUTES, UI, other, type Lang, type RouteKey } from '../lib/i18n';
+interface Props {
+  lang: Lang;
+  route: RouteKey;
+}
+const { lang, route } = Astro.props;
+const alt = other(lang);
+const altUi = UI[alt];
+---
+
+<div class="lang-hint" hidden data-page-lang={lang} lang={alt} role="region" aria-label={altUi.langHint}>
+  <Icon name="languages" size={20} />
+  <span>{UI[lang].langHint}</span>
+  <a class="btn btn-sprout" href={ROUTES[route][alt]} hreflang={alt} data-set-lang={alt}>{UI[lang].langHintCta}</a>
+  <button type="button" class="lh-close" aria-label="×"><Icon name="x" size={18} /></button>
+</div>
+
+<style>
+  .lang-hint {
+    position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 60;
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    padding: 12px 12px 12px 18px; border-radius: 20px;
+    background: var(--lago-night); color: var(--sky);
+    font-family: var(--font-title); font-size: 15px;
+    box-shadow: 0 20px 40px -16px rgba(0, 0, 0, 0.45);
+    max-width: 520px;
+  }
+  .lang-hint[hidden] { display: none; }
+  .lang-hint span { flex: 1 1 180px; }
+  .lang-hint .btn { min-height: 42px; font-size: 15px; }
+  .lh-close { background: transparent; border: 0; color: var(--sky); width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: grid; place-items: center; }
+  .lh-close:hover { background: rgba(255, 255, 255, 0.1); }
+</style>
+
+<script>
+  const el = document.querySelector<HTMLElement>('.lang-hint');
+  if (el) {
+    const pageLang = el.dataset.pageLang;
+    let pref: string | null = null;
+    try {
+      pref = localStorage.getItem('rp-lang');
+    } catch {}
+    const browser = (navigator.languages?.[0] || navigator.language || '').slice(0, 2).toLowerCase();
+    const wantsOther = pref ? pref !== pageLang : browser && browser !== pageLang && (browser === 'en' || browser === 'es');
+    let closed = false;
+    try {
+      closed = !!sessionStorage.getItem('rp-lang-hint-closed');
+    } catch {}
+    if (wantsOther && !closed) el.hidden = false;
+    el.querySelector('.lh-close')?.addEventListener('click', () => {
+      el.hidden = true;
+      try {
+        sessionStorage.setItem('rp-lang-hint-closed', '1');
+        localStorage.setItem('rp-lang', pageLang || '');
+      } catch {}
+    });
+    el.querySelector('a')?.addEventListener('click', (e) => {
+      try {
+        localStorage.setItem('rp-lang', (e.currentTarget as HTMLAnchorElement).dataset.setLang || '');
+      } catch {}
+    });
+  }
+</script>

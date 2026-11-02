@@ -1,0 +1,113 @@
+---
+import Icon from './Icon.astro';
+import type { Lang } from '../lib/i18n';
+interface Props {
+  lang: Lang;
+  detailed?: boolean;
+}
+const { lang, detailed = false } = Astro.props;
+
+const steps = {
+  es: [
+    {
+      icon: 'truck',
+      t: 'Llega cerrada',
+      s: 'Camiones cerrados descargan dentro de un edificio sellado.',
+      d: 'El aire de esa nave se aspira y se usa en la combustión. Así los olores no salen: se queman.',
+    },
+    {
+      icon: 'flame',
+      t: 'Se transforma',
+      s: 'A más de 850 °C, la basura se convierte en calor.',
+      d: 'Los gases se mantienen al menos 2 segundos a esa temperatura, como exige la norma europea. Así se destruyen bacterias y compuestos peligrosos.',
+    },
+    {
+      icon: 'zap',
+      t: 'Da electricidad',
+      s: 'El calor hace vapor, el vapor mueve una turbina.',
+      d: 'La turbina genera electricidad que entra a la red nacional, de día y de noche, llueva o no llueva.',
+    },
+    {
+      icon: 'filter',
+      t: 'Limpia el aire',
+      s: 'Los gases pasan por varias etapas de limpieza antes de salir.',
+      d: 'Se neutralizan ácidos, se capturan partículas y metales, y se miden las emisiones de forma continua, a la vista de todos.',
+    },
+    {
+      icon: 'bricks',
+      t: 'Aprovecha lo que queda',
+      s: 'La basura se reduce a cerca de una décima parte de su volumen.',
+      d: 'Los metales se recuperan para reciclar y la ceniza de fondo se puede usar como material de construcción.',
+    },
+  ],
+  en: [
+    {
+      icon: 'truck',
+      t: 'Arrives sealed',
+      s: 'Closed trucks unload inside a sealed building.',
+      d: 'The air inside that hall is drawn into the furnace and burned. Odors don’t get out — they get destroyed.',
+    },
+    {
+      icon: 'flame',
+      t: 'Gets transformed',
+      s: 'Above 850 °C, waste turns into heat.',
+      d: 'Gases stay at least 2 seconds at that temperature, as European rules require, destroying bacteria and hazardous compounds.',
+    },
+    {
+      icon: 'zap',
+      t: 'Makes electricity',
+      s: 'Heat makes steam, steam spins a turbine.',
+      d: 'The turbine generates electricity for the national grid, day and night, rain or shine.',
+    },
+    {
+      icon: 'filter',
+      t: 'Cleans the air',
+      s: 'Gases go through several cleaning stages before leaving.',
+      d: 'Acids are neutralized, particles and metals captured, and emissions measured continuously, in public view.',
+    },
+    {
+      icon: 'bricks',
+      t: 'Uses what’s left',
+      s: 'Waste shrinks to about one tenth of its volume.',
+      d: 'Metals are recovered for recycling and bottom ash can be used as a construction material.',
+    },
+  ],
+}[lang];
+---
+
+<ol class:list={['hiw', { detailed }]}>
+  {
+    steps.map((s, i) => (
+      <li class="hiw-step reveal" style={`transition-delay:${i * 70}ms`}>
+        <div class="hiw-top">
+          <span class="hiw-n">{String(i + 1).padStart(2, '0')}</span>
+          <span class="icon-badge">
+            <Icon name={s.icon} />
+          </span>
+        </div>
+        <h3 class="hiw-t">{s.t}</h3>
+        <p class="hiw-s">{s.s}</p>
+        {detailed && <p class="hiw-d">{s.d}</p>}
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .hiw { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; grid-template-columns: 1fr; counter-reset: s; }
+  @media (min-width: 680px) { .hiw { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1100px) { .hiw { grid-template-columns: repeat(5, 1fr); } }
+  .hiw-step { position: relative; background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px 22px 26px; }
+  .on-dark .hiw-step, .on-night .hiw-step { background: rgba(249, 246, 228, 0.06); border-color: rgba(249, 246, 228, 0.16); }
+  .hiw-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .hiw-n { font-family: var(--font-title); font-size: 15px; letter-spacing: 0.08em; opacity: 0.6; }
+  .hiw-t { font-family: var(--font-title); font-size: var(--fs-sub); margin-bottom: 0.35em; }
+  .hiw-s { margin: 0; }
+  .hiw-d { margin: 0.8em 0 0; font-size: 0.94em; opacity: 0.85; }
+  @media (min-width: 1100px) {
+    .hiw-step:not(:last-child)::after {
+      content: ''; position: absolute; top: 52px; right: -12px; width: 10px; height: 10px;
+      border-top: 2px solid var(--verde); border-right: 2px solid var(--verde); transform: rotate(45deg); z-index: 1;
+    }
+  }
+</style>

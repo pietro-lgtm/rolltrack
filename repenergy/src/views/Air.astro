@@ -1,0 +1,291 @@
+---
+/**
+ * ¿Contamina? — la página que responde la objeción número uno.
+ * Estrategia: nunca decir "no contamina". Decir la verdad completa, compararla con lo que pasa hoy
+ * y ofrecer prueba (límites europeos + medición pública). Es lo que resiste el escrutinio.
+ */
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import Ref from '../components/Ref.astro';
+import Faq from '../components/Faq.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Sources from '../components/Sources.astro';
+import { ROUTES, type Lang } from '../lib/i18n';
+import { EU_LIMITS, PROJECT, sourceList, type SourceKey } from '../data/facts';
+import { FAQ } from '../data/faq';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const es = lang === 'es';
+const refs: SourceKey[] = ['ghg', 'ipccMethane', 'ied', 'bat2019', 'epaDioxin', 'bmu2005', 'kaplan', 'bottomAsh', 'dec39136'];
+const r = (k: SourceKey) => refs.indexOf(k) + 1;
+
+const stages = es
+  ? [
+      { icon: 'thermometer', t: 'Combustión controlada', d: 'Más de 850 °C durante al menos 2 segundos. A esa temperatura se destruyen los compuestos orgánicos peligrosos.' },
+      { icon: 'wind', t: 'Reducción de óxidos de nitrógeno', d: 'Se inyecta un reactivo (urea o amoníaco) que convierte los óxidos de nitrógeno en nitrógeno y vapor de agua.' },
+      { icon: 'droplets', t: 'Neutralización de ácidos', d: 'Con cal se capturan los gases ácidos: dióxido de azufre, ácido clorhídrico y ácido fluorhídrico.' },
+      { icon: 'filter', t: 'Carbón activado', d: 'Atrapa dioxinas, furanos y mercurio, como el filtro de una pecera pero a escala industrial.' },
+      { icon: 'shield', t: 'Filtro de mangas', d: 'Miles de mangas de tela retienen el polvo más fino antes de que el gas llegue a la chimenea.' },
+    ]
+  : [
+      { icon: 'thermometer', t: 'Controlled combustion', d: 'Above 850 °C for at least 2 seconds. At that temperature, hazardous organic compounds are destroyed.' },
+      { icon: 'wind', t: 'Nitrogen oxide reduction', d: 'A reagent (urea or ammonia) is injected to turn nitrogen oxides into nitrogen and water vapor.' },
+      { icon: 'droplets', t: 'Acid neutralization', d: 'Lime captures acid gases: sulfur dioxide, hydrochloric acid and hydrofluoric acid.' },
+      { icon: 'filter', t: 'Activated carbon', d: 'Traps dioxins, furans and mercury — like an aquarium filter, at industrial scale.' },
+      { icon: 'shield', t: 'Bag filters', d: 'Thousands of fabric bags hold back the finest dust before the gas reaches the stack.' },
+    ];
+
+const honest = es
+  ? [
+      { t: 'Sí, emite CO₂.', d: 'Como toda combustión, sobre todo por los plásticos. Pero evita el metano de los rellenos, que en 20 años calienta el planeta unas 80 veces más que el CO₂. Estudios con investigadores de la EPA de EE. UU. encontraron que generar electricidad con residuos emite menos gases de efecto invernadero que un relleno, incluso uno que capture su gas.', refs: ['ipccMethane', 'kaplan'] as SourceKey[] },
+      { t: 'Sí, queda ceniza.', d: 'Cerca de una décima parte del volumen original. La ceniza de fondo se puede usar en construcción. La ceniza fina de los filtros es una porción pequeña: se estabiliza y va a un sitio autorizado para residuos peligrosos.', refs: ['bottomAsh'] as SourceKey[] },
+      { t: 'Sí, llegan camiones.', d: 'Los mismos que hoy van al relleno, pero con viajes más cortos. Rutas planificadas, camiones cerrados y descarga dentro del edificio.', refs: [] as SourceKey[] },
+    ]
+  : [
+      { t: 'Yes, it emits CO₂.', d: 'Like any combustion, mainly from plastics. But it avoids landfill methane, which over 20 years warms the planet about 80 times more than CO₂. Studies involving US EPA researchers found that generating electricity from waste emits fewer greenhouse gases than a landfill — even one that captures its gas.', refs: ['ipccMethane', 'kaplan'] as SourceKey[] },
+      { t: 'Yes, there’s ash.', d: 'About a tenth of the original volume. Bottom ash can be used in construction. Fine ash from the filters is a small share: it’s stabilized and sent to a site licensed for hazardous waste.', refs: ['bottomAsh'] as SourceKey[] },
+      { t: 'Yes, trucks arrive.', d: 'The same ones that go to the landfill today, but with shorter trips. Planned routes, closed trucks and unloading inside the building.', refs: [] as SourceKey[] },
+    ];
+
+const faqItems = FAQ[lang].filter((f) => /contamina|pollute|oler|smell|salud|health|ceniza|ash/i.test(f.q));
+
+const c = es
+  ? {
+      title: '¿La planta contamina? Aire y salud en Orchidean One',
+      desc: '¿Contamina una planta de valorización energética? La respuesta completa: qué emite, cómo se limpian los gases, los límites de la Unión Europea y cómo usted puede ver las mediciones.',
+      share: '¿La planta de basura a energía contamina? Aquí está la respuesta clara, con datos:',
+    }
+  : {
+      title: 'Does the plant pollute? Air & health at Orchidean One',
+      desc: 'Does a waste-to-energy plant pollute? The full answer: what it emits, how gases are cleaned, European Union limits and how you can see the readings.',
+      share: 'Does the waste-to-energy plant pollute? Here’s the straight answer, with data:',
+    };
+---
+
+<Base lang={lang} route="air" title={c.title} description={c.desc}>
+  <PageHero
+    lang={lang}
+    route="air"
+    crumb={es ? 'Aire y salud' : 'Air & health'}
+    tone="blue"
+    eyebrow={es ? 'Aire y salud' : 'Air & health'}
+    title={es ? '¿Contamina? La respuesta clara.' : 'Does it pollute? The straight answer.'}
+    lead={es ? 'Toda industria emite algo, y no le vamos a decir lo contrario. Esta es la verdad completa: qué sale, cuánto, comparado con qué y cómo usted mismo puede comprobarlo.' : 'Every industry emits something, and we won’t tell you otherwise. Here’s the whole truth: what comes out, how much, compared to what, and how you can check it yourself.'}
+  />
+
+  <!-- Comparado con qué -->
+  <section class="section">
+    <div class="wrap">
+      <div class="measure mb-3" data-listen>
+        <p class="eyebrow">{es ? 'Comparado con qué' : 'Compared to what'}</p>
+        <h2>{es ? 'La basura ya contamina. Solo que nadie la mide.' : 'Trash already pollutes. Nobody measures it.'}</h2>
+        <p class="lead">{es ? 'La pregunta no es “planta o nada”. Es “planta o lo que tenemos hoy”.' : 'The question isn’t “plant or nothing.” It’s “plant or what we have today.”'}</p>
+      </div>
+      <div class="vs">
+        <div class="vs-col vs-now reveal">
+          <p class="vs-h"><Icon name="alert" />{es ? 'Lo que pasa hoy' : 'What happens today'}</p>
+          <ul>
+            <li><strong>{es ? 'Metano sin control.' : 'Uncontrolled methane.'}</strong> {es ? 'Los residuos son casi el 15% de los gases de efecto invernadero del país.' : 'Waste is almost 15% of the country’s greenhouse gases.'}<Ref n={r('ghg')} /></li>
+            <li><strong>{es ? 'Lixiviados.' : 'Leachate.'}</strong> {es ? 'Líquido contaminante que hay que contener por décadas.' : 'Polluting liquid that must be contained for decades.'}</li>
+            <li><strong>{es ? 'Quemas en patios y lotes.' : 'Backyard and lot burning.'}</strong> {es ? 'Humo a ras de suelo, sin ningún filtro.' : 'Ground-level smoke with no filter at all.'}</li>
+            <li><strong>{es ? 'Olores, moscas y zopilotes.' : 'Smells, flies and vultures.'}</strong> {es ? 'Para las comunidades vecinas de los rellenos.' : 'For communities next to landfills.'}</li>
+            <li><strong>{es ? 'Cero datos públicos.' : 'Zero public data.'}</strong> {es ? 'Nadie publica en vivo lo que sale de un relleno.' : 'Nobody publishes live what comes out of a landfill.'}</li>
+          </ul>
+        </div>
+        <div class="vs-col vs-new reveal">
+          <p class="vs-h"><Icon name="shield" />{es ? 'Con Orchidean One' : 'With Orchidean One'}</p>
+          <ul>
+            <li><strong>{es ? 'Sin metano de relleno.' : 'No landfill methane.'}</strong> {es ? 'Lo que no se entierra no se pudre.' : 'What isn’t buried doesn’t rot.'}</li>
+            <li><strong>{es ? 'Sin lixiviados.' : 'No leachate.'}</strong> {es ? 'La basura se transforma en días, no se queda para siempre.' : 'Trash is transformed in days, it doesn’t stay forever.'}</li>
+            <li><strong>{es ? 'Gases tratados.' : 'Treated gases.'}</strong> {es ? `${PROJECT.cleaningStages} etapas de limpieza antes de la chimenea.*` : `${PROJECT.cleaningStages} cleaning stages before the stack.*`}</li>
+            <li><strong>{es ? 'Edificio cerrado.' : 'Sealed building.'}</strong> {es ? 'Los olores se aspiran y se queman.' : 'Odors are drawn in and burned.'}</li>
+            <li><strong>{es ? 'Datos públicos.' : 'Public data.'}</strong> {es ? 'Mediciones continuas publicadas en este sitio.' : 'Continuous readings published on this site.'}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Etapas de limpieza -->
+  <section class="section on-dark">
+    <div class="wrap">
+      <div class="measure mb-3" data-listen>
+        <p class="eyebrow">{es ? 'Cómo se limpia el aire' : 'How the air is cleaned'}</p>
+        <h2>{es ? `${PROJECT.cleaningStages} barreras antes de la chimenea.` : `${PROJECT.cleaningStages} barriers before the stack.`}</h2>
+        <p class="lead">{es ? 'Lo que sale por la chimenea de una planta moderna es, en su mayoría, vapor de agua, nitrógeno y CO₂. Lo demás se atrapa en el camino.' : 'What leaves a modern plant’s stack is mostly water vapor, nitrogen and CO₂. The rest is caught along the way.'}</p>
+      </div>
+      <ol class="stages">
+        {
+          stages.map((s, i) => (
+            <li class="reveal" style={`transition-delay:${i * 60}ms`}>
+              <span class="st-n">{i + 1}</span>
+              <span class="icon-badge">
+                <Icon name={s.icon} />
+              </span>
+              <div>
+                <h3 class="st-t">{s.t}</h3>
+                <p class="mb-0">{s.d}</p>
+              </div>
+            </li>
+          ))
+        }
+        <li class="reveal st-last">
+          <span class="st-n">
+            <Icon name="activity" size={20} />
+          </span>
+          <span class="icon-badge sky">
+            <Icon name="eye" />
+          </span>
+          <div>
+            <h3 class="st-t">{es ? 'Y al final: medición continua y pública' : 'And at the end: continuous, public measurement'}</h3>
+            <p class="mb-0">{es ? 'Analizadores en la chimenea miden las emisiones todo el tiempo. Los resultados se publican en la página de monitoreo.' : 'Analyzers in the stack measure emissions all the time. Results are published on the monitoring page.'} <a href={ROUTES.monitor[lang]}>{es ? 'Ver monitoreo' : 'See monitoring'}</a></p>
+          </div>
+        </li>
+      </ol>
+      <p class="source">{es ? '* Configuración típica de una planta moderna; la configuración final se define en la ingeniería de detalle.' : '* Typical modern-plant configuration; final setup is defined in detailed engineering.'}</p>
+    </div>
+  </section>
+
+  <!-- Límites -->
+  <section class="section">
+    <div class="wrap split split-40 limits-sec">
+      <div data-listen>
+        <p class="eyebrow">{es ? 'La regla' : 'The rule'}</p>
+        <h2>{es ? 'Los límites de Europa, aquí.' : 'Europe’s limits, here.'}</h2>
+        <p class="lead">{es ? 'La Unión Europea tiene de las normas más estrictas del mundo para estas plantas. Orchidean One se diseña para cumplirlas.' : 'The European Union has some of the world’s strictest rules for these plants. Orchidean One is designed to meet them.'}<Ref n={r('ied')} /></p>
+        <p>{es ? 'Además, cumple el reglamento costarricense de emisiones para tratamiento térmico de residuos, y busca acercarse a las “mejores técnicas disponibles” que la UE actualizó en 2019.' : 'It also complies with Costa Rica’s emissions regulation for thermal waste treatment, and aims for the “best available techniques” the EU updated in 2019.'}<Ref n={r('dec39136')} /><Ref n={r('bat2019')} /></p>
+      </div>
+      <div class="table-wrap reveal">
+        <table class="limits">
+          <caption>{es ? 'Límites de emisión, promedio diario (Directiva 2010/75/UE)' : 'Emission limits, daily average (Directive 2010/75/EU)'}</caption>
+          <thead>
+            <tr><th scope="col">{es ? 'Sustancia' : 'Substance'}</th><th scope="col">{es ? 'Límite' : 'Limit'}</th></tr>
+          </thead>
+          <tbody>
+            {
+              EU_LIMITS.map((l) => (
+                <tr>
+                  <th scope="row">{l[lang]}</th>
+                  <td>
+                    <strong>{lang === 'en' ? l.v.replace(',', '.') : l.v}</strong> {l.u}
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Lo que dicen los datos -->
+  <section class="section bg-cream">
+    <div class="wrap">
+      <div class="measure mb-3" data-listen>
+        <p class="eyebrow">{es ? 'Lo que dicen los datos' : 'What the data says'}</p>
+        <h2>{es ? 'Las plantas modernas no son las de antes.' : 'Modern plants aren’t what they used to be.'}</h2>
+      </div>
+      <div class="grid grid-2">
+        <article class="card reveal data-card">
+          <p class="num">−99%</p>
+          <p class="lead">{es ? 'bajaron las dioxinas de estas plantas en Estados Unidos entre 1990 y 2005, gracias a los filtros modernos.' : 'is how much dioxin emissions from these plants fell in the US between 1990 and 2005, thanks to modern filters.'}<Ref n={r('epaDioxin')} /></p>
+        </article>
+        <article class="card reveal data-card">
+          <p class="num">20×</p>
+          <p class="lead">{es ? 'más dioxinas emiten las chimeneas y estufas de leña de las casas en Alemania que todas sus plantas de residuos juntas.' : 'more dioxin is emitted by household fireplaces and wood stoves in Germany than by all its waste plants combined.'}<Ref n={r('bmu2005')} /></p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Lo que no escondemos -->
+  <section class="section">
+    <div class="wrap">
+      <div class="measure mb-3" data-listen>
+        <p class="eyebrow">{es ? 'Sin letra pequeña' : 'No fine print'}</p>
+        <h2>{es ? 'Lo que no le vamos a esconder.' : 'What we won’t hide from you.'}</h2>
+        <p class="lead">{es ? 'Cuando alguien le diga “pero es que…”, aquí están las respuestas.' : 'When someone says “but what about…”, here are the answers.'}</p>
+      </div>
+      <div class="grid grid-3">
+        {
+          honest.map((h) => (
+            <article class="card reveal">
+              <h3 class="ht">{h.t}</h3>
+              <p class="mb-0">
+                {h.d}
+                {h.refs.map((k) => (
+                  <Ref n={r(k)} />
+                ))}
+              </p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Compruébelo -->
+  <section class="section-tight on-sprout">
+    <div class="wrap split">
+      <div data-listen>
+        <h2>{es ? 'No nos crea. Compruébelo.' : 'Don’t trust us. Check.'}</h2>
+        <p class="lead mb-0">{es ? 'Cuando Orchidean One opere, usted verá en este sitio lo que sale por la chimenea, comparado con el límite.' : 'When Orchidean One operates, you’ll see on this site what leaves the stack, compared to the limit.'}</p>
+      </div>
+      <div class="btn-row">
+        <a class="btn btn-lg" href={ROUTES.monitor[lang]}><Icon name="activity" />{es ? 'Ver el monitoreo público' : 'See public monitoring'}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap measure">
+      <h2 class="mb-2">{es ? 'Preguntas sobre aire y salud' : 'Questions about air & health'}</h2>
+      <Faq items={faqItems} />
+    </div>
+  </section>
+
+  <CtaBand
+    lang={lang}
+    route="air"
+    share={c.share}
+    next={{ key: 'world', label: es ? 'El mundo ya lo hace' : 'The world already does it', teaser: es ? 'Copenhague, Viena, Tokio: plantas que viven en medio de la ciudad.' : 'Copenhagen, Vienna, Tokyo: plants that live in the middle of the city.' }}
+  />
+  <Sources lang={lang} items={sourceList(refs)} />
+</Base>
+
+<style>
+  .vs { display: grid; gap: 14px; }
+  @media (min-width: 900px) { .vs { grid-template-columns: 1fr 1fr; } }
+  .vs-col { border-radius: var(--radius); padding: 28px; }
+  .vs-now { background: #f6e3df; }
+  .vs-new { background: var(--sprout); color: var(--lago-night); }
+  .vs-h { display: flex; align-items: center; gap: 10px; font-family: var(--font-title); font-weight: 500; font-size: var(--fs-sub); margin-bottom: 18px; }
+  .vs-now .vs-h { color: var(--volcano-deep); }
+  .vs ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 14px; }
+  .vs li { padding-top: 14px; border-top: 1px solid rgba(13, 36, 89, 0.12); }
+
+  .stages { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+  .stages li { display: grid; grid-template-columns: 36px 56px 1fr; gap: 16px; align-items: center; padding: 20px 22px; border-radius: var(--radius); background: rgba(249, 246, 228, 0.06); border: 1px solid rgba(249, 246, 228, 0.16); }
+  .st-n { font-family: var(--font-title); font-size: 22px; color: var(--sprout); display: grid; place-items: center; }
+  .st-t { font-family: var(--font-title); font-size: var(--fs-body); font-weight: 500; margin-bottom: 4px; }
+  .st-last { background: rgba(209, 244, 98, 0.12) !important; border-color: var(--sprout) !important; }
+  @media (max-width: 560px) { .stages li { grid-template-columns: 1fr; } .st-n { justify-content: start; } }
+
+  .limits-sec { align-items: start; }
+  .table-wrap { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--line); background: var(--paper); box-shadow: var(--shadow); }
+  .limits { width: 100%; border-collapse: collapse; font-size: 16px; }
+  .limits caption { text-align: left; padding: 18px 20px 6px; font-family: var(--font-title); font-weight: 500; font-size: 14px; color: var(--ink-soft); }
+  .limits th, .limits td { padding: 12px 20px; border-top: 1px solid var(--line); text-align: left; }
+  .limits thead th { font-family: var(--font-title); font-weight: 500; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); }
+  .limits tbody th { font-weight: 400; }
+  .limits td { white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+  .data-card .num { color: var(--lago); margin-bottom: 12px; }
+  .data-card .lead { margin: 0; }
+  .ht { font-family: var(--font-title); color: var(--lago); }
+  .on-dark :global(.source) { margin-top: 20px; }
+</style>

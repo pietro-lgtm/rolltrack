@@ -1,0 +1,61 @@
+---
+/**
+ * Cierre de cada página: compartir + siguiente lectura. Cada página termina empujando a la siguiente.
+ */
+import Icon from './Icon.astro';
+import ShareBar from './ShareBar.astro';
+import Logo from './Logo.astro';
+import { ROUTES, UI, type Lang, type RouteKey } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+  route: RouteKey;
+  share: string;
+  next?: { key: RouteKey; label: string; teaser: string };
+  title?: string;
+}
+const { lang, route, share, next, title } = Astro.props;
+const heading = title ?? (lang === 'es' ? '¿Le sirvió? Páselo.' : 'Was this useful? Pass it on.');
+---
+
+<section class="cta-band on-dark">
+  <div class="wrap cta-grid">
+    <div>
+      <Logo variant="blue" mark class="cta-mark" height={56} />
+      <h2>{heading}</h2>
+      <p class="lead">
+        {
+          lang === 'es'
+            ? 'Una persona informada vale más que mil rumores. Mande este enlace a su familia, a su grupo del barrio o a su municipalidad.'
+            : 'One informed person is worth a thousand rumors. Send this link to your family, your neighborhood group or your local council.'
+        }
+      </p>
+      <ShareBar lang={lang} route={route} message={share} tone="dark" compact />
+    </div>
+    {
+      next && (
+        <a class="next card" href={ROUTES[next.key][lang]}>
+          <span class="eyebrow">{UI[lang].readMore}</span>
+          <span class="next-t">{next.label}</span>
+          <span class="next-s">{next.teaser}</span>
+          <span class="next-go">
+            <Icon name="arrowRight" size={26} />
+          </span>
+        </a>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .cta-band { padding-block: clamp(64px, 8vw, 112px); }
+  .cta-grid { display: grid; gap: 40px; align-items: center; }
+  @media (min-width: 960px) { .cta-grid { grid-template-columns: 1.2fr 0.8fr; } }
+  .cta-band :global(.cta-mark) { margin-bottom: 24px; }
+  .cta-band .lead { max-width: 36rem; margin-bottom: 28px; }
+  .next { display: grid; gap: 10px; text-decoration: none; color: var(--sky) !important; transition: transform 0.3s var(--ease), background-color 0.3s; }
+  .next:hover { transform: translateY(-4px); background: rgba(249, 246, 228, 0.12) !important; text-decoration: none; }
+  .next-t { font-family: var(--font-title); font-size: var(--fs-sub); line-height: 1.2; }
+  .next-s { opacity: 0.85; }
+  .next-go { margin-top: 14px; width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; background: var(--sprout); color: var(--lago-night); }
+</style>

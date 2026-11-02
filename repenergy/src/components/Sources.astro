@@ -1,0 +1,46 @@
+---
+/**
+ * Lista de fuentes numeradas. Toda cifra pública del sitio debe tener fuente: así se gana
+ * la discusión cuando un periodista o un diputado revisa los datos.
+ */
+import { UI, type Lang } from '../lib/i18n';
+export interface Source {
+  id: string;
+  label: string;
+  url?: string;
+}
+interface Props {
+  lang: Lang;
+  items: Source[];
+}
+const { lang, items } = Astro.props;
+---
+
+{
+  items.length > 0 && (
+    <section class="sources wrap" aria-labelledby="sources-h">
+      <h2 id="sources-h" class="src-h">{UI[lang].sources}</h2>
+      <ol>
+        {items.map((s) => (
+          <li id={`src-${s.id}`}>
+            {s.url ? (
+              <a href={s.url} rel="noopener" target="_blank">
+                {s.label}
+              </a>
+            ) : (
+              s.label
+            )}
+          </li>
+        ))}
+      </ol>
+    </section>
+  )
+}
+
+<style>
+  .sources { padding-block: 40px 64px; }
+  .src-h { font-family: var(--font-title); font-weight: 500; font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); margin: 0 0 12px; }
+  ol { margin: 0; padding-left: 1.4em; display: grid; gap: 6px; font-size: 14.5px; color: var(--ink-soft); max-width: 70rem; }
+  a { color: inherit; word-break: break-word; }
+  li:target { background: var(--sprout); border-radius: 6px; }
+</style>

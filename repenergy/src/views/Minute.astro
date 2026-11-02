@@ -1,0 +1,156 @@
+---
+/**
+ * "En 1 minuto": la página para mandar por WhatsApp. Seis pantallas, una idea por pantalla,
+ * números grandes y botón para escucharla. Pensada para leerse con el pulgar.
+ */
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import Ref from '../components/Ref.astro';
+import Logo from '../components/Logo.astro';
+import PlantScene from '../components/PlantScene.astro';
+import ListenButton from '../components/ListenButton.astro';
+import ShareBar from '../components/ShareBar.astro';
+import Sources from '../components/Sources.astro';
+import { ROUTES, fmt, type Lang } from '../lib/i18n';
+import { PROJECT, sourceList, type SourceKey } from '../data/facts';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const refs: SourceKey[] = ['gen4000', 'ocde80', 'huazo', 'ied', 'ecoprog'];
+const r = (k: SourceKey) => refs.indexOf(k) + 1;
+const es = lang === 'es';
+
+const c = es
+  ? {
+      title: 'Orchidean One en 1 minuto',
+      desc: 'La crisis de la basura en Costa Rica y la solución de Orchidean One, explicadas en un minuto. Para leer, escuchar y compartir por WhatsApp.',
+      share: 'Le explico en 1 minuto la crisis de la basura y cómo se puede convertir en energía:',
+    }
+  : {
+      title: 'Orchidean One in 1 minute',
+      desc: 'Costa Rica’s trash crisis and the Orchidean One solution, explained in one minute. Read it, listen to it, share it on WhatsApp.',
+      share: 'Costa Rica’s trash crisis and how it can become energy, explained in 1 minute:',
+    };
+---
+
+<Base lang={lang} route="minute" title={c.title} description={c.desc}>
+  <div class="progress" aria-hidden="true"><span></span></div>
+
+  <section class="slide s1 bg-sky">
+    <div class="wrap slide-inner" data-listen>
+      <div class="top-row">
+        <span class="pill pill-sprout"><Icon name="clock" size={16} />{es ? '1 minuto' : '1 minute'}</span>
+        <ListenButton lang={lang} />
+      </div>
+      <p class="step">1 / 6</p>
+      <p class="num huge">4.000 t</p>
+      <h1 class="slide-h">{es ? 'de basura produce Costa Rica cada día.' : 'of trash: what Costa Rica produces every single day.'}<Ref n={r('gen4000')} /></h1>
+      <p class="lead">{es ? 'Es como llenar unos 400 camiones recolectores. Todos los días.' : 'That’s like filling about 400 garbage trucks. Every day.'}</p>
+    </div>
+    <a class="next-arrow" href="#s2" aria-label={es ? 'Siguiente' : 'Next'}><Icon name="arrowDown" /></a>
+  </section>
+
+  <section id="s2" class="slide on-red">
+    <div class="wrap slide-inner" data-listen>
+      <p class="step">2 / 6</p>
+      <p class="num huge">{es ? '8 de 10' : '8 in 10'}</p>
+      <h2 class="slide-h">{es ? 'toneladas se entierran. Y los rellenos se están llenando.' : 'tonnes get buried. And the landfills are filling up.'}<Ref n={r('ocde80')} /></h2>
+      <p class="lead">{es ? 'El relleno de El Huazo recibe la basura de más de 35 municipalidades y se está quedando sin espacio.' : 'The El Huazo landfill takes trash from more than 35 municipalities and is running out of space.'}<Ref n={r('huazo')} /></p>
+    </div>
+    <a class="next-arrow" href="#s3" aria-label={es ? 'Siguiente' : 'Next'}><Icon name="arrowDown" /></a>
+  </section>
+
+  <section id="s3" class="slide on-dark">
+    <div class="wrap slide-inner split" data-listen>
+      <div>
+        <p class="step">3 / 6</p>
+        <h2 class="slide-h big">{es ? 'Orchidean One convierte esa basura en electricidad.' : 'Orchidean One turns that trash into electricity.'}</h2>
+        <p class="lead">{es ? `Hasta ${fmt(PROJECT.capacityTpd, 'es')} toneladas al día que ya no se entierran, y luz para unos ${fmt(PROJECT.homes, 'es')} hogares.*` : `Up to ${fmt(PROJECT.capacityTpd, 'en')} tonnes a day no longer buried, and power for about ${fmt(PROJECT.homes, 'en')} homes.*`}</p>
+        <p class="source">{es ? '* Estimación de diseño.' : '* Design estimate.'}</p>
+      </div>
+      <div class="scene"><PlantScene label={es ? 'Ilustración de Orchidean One' : 'Illustration of Orchidean One'} /></div>
+    </div>
+    <a class="next-arrow" href="#s4" aria-label={es ? 'Siguiente' : 'Next'}><Icon name="arrowDown" /></a>
+  </section>
+
+  <section id="s4" class="slide on-sprout">
+    <div class="wrap slide-inner" data-listen>
+      <p class="step">4 / 6</p>
+      <span class="icon-badge lago big-badge"><Icon name="eye" size={34} /></span>
+      <h2 class="slide-h big">{es ? 'Limpia sus gases. Y usted puede ver las mediciones.' : 'It cleans its gases. And you can see the readings.'}</h2>
+      <p class="lead">{es ? 'Varias etapas de filtros, los límites de la Unión Europea y datos publicados en internet. No tiene que creernos: puede comprobarlo.' : 'Several filter stages, European Union limits and data published online. You don’t have to trust us — you can check.'}<Ref n={r('ied')} /></p>
+    </div>
+    <a class="next-arrow" href="#s5" aria-label={es ? 'Siguiente' : 'Next'}><Icon name="arrowDown" /></a>
+  </section>
+
+  <section id="s5" class="slide on-green">
+    <div class="wrap slide-inner" data-listen>
+      <p class="step">5 / 6</p>
+      <p class="num huge">3.000+</p>
+      <h2 class="slide-h">{es ? 'plantas como esta funcionan en el mundo.' : 'plants like this run around the world.'}<Ref n={r('ecoprog')} /></h2>
+      <ul class="cities">
+        <li>{es ? 'Copenhague: con pista de esquí en el techo' : 'Copenhagen: with a ski slope on the roof'}</li>
+        <li>{es ? 'Viena: en el centro de la ciudad' : 'Vienna: right in the city center'}</li>
+        <li>{es ? 'Tokio: 21 plantas dentro de la ciudad' : 'Tokyo: 21 plants inside the city'}</li>
+      </ul>
+    </div>
+    <a class="next-arrow" href="#s6" aria-label={es ? 'Siguiente' : 'Next'}><Icon name="arrowDown" /></a>
+  </section>
+
+  <section id="s6" class="slide on-night">
+    <div class="wrap slide-inner">
+      <div data-listen>
+        <p class="step">6 / 6</p>
+        <Logo variant="blue" mark height={64} />
+        <h2 class="slide-h big mt-2">{es ? 'Menos basura enterrada. Más luz para el país.' : 'Less buried trash. More power for the country.'}</h2>
+        <p class="lead">{es ? 'Ahora usted sabe más que la mayoría. Páselo.' : 'Now you know more than most people. Pass it on.'}</p>
+      </div>
+      <ShareBar lang={lang} route="minute" message={c.share} tone="dark" compact />
+      <div class="more">
+        <a class="btn btn-ghost" href={ROUTES.crisis[lang]}>{es ? 'La crisis' : 'The crisis'}<Icon name="arrowRight" /></a>
+        <a class="btn btn-ghost" href={ROUTES.air[lang]}>{es ? '¿Contamina?' : 'Does it pollute?'}<Icon name="arrowRight" /></a>
+        <a class="btn btn-ghost" href={ROUTES.faq[lang]}>{es ? 'Preguntas' : 'Questions'}<Icon name="arrowRight" /></a>
+      </div>
+    </div>
+  </section>
+
+  <Sources lang={lang} items={sourceList(refs)} />
+</Base>
+
+<style>
+  .progress { position: fixed; left: 0; right: 0; top: 0; height: 4px; z-index: 70; background: transparent; }
+  .progress span { display: block; height: 100%; width: 0; background: var(--verde); transition: width 0.1s linear; }
+  .slide { position: relative; min-height: calc(100svh - 72px); display: grid; align-items: center; padding: 56px 0 96px; scroll-snap-align: start; }
+  .slide-inner { width: 100%; }
+  .top-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 40px; }
+  .step { font-family: var(--font-title); font-size: 15px; letter-spacing: 0.1em; opacity: 0.7; margin-bottom: 18px; }
+  .huge { font-size: clamp(84px, 20vw, 200px); line-height: 0.9; margin: 0 0 18px; }
+  .on-red .huge { color: #fff; }
+  .s1 .huge { color: var(--verde-ink); }
+  .on-green .huge { color: var(--lago); }
+  .slide-h { font-size: var(--fs-title); max-width: 18ch; }
+  .slide-h.big { max-width: 16ch; }
+  .lead { max-width: 36rem; }
+  .scene { border-radius: var(--radius); overflow: hidden; aspect-ratio: 5 / 3.6; }
+  .big-badge { width: 80px; height: 80px; margin-bottom: 28px; }
+  .cities { list-style: none; padding: 0; margin: 24px 0 0; display: grid; gap: 10px; }
+  .cities li { padding: 14px 18px; border-radius: 16px; background: rgba(252, 251, 244, 0.55); font-family: var(--font-title); font-size: var(--fs-body); max-width: 30rem; }
+  .next-arrow { position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%); width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; background: rgba(252, 251, 244, 0.9); color: var(--lago) !important; animation: bob 2.4s ease-in-out infinite; }
+  @keyframes bob { 50% { transform: translate(-50%, 6px); } }
+  .more { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+  .on-night .source, .on-dark .source { color: rgba(249, 246, 228, 0.7); }
+  .on-red :global(sup.ref a), .on-dark :global(sup.ref a), .on-night :global(sup.ref a) { color: inherit; }
+</style>
+
+<script>
+  const bar = document.querySelector<HTMLElement>('.progress span');
+  const onScroll = () => {
+    const h = document.documentElement;
+    const p = h.scrollTop / Math.max(1, h.scrollHeight - h.clientHeight);
+    if (bar) bar.style.width = `${Math.min(100, p * 100)}%`;
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+</script>

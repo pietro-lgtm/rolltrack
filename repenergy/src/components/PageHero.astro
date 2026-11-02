@@ -1,0 +1,68 @@
+---
+import ListenButton from './ListenButton.astro';
+import Breadcrumbs from './Breadcrumbs.astro';
+import { LOGO } from '../data/logo';
+import type { Lang, RouteKey } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+  route: RouteKey;
+  eyebrow: string;
+  title: string;
+  lead: string;
+  tone?: 'cream' | 'red' | 'blue' | 'green' | 'night';
+  image?: { src: string; alt: string };
+  crumb: string;
+}
+const { lang, route, eyebrow, title, lead, tone = 'cream', image, crumb } = Astro.props;
+const toneClass = { cream: 'bg-sky', red: 'on-red', blue: 'on-dark', green: 'on-green', night: 'on-night' }[tone];
+const dark = tone === 'red' || tone === 'blue' || tone === 'night';
+---
+
+<section class:list={['page-hero', toneClass, { 'has-image': !!image }]}>
+  <div class="wrap ph-grid">
+    <div class="ph-copy" data-listen>
+      <Breadcrumbs lang={lang} route={route} label={crumb} dark={dark} />
+      <p class="eyebrow">{eyebrow}</p>
+      <h1>{title}</h1>
+      <p class="lead">{lead}</p>
+      <div class="ph-actions">
+        <ListenButton lang={lang} tone={dark ? 'dark' : 'light'} />
+        <slot name="actions" />
+      </div>
+    </div>
+    {
+      image && (
+        <div class="ph-media">
+          <img src={image.src} alt={image.alt} width="640" height="748" loading="eager" decoding="async" fetchpriority="high" />
+        </div>
+      )
+    }
+    <slot name="media" />
+  </div>
+  {
+    !image && !Astro.slots.has('media') && (
+      <svg class="ph-deco" viewBox="0 0 100 100" aria-hidden="true">
+        <circle cx="50" cy="50" r="49" fill="none" stroke="currentColor" stroke-width="0.6" />
+        <g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          {LOGO.markPaths.map((d) => <path d={d} />)}
+        </g>
+      </svg>
+    )
+  }
+</section>
+
+<style>
+  .page-hero { padding: clamp(28px, 5vw, 64px) 0 clamp(56px, 8vw, 104px); position: relative; overflow: hidden; }
+  .ph-grid { display: grid; gap: 36px; align-items: center; }
+  @media (min-width: 960px) { .has-image .ph-grid, .ph-grid:has(.ph-media-slot) { grid-template-columns: 1.15fr 0.85fr; } }
+  .ph-copy { max-width: 46rem; position: relative; z-index: 1; }
+  .ph-deco { position: absolute; right: max(-140px, -12vw); top: 50%; width: min(620px, 52vw); height: auto; transform: translateY(-50%); opacity: 0.16; color: var(--verde); pointer-events: none; }
+  .on-red .ph-deco, .on-dark .ph-deco, .on-night .ph-deco { color: var(--sprout); opacity: 0.22; }
+  .on-green .ph-deco { color: var(--sky); opacity: 0.4; }
+  @media (max-width: 760px) { .ph-deco { width: 300px; right: -110px; top: 74%; opacity: 0.1; } }
+  .ph-copy .lead { max-width: 38rem; }
+  .ph-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 28px; }
+  .ph-media img { width: 100%; aspect-ratio: 4 / 4.2; object-fit: cover; border-radius: var(--radius); box-shadow: var(--shadow); }
+  @media (max-width: 959px) { .ph-media img { aspect-ratio: 16 / 10; } }
+</style>
