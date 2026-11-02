@@ -1,0 +1,64 @@
+---
+/**
+ * Logotipo Reenergy — isotipo de hojas + logotipo vectorizado del brand book.
+ * Variantes de color según el brand book ("color variations").
+ */
+import { LOGO } from '../data/logo';
+
+type Variant = 'light' | 'blue' | 'red' | 'green';
+interface Props {
+  variant?: Variant;
+  mark?: boolean; // solo el isotipo (círculo)
+  class?: string;
+  title?: string;
+  height?: number;
+}
+const { variant = 'light', mark = false, class: cls = '', title = 'Reenergy', height } = Astro.props;
+
+const PALETTES: Record<Variant, { circle: string; leaf: string; word: string }> = {
+  light: { circle: '#a1c93e', leaf: '#f9f6e4', word: '#a1c93e' },
+  blue: { circle: '#d1f462', leaf: '#1b47b2', word: '#d1f462' },
+  red: { circle: '#d1f462', leaf: '#e03b47', word: '#d1f462' },
+  green: { circle: '#f9f6e4', leaf: '#a1c93e', word: '#f9f6e4' },
+};
+const p = PALETTES[variant];
+const [, , vbW, vbH] = LOGO.viewBox.split(' ').map(Number);
+const ratio = vbW / vbH;
+---
+
+{
+  mark ? (
+    <svg
+      class={`logo logo-mark ${cls}`}
+      viewBox="0 0 100 100"
+      role="img"
+      aria-label={title}
+      height={height}
+      width={height}
+    >
+      <circle cx="50" cy="50" r="50" fill={p.circle} />
+      <g fill="none" stroke={p.leaf} stroke-width={LOGO.markStroke} stroke-linecap="round" stroke-linejoin="round">
+        {LOGO.markPaths.map((d) => (
+          <path d={d} />
+        ))}
+      </g>
+    </svg>
+  ) : (
+    <svg
+      class={`logo ${cls}`}
+      viewBox={LOGO.viewBox}
+      role="img"
+      aria-label={title}
+      height={height}
+      width={height ? Math.round(height * ratio) : undefined}
+    >
+      <circle cx={LOGO.circle.cx} cy={LOGO.circle.cy} r={LOGO.circle.r} fill={p.circle} />
+      <g transform={LOGO.markTransform} fill="none" stroke={p.leaf} stroke-width={LOGO.markStroke} stroke-linecap="round" stroke-linejoin="round">
+        {LOGO.markPaths.map((d) => (
+          <path d={d} />
+        ))}
+      </g>
+      <path transform={LOGO.wordTransform} d={LOGO.wordPath} fill={p.word} fill-rule="evenodd" />
+    </svg>
+  )
+}

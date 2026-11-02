@@ -1,0 +1,465 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import Logo from '../components/Logo.astro';
+import Ref from '../components/Ref.astro';
+import PlantScene from '../components/PlantScene.astro';
+import HowItWorks from '../components/HowItWorks.astro';
+import WorldCards from '../components/WorldCards.astro';
+import Faq from '../components/Faq.astro';
+import SignupForm from '../components/SignupForm.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Sources from '../components/Sources.astro';
+import { ROUTES, fmt, type Lang } from '../lib/i18n';
+import { PROJECT, sourceList, type SourceKey } from '../data/facts';
+import { SITE } from '../data/site';
+import { FAQ } from '../data/faq';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const R = ROUTES;
+
+const refs: SourceKey[] = [
+  'gen4000', 'ocde80', 'recycling', 'limon300', 'huazo', 'ice2024', 'ghg', 'ecoprog',
+  'copenhill', 'spittelau', 'tokyo', 'sweden', 'swiss', 'singapore', 'germany', 'ied',
+];
+const r = (k: SourceKey) => refs.indexOf(k) + 1;
+
+const c = {
+  es: {
+    title: 'Orchidean One · Basura convertida en energía para Costa Rica',
+    desc: 'Costa Rica se está quedando sin espacio para su basura. Orchidean One, de Reenergy, la convierte en electricidad con tecnología probada en más de 3.000 plantas del mundo y aire medido en público.',
+    eyebrow: 'Orchidean One · Costa Rica',
+    h1: 'Lo que hoy enterramos, mañana ilumina el país.',
+    lead: 'Costa Rica se está quedando sin lugar para su basura. Orchidean One la convierte en electricidad, con tecnología probada en todo el mundo y el aire medido a la vista de todos.',
+    cta1: 'Entiéndalo en 1 minuto',
+    cta2: '¿Contamina? La respuesta clara',
+    chips: ['Basura → electricidad', `${PROJECT.volumeReduction}% menos volumen`, 'Emisiones públicas en vivo'],
+    share: 'Costa Rica se está quedando sin espacio para la basura. Hay una solución que ya usan Copenhague, Viena y Tokio. Mire:',
+  },
+  en: {
+    title: 'Orchidean One · Turning Costa Rica’s trash into energy',
+    desc: 'Costa Rica is running out of room for its trash. Orchidean One, by Reenergy, turns it into electricity with technology proven in 3,000+ plants worldwide and air quality measured in public.',
+    eyebrow: 'Orchidean One · Costa Rica',
+    h1: 'What we bury today can power the country tomorrow.',
+    lead: 'Costa Rica is running out of places to put its trash. Orchidean One turns it into electricity, with technology proven around the world and air quality measured in plain sight.',
+    cta1: 'Get it in 1 minute',
+    cta2: 'Does it pollute? A straight answer',
+    chips: ['Trash → electricity', `${PROJECT.volumeReduction}% less volume`, 'Live public emissions'],
+    share: 'Costa Rica is running out of room for its trash. There’s a solution Copenhagen, Vienna and Tokyo already use. Take a look:',
+  },
+}[lang];
+
+const faqItems = FAQ[lang].filter((f) => f.home);
+const plantLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Project',
+  '@id': `${SITE.url.replace(/\/$/, '')}/#plant`,
+  name: 'Orchidean One',
+  description: c.desc,
+  parentOrganization: { '@id': `${SITE.url.replace(/\/$/, '')}/#org` },
+  areaServed: 'Costa Rica',
+};
+---
+
+<Base lang={lang} route="home" title={c.title} description={c.desc} jsonLd={[plantLd]}>
+  <!-- ============ HERO (aterrizaje de campaña) ============ -->
+  <section class="hero">
+    <div class="hero-media" aria-hidden="true">
+      <picture>
+        <source srcset="/img/niebla-montana-800.webp 800w, /img/niebla-montana.webp 1332w" type="image/webp" sizes="100vw" />
+        <img src="/img/niebla-montana.jpg" alt="" width="1332" height="745" fetchpriority="high" decoding="async" />
+      </picture>
+      {
+        SITE.heroVideo && (
+          <video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="/img/niebla-montana.jpg">
+            <source src={SITE.heroVideo} />
+          </video>
+        )
+      }
+    </div>
+    <div class="wrap hero-inner" data-listen>
+      <p class="eyebrow">{c.eyebrow}</p>
+      <h1 class="hero-h1">{c.h1}</h1>
+      <p class="lead hero-lead">{c.lead}</p>
+      <div class="btn-row">
+        <a class="btn btn-lg" href={R.minute[lang]}>
+          <Icon name="play" />
+          {c.cta1}
+        </a>
+        <a class="btn btn-lg btn-light" href={R.air[lang]}>
+          {c.cta2}
+          <Icon name="arrowRight" />
+        </a>
+      </div>
+      <ul class="hero-chips">
+        {
+          c.chips.map((t, i) => (
+            <li>
+              <Icon name={['zap', 'recycle', 'activity'][i]} size={18} />
+              {t}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    <a class="hero-scroll" href="#crisis" aria-label={lang === 'es' ? 'Bajar' : 'Scroll down'}><Icon name="arrowDown" /></a>
+  </section>
+
+  <!-- ============ LA CRISIS ============ -->
+  <section id="crisis" class="section on-red crisis">
+    <div class="wrap">
+      <div class="split split-40">
+        <div data-listen>
+          <p class="eyebrow">{lang === 'es' ? 'El problema' : 'The problem'}</p>
+          <h2>{lang === 'es' ? 'La basura no desaparece. Solo la cambiamos de lugar.' : 'Trash doesn’t disappear. We just move it around.'}</h2>
+          <p class="lead">
+            {
+              lang === 'es'
+                ? 'Casi todo lo que botamos termina enterrado. Los rellenos sanitarios del Valle Central se están llenando, los camiones viajan cada vez más lejos y las municipalidades pagan cada vez más.'
+                : 'Almost everything we throw away ends up buried. The Central Valley’s landfills are filling up, trucks travel farther every year and municipalities pay more and more.'
+            }
+            <Ref n={r('huazo')} />
+          </p>
+          <a class="btn btn-light" href={R.crisis[lang]}>
+            {lang === 'es' ? 'Entienda la crisis' : 'Understand the crisis'}
+            <Icon name="arrowRight" />
+          </a>
+        </div>
+        <ul class="stats">
+          <li class="reveal">
+            <span class="num">4.000 t</span>
+            <span>{lang === 'es' ? 'de basura produce Costa Rica cada día' : 'of trash produced in Costa Rica every day'}<Ref n={r('gen4000')} /></span>
+          </li>
+          <li class="reveal">
+            <span class="num">{lang === 'es' ? '8 de 10' : '8 in 10'}</span>
+            <span>{lang === 'es' ? 'toneladas terminan enterradas en rellenos' : 'tonnes end up buried in landfills'}<Ref n={r('ocde80')} /></span>
+          </li>
+          <li class="reveal">
+            <span class="num">&lt;10%</span>
+            <span>{lang === 'es' ? 'se recicla o se aprovecha' : 'gets recycled or recovered'}<Ref n={r('recycling')} /></span>
+          </li>
+          <li class="reveal">
+            <span class="num">300+ km</span>
+            <span>{lang === 'es' ? 'viaja parte de la basura del Valle Central hasta Limón' : 'is how far some Central Valley trash travels, to Limón'}<Ref n={r('limon300')} /></span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ LA SOLUCIÓN ============ -->
+  <section class="section solution">
+    <div class="wrap split">
+      <div class="scene-wrap reveal">
+        <PlantScene label={lang === 'es' ? 'Ilustración de Orchidean One: edificio con techo verde, chimenea con anillo de monitoreo y energía hacia la red' : 'Illustration of Orchidean One: green-roofed building, stack with monitoring ring, power to the grid'} />
+        <span class="scene-tag">{lang === 'es' ? 'Ilustración de concepto' : 'Concept illustration'}</span>
+      </div>
+      <div data-listen>
+        <p class="eyebrow">{lang === 'es' ? 'La solución' : 'The solution'}</p>
+        <h2>{lang === 'es' ? 'Una planta que convierte basura en luz.' : 'A plant that turns trash into light.'}</h2>
+        <p class="lead">
+          {
+            lang === 'es'
+              ? 'Orchidean One recibe la basura que hoy se entierra y la transforma en electricidad para la red nacional. Es una planta de valorización energética: lo mismo que usan las ciudades más limpias del mundo.'
+              : 'Orchidean One takes the trash we bury today and turns it into electricity for the national grid. It’s a waste-to-energy plant — the same kind the world’s cleanest cities rely on.'
+          }
+        </p>
+        <ul class="checklist mt-2">
+          <li><Icon name="check" />{lang === 'es' ? `Recibe hasta ${fmt(PROJECT.capacityTpd, 'es')} toneladas de basura al día.*` : `Takes up to ${fmt(PROJECT.capacityTpd, 'en')} tonnes of trash a day.*`}</li>
+          <li><Icon name="check" />{lang === 'es' ? `Genera electricidad para el equivalente a unos ${fmt(PROJECT.homes, 'es')} hogares.*` : `Generates power for the equivalent of about ${fmt(PROJECT.homes, 'en')} homes.*`}</li>
+          <li><Icon name="check" />{lang === 'es' ? `Reduce el volumen de la basura en cerca de un ${PROJECT.volumeReduction}%.` : `Shrinks trash volume by about ${PROJECT.volumeReduction}%.`}</li>
+          <li><Icon name="check" />{lang === 'es' ? 'Limpia sus gases y publica sus mediciones en este sitio.' : 'Cleans its gases and publishes its readings on this site.'}</li>
+        </ul>
+        <p class="source">{lang === 'es' ? '* Estimación de diseño; se confirmará con los estudios de ingeniería.' : '* Design estimate, to be confirmed by engineering studies.'}</p>
+        <a class="link-arrow mt-1" href={R.plant[lang]}>{lang === 'es' ? 'Conozca Orchidean One' : 'Meet Orchidean One'}<Icon name="arrowRight" /></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CÓMO FUNCIONA ============ -->
+  <section class="section bg-cream">
+    <div class="wrap">
+      <div class="center mb-3" data-listen>
+        <p class="eyebrow">{lang === 'es' ? 'Cómo funciona' : 'How it works'}</p>
+        <h2>{lang === 'es' ? 'Cinco pasos. Cero misterio.' : 'Five steps. No mystery.'}</h2>
+      </div>
+      <HowItWorks lang={lang} />
+      <div class="center mt-3">
+        <a class="btn" href={R.plant[lang]}>{lang === 'es' ? 'Ver la planta por dentro' : 'See inside the plant'}<Icon name="arrowRight" /></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ BENEFICIOS ============ -->
+  <section class="section">
+    <div class="wrap">
+      <div class="measure mb-3" data-listen>
+        <p class="eyebrow">{lang === 'es' ? 'Por qué importa' : 'Why it matters'}</p>
+        <h2>{lang === 'es' ? 'Lo que gana Costa Rica.' : 'What Costa Rica gains.'}</h2>
+      </div>
+      <div class="grid grid-3">
+        <article class="card reveal benefit">
+          <span class="icon-badge"><Icon name="mountain" /></span>
+          <h3>{lang === 'es' ? 'Menos basura enterrada' : 'Less buried trash'}</h3>
+          <p>{lang === 'es' ? 'Cada tonelada que entra a la planta es una tonelada menos en un relleno que ya no da abasto.' : 'Every tonne the plant takes is a tonne less in a landfill that’s already overflowing.'}</p>
+        </article>
+        <article class="card reveal benefit">
+          <span class="icon-badge lago"><Icon name="cloudRain" /></span>
+          <h3>{lang === 'es' ? 'Luz que no depende de la lluvia' : 'Power that doesn’t depend on rain'}</h3>
+          <p>
+            {lang === 'es' ? 'En 2024 hubo racionamientos y el ICE gastó cientos de millones de dólares en combustibles e importaciones. La basura se produce todos los días, llueva o no.' : 'In 2024 there were blackouts and ICE spent hundreds of millions of dollars on fuel and imports. Trash is produced every day, rain or shine.'}
+            <Ref n={r('ice2024')} />
+          </p>
+        </article>
+        <article class="card reveal benefit">
+          <span class="icon-badge verde"><Icon name="leaf" /></span>
+          <h3>{lang === 'es' ? 'Menos metano' : 'Less methane'}</h3>
+          <p>
+            {lang === 'es' ? 'Los residuos son casi el 15% de las emisiones de gases de efecto invernadero del país. Lo que no se entierra no se pudre ni libera metano.' : 'Waste is almost 15% of the country’s greenhouse gas emissions. What isn’t buried doesn’t rot or release methane.'}
+            <Ref n={r('ghg')} />
+          </p>
+        </article>
+        <article class="card reveal benefit">
+          <span class="icon-badge lago"><Icon name="droplets" /></span>
+          <h3>{lang === 'es' ? 'Ríos y suelos protegidos' : 'Protected rivers and soil'}</h3>
+          <p>{lang === 'es' ? 'Menos rellenos significa menos lixiviados: el líquido que suelta la basura al pudrirse y que amenaza ríos y acuíferos.' : 'Fewer landfills means less leachate — the liquid rotting trash releases, which threatens rivers and aquifers.'}</p>
+        </article>
+        <article class="card reveal benefit">
+          <span class="icon-badge"><Icon name="road" /></span>
+          <h3>{lang === 'es' ? 'Menos camiones en carretera' : 'Fewer trucks on the road'}</h3>
+          <p>{lang === 'es' ? 'Tratar la basura cerca de donde se produce evita viajes de cientos de kilómetros, presas y gasto de combustible.' : 'Treating trash near where it’s produced avoids trips of hundreds of kilometers, traffic and fuel.'}</p>
+        </article>
+        <article class="card reveal benefit">
+          <span class="icon-badge verde"><Icon name="hardhat" /></span>
+          <h3>{lang === 'es' ? 'Trabajo para la zona' : 'Jobs for the region'}</h3>
+          <p>{lang === 'es' ? `Cerca de ${PROJECT.jobsConstruction} empleos durante la construcción y unos ${PROJECT.jobsOperation} empleos técnicos permanentes.*` : `Around ${PROJECT.jobsConstruction.replace('.', ',')} jobs during construction and some ${PROJECT.jobsOperation} permanent technical jobs.*`}</p>
+        </article>
+      </div>
+      <p class="source">{lang === 'es' ? '* Estimación de diseño.' : '* Design estimate.'}</p>
+    </div>
+  </section>
+
+  <!-- ============ EL MUNDO ============ -->
+  <section class="section bg-paper world-sec">
+    <div class="wrap">
+      <div class="world-head mb-3">
+        <div data-listen>
+          <p class="eyebrow">{lang === 'es' ? 'No es un experimento' : 'Not an experiment'}</p>
+          <h2>{lang === 'es' ? 'El mundo ya lo hace. Y vive al lado.' : 'The world already does it. Right next door.'}</h2>
+          <p class="lead">
+            {lang === 'es' ? 'Hay más de 3.000 plantas como esta en el mundo. Muchas están en el corazón de las ciudades más limpias y ricas del planeta.' : 'There are more than 3,000 plants like this worldwide. Many sit in the heart of the planet’s cleanest, wealthiest cities.'}
+            <Ref n={r('ecoprog')} />
+          </p>
+        </div>
+        <div class="big-count reveal" aria-hidden="true">
+          <span class="num">3.000+</span>
+          <span>{lang === 'es' ? 'plantas en el mundo' : 'plants worldwide'}</span>
+        </div>
+      </div>
+      <WorldCards lang={lang} refs={refs} />
+      <p class="mt-2">
+        {lang === 'es' ? 'Y no compite con el reciclaje: Alemania tiene decenas de plantas y aun así recicla o composta el 69% de su basura municipal.' : 'And it doesn’t compete with recycling: Germany runs dozens of plants and still recycles or composts 69% of its municipal waste.'}
+        <Ref n={r('germany')} />
+      </p>
+      <a class="link-arrow" href={R.world[lang]}>{lang === 'es' ? 'Ver ejemplos del mundo' : 'See examples worldwide'}<Icon name="arrowRight" /></a>
+    </div>
+  </section>
+
+  <!-- ============ AIRE ============ -->
+  <section class="section on-dark air">
+    <div class="wrap split">
+      <div data-listen>
+        <p class="eyebrow">{lang === 'es' ? 'Aire y salud' : 'Air & health'}</p>
+        <h2>{lang === 'es' ? '¿Contamina? Le respondemos claro.' : 'Does it pollute? Here’s a straight answer.'}</h2>
+        <p class="lead">
+          {lang === 'es' ? 'Toda industria tiene emisiones. La pregunta correcta es: ¿comparado con qué? Hoy la basura ya contamina —en rellenos, en ríos y en quemas— y nadie la mide.' : 'Every industry has emissions. The right question is: compared to what? Today trash already pollutes — in landfills, rivers and backyard burning — and nobody measures it.'}
+        </p>
+        <p>
+          {lang === 'es' ? 'Orchidean One trata sus gases en varias etapas, se diseña para cumplir los límites de la Unión Europea —de los más estrictos del mundo— y publica sus mediciones en este sitio.' : 'Orchidean One treats its gases in several stages, is designed to meet European Union limits — among the strictest in the world — and publishes its readings on this site.'}
+          <Ref n={r('ied')} />
+        </p>
+        <div class="btn-row mt-2">
+          <a class="btn btn-sprout" href={R.air[lang]}>{lang === 'es' ? 'La respuesta completa' : 'The full answer'}<Icon name="arrowRight" /></a>
+          <a class="btn btn-ghost" href={R.monitor[lang]}><Icon name="activity" />{lang === 'es' ? 'Monitoreo público' : 'Public monitoring'}</a>
+        </div>
+      </div>
+      <div class="compare reveal">
+        <div class="cmp cmp-now">
+          <p class="cmp-h"><Icon name="alert" size={20} />{lang === 'es' ? 'Hoy, con rellenos' : 'Today, with landfills'}</p>
+          <ul>
+            <li>{lang === 'es' ? 'Metano que sale sin control' : 'Methane escaping uncontrolled'}</li>
+            <li>{lang === 'es' ? 'Líquidos que amenazan ríos' : 'Liquids threatening rivers'}</li>
+            <li>{lang === 'es' ? 'Olores, moscas y zopilotes' : 'Smells, flies and vultures'}</li>
+            <li>{lang === 'es' ? 'Nadie publica mediciones' : 'No one publishes readings'}</li>
+          </ul>
+        </div>
+        <div class="cmp cmp-new">
+          <p class="cmp-h"><Icon name="shield" size={20} />{lang === 'es' ? 'Con Orchidean One' : 'With Orchidean One'}</p>
+          <ul>
+            <li>{lang === 'es' ? 'Gases tratados antes de salir' : 'Gases treated before release'}</li>
+            <li>{lang === 'es' ? 'Límites de la Unión Europea' : 'European Union limits'}</li>
+            <li>{lang === 'es' ? 'Edificio cerrado, sin olores afuera' : 'Sealed building, no odors outside'}</li>
+            <li>{lang === 'es' ? 'Mediciones públicas en línea' : 'Public readings online'}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ¿POR QUÉ ORCHIDEAN? ============ -->
+  <section class="section orchid">
+    <div class="wrap split split-40">
+      <div class="orchid-photo reveal">
+        <img src="/img/valle-verde.webp" alt={lang === 'es' ? 'Valle verde de Costa Rica con colinas y árboles' : 'Green Costa Rican valley with hills and trees'} width="640" height="748" loading="lazy" decoding="async" />
+      </div>
+      <div data-listen>
+        <p class="eyebrow">{lang === 'es' ? 'El nombre' : 'The name'}</p>
+        <h2>{lang === 'es' ? '¿Por qué “Orchidean”?' : 'Why “Orchidean”?'}</h2>
+        <p class="lead">
+          {lang === 'es' ? 'Por la orquídea, la flor de Costa Rica. La guaria morada es nuestra flor nacional.' : 'After the orchid, Costa Rica’s flower. The guaria morada is our national flower.'}
+        </p>
+        <p>
+          {lang === 'es' ? 'La orquídea no es un parásito: vive sobre el árbol sin quitarle nada y aprovecha lo que el bosque deja pasar. Esa es la idea de Orchidean One: tomar lo que el país ya botó y devolverlo convertido en algo útil.' : 'The orchid isn’t a parasite: it lives on the tree without taking anything from it, and makes use of what the forest lets pass by. That’s the idea behind Orchidean One: take what the country already threw away and give it back as something useful.'}
+        </p>
+        <p class="orchid-sign"><Logo mark height={44} />{lang === 'es' ? 'Una planta para un país verde.' : 'A plant for a green country.'}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DÓNDE Y CUÁNDO ============ -->
+  <section class="section on-sprout build">
+    <div class="wrap">
+      <div class="split">
+        <div data-listen>
+          <p class="eyebrow">{lang === 'es' ? 'Dónde y cuándo' : 'Where and when'}</p>
+          <h2>{lang === 'es' ? 'Rápido, porque ya está probado.' : 'Fast, because it’s already proven.'}</h2>
+          <p class="lead">
+            {lang === 'es' ? 'No hay que inventar nada. El diseño ya funciona en cientos de plantas; aquí se adapta a nuestra basura y a nuestras leyes.' : 'Nothing needs inventing. The design already runs in hundreds of plants; here it’s adapted to our waste and our laws.'}
+          </p>
+          <a class="btn" href={R.build[lang]}>{lang === 'es' ? 'Ubicación, permisos y plazos' : 'Site, permits and timeline'}<Icon name="arrowRight" /></a>
+        </div>
+        <ul class="build-facts">
+          <li class="reveal"><span class="num">{PROJECT.areaHa} ha</span><span>{lang === 'es' ? 'de terreno: una fracción de lo que consume un relleno.*' : 'of land — a fraction of what a landfill consumes.*'}</span></li>
+          <li class="reveal"><span class="num">~{PROJECT.constructionMonths} {lang === 'es' ? 'meses' : 'months'}</span><span>{lang === 'es' ? 'de construcción una vez aprobados los permisos.*' : 'of construction once permits are approved.*'}</span></li>
+          <li class="reveal"><span class="num">{lang === 'es' ? 'Zona industrial' : 'Industrial zone'}</span><span>{lang === 'es' ? 'lejos de casas, cerca de carreteras y de la red eléctrica.' : 'away from homes, near highways and the power grid.'}</span></li>
+        </ul>
+      </div>
+      <p class="source">{lang === 'es' ? '* Estimación de diseño, sujeta a estudios y permisos (SETENA y municipalidad).' : '* Design estimate, subject to studies and permits (SETENA and municipality).'}</p>
+    </div>
+  </section>
+
+  <!-- ============ PREGUNTAS ============ -->
+  <section class="section">
+    <div class="wrap split split-40 faq-sec">
+      <div data-listen>
+        <p class="eyebrow">{lang === 'es' ? 'Preguntas' : 'Questions'}</p>
+        <h2>{lang === 'es' ? 'Lo que la gente pregunta.' : 'What people ask.'}</h2>
+        <p class="lead">{lang === 'es' ? 'Respuestas cortas, en palabras claras.' : 'Short answers, in plain words.'}</p>
+        <a class="link-arrow" href={R.faq[lang]}>{lang === 'es' ? 'Todas las preguntas' : 'All questions'}<Icon name="arrowRight" /></a>
+      </div>
+      <Faq items={faqItems} schema={false} />
+    </div>
+  </section>
+
+  <!-- ============ SUSCRIPCIÓN ============ -->
+  <section class="section-tight bg-cream" id="noticias">
+    <div class="wrap split split-40">
+      <div>
+        <p class="eyebrow">{lang === 'es' ? 'Manténgase al día' : 'Stay in the loop'}</p>
+        <h2>{lang === 'es' ? 'Reciba las noticias de primera mano.' : 'Get the news first-hand.'}</h2>
+        <p>{lang === 'es' ? 'Avances, fechas de consulta pública y respuestas a sus preguntas. Sin spam.' : 'Progress, public consultation dates and answers to your questions. No spam.'}</p>
+      </div>
+      <SignupForm lang={lang} />
+    </div>
+  </section>
+
+  <CtaBand
+    lang={lang}
+    route="home"
+    share={c.share}
+    next={{ key: 'crisis', label: lang === 'es' ? 'La crisis de la basura, explicada' : 'The trash crisis, explained', teaser: lang === 'es' ? 'Qué está pasando con los rellenos y por qué nos afecta a todos.' : 'What’s happening with landfills and why it affects everyone.' }}
+  />
+  <Sources lang={lang} items={sourceList(refs)} />
+</Base>
+
+<style>
+  /* HERO */
+  .hero { position: relative; min-height: min(92svh, 900px); display: grid; align-items: center; overflow: hidden; background: #e9eae6; }
+  .hero-media { position: absolute; inset: 0; }
+  .hero-media img, .hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 30% 60%; }
+  .hero-media img { animation: kenburns 28s ease-in-out infinite alternate; transform-origin: 20% 70%; }
+  .hero-media::after {
+    content: ''; position: absolute; inset: 0;
+    background:
+      linear-gradient(180deg, rgba(249, 246, 228, 0.55) 0%, rgba(249, 246, 228, 0) 35%),
+      linear-gradient(90deg, rgba(245, 245, 240, 0.78) 0%, rgba(245, 245, 240, 0.35) 55%, rgba(245, 245, 240, 0) 80%);
+  }
+  @keyframes kenburns { from { transform: scale(1.02); } to { transform: scale(1.14) translate(-1.5%, -1%); } }
+  .hero-inner { position: relative; z-index: 1; padding-block: 72px 120px; }
+  .hero-h1 { max-width: 13ch; font-size: calc(var(--fs-title) * 1.25); color: #2f302c; }
+  .hero-lead { max-width: 34rem; color: #3a3a36; }
+  .hero-inner .btn-row { margin-top: 32px; }
+  .hero-inner .eyebrow { color: var(--verde-ink); }
+  .hero-chips { list-style: none; padding: 0; margin: 36px 0 0; display: flex; flex-wrap: wrap; gap: 10px; }
+  .hero-chips li {
+    display: inline-flex; align-items: center; gap: 8px; padding: 9px 14px; border-radius: 999px;
+    background: rgba(252, 251, 244, 0.82); backdrop-filter: blur(6px);
+    font-family: var(--font-title); font-size: 14.5px; color: var(--lago-night);
+  }
+  .hero-chips li :global(svg) { color: var(--verde-ink); }
+  .hero-scroll { position: absolute; left: 50%; bottom: 24px; transform: translateX(-50%); width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; background: rgba(252, 251, 244, 0.85); color: var(--lago); animation: bob 2.4s ease-in-out infinite; }
+  @keyframes bob { 50% { transform: translate(-50%, 6px); } }
+  @media (max-width: 700px) {
+    .hero { min-height: auto; align-items: end; }
+    .hero-media img { object-position: 22% 80%; }
+    .hero-media::after { background: linear-gradient(180deg, rgba(249, 246, 228, 0.7) 0%, rgba(245, 245, 240, 0.55) 60%, rgba(245, 245, 240, 0.25) 100%); }
+    .hero-inner { padding-block: 40px 96px; }
+    .hero-h1 { font-size: var(--fs-title); }
+    .hero-inner .btn-row .btn { width: 100%; }
+    .hero-scroll { display: none; }
+  }
+
+  /* CRISIS */
+  .stats { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); }
+  .stats li { display: grid; gap: 10px; padding: 24px; border-radius: var(--radius); background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.22); }
+  .stats .num { color: #fff; }
+  .crisis :global(sup.ref a) { color: #fff; }
+
+  /* SOLUCIÓN */
+  .scene-wrap { position: relative; border-radius: calc(var(--radius) + 6px); overflow: hidden; aspect-ratio: 5 / 3.4; box-shadow: var(--shadow); background: #f3efd6; }
+  .scene-tag { position: absolute; left: 14px; top: 14px; padding: 6px 12px; border-radius: 999px; background: rgba(252, 251, 244, 0.9); font-family: var(--font-title); font-size: 12.5px; }
+
+  .benefit h3 { font-family: var(--font-title); margin-top: 18px; }
+  .benefit p { margin: 0; }
+
+  /* MUNDO */
+  .world-head { display: grid; gap: 24px; align-items: end; }
+  @media (min-width: 900px) { .world-head { grid-template-columns: 1fr auto; } }
+  .big-count { display: grid; justify-items: start; padding: 28px 32px; border-radius: var(--radius); background: var(--lago); color: var(--sky); }
+  .big-count .num { font-size: calc(var(--fs-title) * 1.4); color: var(--sprout); }
+
+  /* AIRE */
+  .compare { display: grid; gap: 14px; }
+  .cmp { border-radius: var(--radius); padding: 26px 26px 22px; }
+  .cmp-now { background: rgba(249, 246, 228, 0.08); border: 1px solid rgba(249, 246, 228, 0.2); }
+  .cmp-new { background: var(--sprout); color: var(--lago-night); }
+  .cmp-h { display: flex; align-items: center; gap: 10px; font-family: var(--font-title); font-weight: 500; font-size: var(--fs-body); margin-bottom: 12px; }
+  .cmp ul { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; }
+  .air :global(sup.ref a) { color: var(--sprout); }
+
+  /* ORQUÍDEA */
+  .orchid-photo img { width: 100%; aspect-ratio: 4 / 4.4; object-fit: cover; border-radius: calc(var(--radius) + 6px); box-shadow: var(--shadow); }
+  @media (max-width: 899px) { .orchid-photo img { aspect-ratio: 16 / 11; } }
+  .orchid-sign { display: flex; align-items: center; gap: 14px; font-family: var(--font-title); font-size: var(--fs-body); margin-top: 28px; color: var(--verde-ink); }
+
+  /* CONSTRUCCIÓN */
+  .build-facts { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+  .build-facts li { display: grid; gap: 6px; padding: 22px 24px; border-radius: var(--radius); background: rgba(252, 251, 244, 0.6); }
+  .build-facts .num { font-size: var(--fs-sub); color: var(--lago); }
+  .build .source { color: var(--lago-night); opacity: 0.75; }
+
+  .faq-sec { align-items: start; }
+</style>
