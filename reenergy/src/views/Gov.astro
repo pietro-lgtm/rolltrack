@@ -52,7 +52,7 @@ const sheet = es
       ['Monitoreo', 'Medición continua, publicada en línea y en pantallas públicas frente a la planta y en las municipalidades'],
       ['Auditorías', 'Independientes y periódicas, con resultados públicos'],
       ['Reducción de volumen', `~${PROJECT.volumeReduction}%`],
-      ['Ceniza', 'Mezclada con cemento para fabricar adoquines; ceniza fina estabilizada con cemento'],
+      ['Ceniza', 'Ceniza de fondo reutilizable en obras; ceniza fina con manejo controlado (Ministerio de Salud)'],
       ['Ubicación', `Primera planta: ${PROJECT.firstSite} · Segunda: ${PROJECT.secondSite}`],
       ['Terreno', `${PROJECT.areaHa} ha como mínimo`],
       ['Estudios y permisos', `Meta de ${PROJECT.permitsMonths} meses`],
@@ -60,7 +60,7 @@ const sheet = es
       ['Empleo', `~${PROJECT.jobsOperation} empleos permanentes`],
       ['Inversión', '100% privada, de ReEnergy. El Estado no aporta fondos'],
       ['Tarifa municipal', 'Por tonelada, igual o menor a lo que hoy cuesta llevar la basura a Guápiles o Puntarenas'],
-      ['Estudio de residuos', `En curso, a cargo de ${PROJECT.wasteStudy.es}`],
+      ['Estudio de residuos', 'En curso: humedad y poder calorífico de la basura costarricense'],
     ]
   : [
       ['Facility type', 'Waste-to-energy plant for ordinary municipal solid waste'],
@@ -74,7 +74,7 @@ const sheet = es
       ['Monitoring', 'Continuous measurement, published online and on public screens outside the plant and at the municipalities'],
       ['Audits', 'Independent and regular, with public results'],
       ['Volume reduction', `~${PROJECT.volumeReduction}%`],
-      ['Ash', 'Mixed with cement to make paving blocks; fine ash stabilized with cement'],
+      ['Ash', 'Bottom ash reusable in construction; fine ash under controlled handling (Ministry of Health)'],
       ['Location', `First plant: ${PROJECT.firstSite} · Second: ${PROJECT.secondSite}`],
       ['Land', `${PROJECT.areaHa} ha minimum`],
       ['Studies and permits', `${PROJECT.permitsMonths}-month target`],
@@ -82,7 +82,7 @@ const sheet = es
       ['Employment', `~${PROJECT.jobsOperation} permanent jobs`],
       ['Investment', '100% private, by ReEnergy. No public funds'],
       ['Municipal fee', 'Per tonne, equal to or below what it costs today to haul trash to Guápiles or Puntarenas'],
-      ['Waste study', `Under way, by ${PROJECT.wasteStudy.en}`],
+      ['Waste study', 'Under way: moisture and heating value of Costa Rican waste'],
     ];
 
 const legal = es
@@ -187,7 +187,7 @@ const c = es
             }
           </tbody>
         </table>
-        <p class="source sheet-note">{es ? '* Estimación, sujeta a ingeniería de detalle y al estudio de residuos de la UCR.' : '* Estimate, subject to detailed engineering and the UCR waste study.'}</p>
+        <p class="source sheet-note">{es ? '* Estimación, sujeta a ingeniería de detalle y al estudio de residuos en curso.' : '* Estimate, subject to detailed engineering and the ongoing waste study.'}</p>
       </div>
     </div>
   </section>

@@ -56,11 +56,11 @@ export const FAQ: { es: Item[]; en: Item[] } = {
     },
     {
       q: 'La basura tica es muy húmeda. ¿Sirve para esto?',
-      a: `<p>Es una buena pregunta. Nuestra basura tiene mucha materia orgánica y humedad. Por eso ${PROJECT.wasteStudy.es} está estudiando la basura real del país —humedad y poder calorífico— para ajustar el diseño. La basura reposa en una fosa cerrada para escurrir, y una parrilla móvil de varias etapas la mueve y mezcla para que se queme por completo, entre 850 y 1.100 °C.</p>`,
+      a: `<p>Es una buena pregunta. Nuestra basura tiene mucha materia orgánica y humedad. Por eso se está haciendo un estudio de la basura real del país —humedad y poder calorífico— para ajustar el diseño. La basura reposa en una fosa cerrada para escurrir, y una parrilla móvil de varias etapas la mueve y mezcla para que se queme por completo, entre 850 y 1.100 °C.</p>`,
     },
     {
       q: '¿Qué pasa con la ceniza?',
-      a: `<p>La basura se reduce a cerca de una décima parte de su volumen. Los metales se recuperan para reciclar, y la ceniza se mezcla con cemento para fabricar adoquines para calles, urbanizaciones y parqueos (Dinamarca reutiliza casi toda su ceniza de fondo en obras). La ceniza fina de los filtros —una porción pequeña— se estabiliza con cemento, bajo el control del Ministerio de Salud.</p>`,
+      a: `<p>La basura se reduce a cerca de una décima parte de su volumen. Los metales se recuperan para reciclar. La ceniza de fondo puede reutilizarse en obras (Dinamarca reutiliza casi toda la suya). La ceniza fina de los filtros —una porción pequeña— se maneja bajo el control del Ministerio de Salud.</p>`,
     },
     {
       q: '¿Va a bajar el recibo de la luz?',
@@ -130,11 +130,11 @@ export const FAQ: { es: Item[]; en: Item[] } = {
     },
     {
       q: 'Costa Rican trash is very wet. Does it work?',
-      a: `<p>Good question. Our trash has a lot of organic matter and moisture. That’s why ${PROJECT.wasteStudy.en} is studying the country’s actual waste — moisture and heating value — to fine-tune the design. Trash rests in a sealed pit to drain, and a moving multi-stage grate keeps it moving and mixing so it burns completely, between 850 and 1,100 °C.</p>`,
+      a: `<p>Good question. Our trash has a lot of organic matter and moisture. That’s why a study of the country’s actual waste — moisture and heating value — is under way to fine-tune the design. Trash rests in a sealed pit to drain, and a moving multi-stage grate keeps it moving and mixing so it burns completely, between 850 and 1,100 °C.</p>`,
     },
     {
       q: 'What happens to the ash?',
-      a: `<p>Trash shrinks to about a tenth of its volume. Metals are recovered for recycling, and the ash is mixed with cement to make paving blocks for streets, housing developments and parking lots (Denmark reuses nearly all of its bottom ash in construction). The fine ash from the filters — a small share — is stabilized with cement, under Ministry of Health oversight.</p>`,
+      a: `<p>Trash shrinks to about a tenth of its volume. Metals are recovered for recycling. Bottom ash can be reused in construction (Denmark reuses nearly all of its own). The fine ash from the filters — a small share — is handled under Ministry of Health oversight.</p>`,
     },
     {
       q: 'Will my electricity bill go down?',

@@ -66,7 +66,7 @@ Nothing goes public until these are checked. A single wrong number found by a jo
 ### 3a. Project figures
 All live in **`src/data/facts.ts` → `PROJECT`** and propagate everywhere.
 
-Confirmed by ReEnergy (Nov 2026): **1,000 t/day**, **20 MW net**, **10 ha minimum**, **18–22 months** of construction after permits, a **6-month target** for studies and permits, **~150 permanent jobs**, **850–1,100 °C** moving multi-stage grate (Belgian design), first plant in **Cartago** and second in **Alajuela**, a waste study by **UCR**, and letters of interest from Santa Ana, Curridabat, Alajuelita, Desamparados, Montes de Oca (San Pedro) and La Unión.
+Confirmed by ReEnergy (Nov 2026): **1,000 t/day**, **20 MW net**, **10 ha minimum**, **18–22 months** of construction after permits, a **6-month target** for studies and permits, **~150 permanent jobs**, **850–1,100 °C** moving multi-stage grate (Belgian design), first plant in **Cartago** and second in **Alajuela** (approved to publish), a waste-characterization study under way, and letters of interest from Santa Ana, Curridabat, Alajuelita, Desamparados, Montes de Oca (San Pedro) and La Unión.
 
 Still open:
 | Field | Current value | Notes |
@@ -75,9 +75,12 @@ Still open:
 | construction jobs | not shown | No figure yet |
 | gas-cleaning stages | "several" | The air page lists the typical modern configuration; confirm against the actual design |
 
-Commitments confirmed by ReEnergy and now on the site: EU emission limits; continuous public emissions online **and on public screens at the plant and the municipalities**; mandatory independent audits; **100% private investment, no public funds**; a municipal fee **equal to or below** today's cost of hauling trash to Guápiles or Puntarenas; visitor center, green roof and local hiring; ash mixed with cement into paving blocks.
+Commitments confirmed by ReEnergy and now on the site: EU emission limits; continuous public emissions online **and on public screens at the plant and the municipalities**; mandatory independent audits; **100% private investment, no public funds**; a municipal fee **equal to or below** today's cost of hauling trash to Guápiles or Puntarenas; visitor center, green roof and local hiring.
 
-⚠️ **Ash wording to double-check with engineering:** the site says the ash goes into paving blocks and that the *fine filter ash* is stabilized with cement under Ministry of Health oversight. Fly ash is treated as hazardous in most countries. Before saying publicly that filter ash itself goes into street pavers, confirm the process and its regulatory approval.
+**Kept off the site on purpose (Nov 2026):**
+- **UCR** as the author of the waste study: don't name it until the university approves the use of its name.
+- **Ash → paving blocks**: ReEnergy says the ash is mixed with cement into pavers, but whether that includes the hazardous filter ash is unconfirmed. The site only says bottom ash *can* be reused in construction and filter ash is handled under Ministry of Health oversight.
+- **CNTY** as the technology supplier: not named on the site. Official answer if asked: CNTY.
 
 ### 3b. Third-party facts: open every link
 All sources are in **`src/data/facts.ts` → `SOURCES`** and appear as numbered footnotes. They were researched on 2026-11-02 **from search results only (full articles were not opened)**. Before launch:

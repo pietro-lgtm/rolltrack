@@ -29,25 +29,25 @@ const lanes = es
   ? [
       { tone: 'lago', icon: 'zap', t: 'Energía', steps: ['Fosa cerrada', 'Parrilla a 850–1.100 °C', 'Caldera: vapor', 'Turbina', 'Red nacional'] },
       { tone: 'sprout', icon: 'wind', t: 'Aire', steps: ['Gases calientes', 'Limpieza en varias etapas', 'Medición continua', 'Chimenea'] },
-      { tone: 'verde', icon: 'recycle', t: 'Materiales', steps: ['Metales → reciclaje', 'Ceniza + cemento → adoquines', 'Ceniza fina → estabilizada con cemento'] },
+      { tone: 'verde', icon: 'recycle', t: 'Materiales', steps: ['Metales → reciclaje', 'Ceniza de fondo → reutilizable en obras', 'Ceniza fina → manejo controlado'] },
     ]
   : [
       { tone: 'lago', icon: 'zap', t: 'Energy', steps: ['Sealed pit', 'Grate at 850–1,100 °C', 'Boiler: steam', 'Turbine', 'National grid'] },
       { tone: 'sprout', icon: 'wind', t: 'Air', steps: ['Hot gases', 'Multi-stage cleaning', 'Continuous measuring', 'Stack'] },
-      { tone: 'verde', icon: 'recycle', t: 'Materials', steps: ['Metals → recycling', 'Ash + cement → paving blocks', 'Fine ash → stabilized with cement'] },
+      { tone: 'verde', icon: 'recycle', t: 'Materials', steps: ['Metals → recycling', 'Bottom ash → reusable in construction', 'Fine ash → controlled handling'] },
     ];
 
 const design = es
   ? [
       { icon: 'flame', t: 'Parrilla móvil multietapa', d: 'Tecnología de diseño belga que mueve y mezcla la basura sin parar, para una combustión completa y pareja entre 850 y 1.100 °C.' },
-      { icon: 'droplets', t: 'Para basura húmeda', d: 'Nuestra basura tiene mucha materia orgánica. La Universidad de Costa Rica está estudiando la basura real del país para ajustar el diseño, y la fosa cerrada la deja escurrir antes del horno.' },
+      { icon: 'droplets', t: 'Para basura húmeda', d: 'Nuestra basura tiene mucha materia orgánica. Por eso se está haciendo un estudio de la basura real del país para ajustar el diseño, y la fosa cerrada la deja escurrir antes del horno.' },
       { icon: 'shield', t: 'Sismorresistente', d: 'Diseñada según el Código Sísmico de Costa Rica, como exige cualquier obra de su tamaño en el país.' },
       { icon: 'leaf', t: 'Parte del paisaje', d: 'Techo verde, arquitectura baja y áreas de árboles alrededor. Que se vea como lo que es: una planta para un país verde.' },
       { icon: 'users', t: 'Abierta a la gente', d: 'Un centro de visitas para escuelas, colegios y comunidades. Como CopenHill en Copenhague, la planta también es un lugar para aprender.' },
     ]
   : [
       { icon: 'flame', t: 'Moving multi-stage grate', d: 'Belgian-designed technology that keeps the waste moving and mixing, for complete, even combustion between 850 and 1,100 °C.' },
-      { icon: 'droplets', t: 'Built for wet waste', d: 'Our trash has a lot of organic matter. The University of Costa Rica is studying the country’s actual waste to fine-tune the design, and the sealed pit lets it drain before the furnace.' },
+      { icon: 'droplets', t: 'Built for wet waste', d: 'Our trash has a lot of organic matter. That’s why a study of the country’s actual waste is under way to fine-tune the design, and the sealed pit lets it drain before the furnace.' },
       { icon: 'shield', t: 'Earthquake-resistant', d: 'Designed to Costa Rica’s Seismic Code, as required for any structure of its size in the country.' },
       { icon: 'leaf', t: 'Part of the landscape', d: 'Green roof, low-profile architecture and trees all around. It should look like what it is: a plant for a green country.' },
       { icon: 'users', t: 'Open to people', d: 'A visitor center for schools and communities. Like CopenHill in Copenhagen, the plant is also a place to learn.' },
@@ -95,7 +95,7 @@ const c = es
           ))
         }
       </ul>
-      <p class="source">{es ? '* Estimación. Las cifras finales se confirman con la ingeniería de detalle y el estudio de la basura que realiza la UCR.' : '* Estimate. Final figures will be confirmed by detailed engineering and the waste study being carried out by UCR.'}</p>
+      <p class="source">{es ? '* Estimación. Las cifras finales se confirman con la ingeniería de detalle y el estudio de la basura en curso.' : '* Estimate. Final figures will be confirmed by detailed engineering and the ongoing waste study.'}</p>
     </div>
   </section>
 

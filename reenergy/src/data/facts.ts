@@ -188,7 +188,7 @@ export const PROJECT = {
   furnaceMaxC: 1100, // °C máximo de operación de la parrilla — confirmado
   firstSite: 'Cartago', // primera planta — confirmado
   secondSite: 'Alajuela', // segunda planta — confirmado
-  wasteStudy: { es: 'la Universidad de Costa Rica (UCR)', en: 'the University of Costa Rica (UCR)' }, // en curso — confirmado
+  // Estudio de residuos: lo realiza la UCR, pero NO se menciona en público hasta tener su autorización.
   // Municipalidades con carta de interés firmada (no vinculante) — confirmado. "San Pedro" = Municipalidad de Montes de Oca.
   lettersOfInterest: ['Santa Ana', 'Curridabat', 'Alajuelita', 'Desamparados', 'Montes de Oca (San Pedro)', 'La Unión'],
 };
