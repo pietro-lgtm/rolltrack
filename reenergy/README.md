@@ -1,6 +1,6 @@
-# Reenergy · Orchidean One — public website
+# ReEnergy · Orchidean One — public website
 
-Bilingual (Spanish first, English toggle) public site for **Orchidean One**, the waste-to-energy plant proposed by **Reenergy** in Costa Rica. Static site built with [Astro 5](https://astro.build): fast on cheap Android phones, indexable by Google, and deployable anywhere (Vercel, Netlify, Cloudflare Pages, S3).
+Bilingual (Spanish first, English toggle) public site for **Orchidean One**, the waste-to-energy plant proposed by **ReEnergy** in Costa Rica. Static site built with [Astro 5](https://astro.build): fast on cheap Android phones, indexable by Google, and deployable anywhere (Vercel, Netlify, Cloudflare Pages, S3).
 
 ```bash
 cd reenergy
@@ -63,25 +63,21 @@ Tone: *usted*, short sentences, everyday words, one idea per block, big numbers,
 
 Nothing goes public until these are checked. A single wrong number found by a journalist costs the whole conversation.
 
-### 3a. Project figures: confirm with engineering
-All live in **`src/data/facts.ts` → `PROJECT`** and propagate everywhere. The site labels them “estimación de diseño”.
+### 3a. Project figures
+All live in **`src/data/facts.ts` → `PROJECT`** and propagate everywhere.
 
-| Field | Current placeholder | Notes |
+Confirmed by ReEnergy (Nov 2026): **1,000 t/day**, **20 MW net**, **10 ha minimum**, **18–22 months** of construction after permits, a **6-month target** for studies and permits, **~150 permanent jobs**, **850–1,100 °C** moving multi-stage grate (Belgian design), first plant in **Cartago** and second in **Alajuela**, a waste study by **UCR**, and letters of interest from Santa Ana, Curridabat, Alajuelita, Desamparados, Montes de Oca (San Pedro) and La Unión.
+
+Still open:
+| Field | Current value | Notes |
 |---|---|---|
-| `capacityTpd` | 1,500 t/day | |
-| `powerMW` | ~30 MW net | ≈ 400–550 kWh/t; Costa Rican waste is wet, so this could be lower |
-| `homes` | 80,000 | assumes ~250 kWh/month per home |
-| `areaHa` | 8–10 ha | |
-| `constructionMonths` | 30 | after permits |
-| `jobsConstruction` / `jobsOperation` | 1,000 / 150 | |
-| `cleaningStages` | 5 | must match the flue-gas design |
+| `homes` | ~50,000 | **Our calculation**: 20 MW × ~8,000 h ÷ ~3,000 kWh per home per year. Confirm or replace. |
+| construction jobs | not shown | No figure yet |
+| gas-cleaning stages | "several" | The air page lists the typical modern configuration; confirm against the actual design |
 
-Also confirm these **commitments**, which the copy makes on the client's behalf:
-- Designed to **EU Directive 2010/75/EU** limits (`/aire-y-salud/`, `/municipalidades/`).
-- **Continuous emissions published online** and **independent audits** (`/monitoreo/`).
-- **Private investment by Reenergy; municipalities pay a per-tonne fee** (FAQ “¿Quién paga?”, fact sheet).
-- Visitor center, green roof and local hiring (`/orchidean-one/`).
-- Design for **wet / high-organic waste** (pit drainage, grates). Validate against a waste-characterization study: ISWA's minimum heating value is ~7 MJ/kg.
+Commitments confirmed by ReEnergy and now on the site: EU emission limits; continuous public emissions online **and on public screens at the plant and the municipalities**; mandatory independent audits; **100% private investment, no public funds**; a municipal fee **equal to or below** today's cost of hauling trash to Guápiles or Puntarenas; visitor center, green roof and local hiring; ash mixed with cement into paving blocks.
+
+⚠️ **Ash wording to double-check with engineering:** the site says the ash goes into paving blocks and that the *fine filter ash* is stabilized with cement under Ministry of Health oversight. Fly ash is treated as hazardous in most countries. Before saying publicly that filter ash itself goes into street pavers, confirm the process and its regulatory approval.
 
 ### 3b. Third-party facts: open every link
 All sources are in **`src/data/facts.ts` → `SOURCES`** and appear as numbered footnotes. They were researched on 2026-11-02 **from search results only (full articles were not opened)**. Before launch:
@@ -106,7 +102,7 @@ Done in code: semantic pages per query cluster, `es-CR` + `en` hreflang pairs, `
 
 To do at launch:
 1. **Google Search Console**: verify the domain, submit `/sitemap.xml`, and request indexing of the home, `/aire-y-salud/` and `/la-crisis/`.
-2. **Brand queries.** Make sure “Orchidean One” and “Reenergy” are used identically everywhere: press releases, YouTube descriptions, social bios. Point all of them to this domain.
+2. **Brand queries.** Make sure “Orchidean One” and “ReEnergy” are used identically everywhere: press releases, YouTube descriptions, social bios. Point all of them to this domain.
 3. **Target queries** the pages are written for: *crisis de la basura Costa Rica*, *rellenos sanitarios Costa Rica*, *planta de basura a energía Costa Rica*, *valorización energética*, *¿la incineración contamina?*, *El Huazo*, *La Carpio*.
 4. **Fresh content.** Add a *Noticias* section (recommended next build) so every milestone (study, consultation, permit) becomes a new indexed page.
 5. **Earned links.** Every press release links to the specific sourced page (for example `/aire-y-salud/`), not just the home page.

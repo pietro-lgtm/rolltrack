@@ -168,20 +168,29 @@ export function refNo(keys: SourceKey[], k: SourceKey) {
 }
 
 /**
- * ⚠️ CIFRAS DE DISEÑO — VERIFICAR TODAS CON INGENIERÍA ANTES DE PUBLICAR.
- * Se muestran en el sitio como “estimación de diseño”.
+ * CIFRAS DEL PROYECTO — confirmadas por ReEnergy (noviembre 2026) salvo donde dice VERIFICAR.
+ * Se muestran en el sitio como "estimación" cuando todavía dependen de ingeniería de detalle.
  */
 export const PROJECT = {
-  capacityTpd: 1500, // toneladas por día — VERIFICAR
-  powerMW: 30, // MW netos aproximados (≈ 400–550 kWh/t) — VERIFICAR
-  homes: 80000, // hogares equivalentes — VERIFICAR (supuesto: ~250 kWh/mes por hogar)
-  areaHa: '8 a 10', // hectáreas — VERIFICAR
-  constructionMonths: 30, // meses de construcción tras permisos — VERIFICAR
-  jobsConstruction: '1.000', // empleos en obra (pico) — VERIFICAR
-  jobsOperation: '150', // empleos permanentes directos — VERIFICAR
+  capacityTpd: 1000, // t/día — confirmado
+  powerMW: 20, // MW netos — confirmado
+  // VERIFICAR: cálculo propio, no confirmado por ReEnergy.
+  // 20 MW × ~8.000 h/año ≈ 160 GWh/año ÷ ~3.000 kWh por hogar al año (≈250 kWh/mes) ≈ 53.000 → "unos 50.000".
+  homes: 50000,
+  areaHa: 10, // hectáreas, como mínimo — confirmado
+  constructionEs: '18 a 22 meses', // 1,5 a 1,8 años tras permisos — confirmado
+  constructionEn: '18–22 months',
+  constructionShort: '18–22',
+  permitsMonths: 6, // meta del programa para estudios y permisos — confirmado (es una meta)
+  jobsOperation: 150, // empleos permanentes — confirmado ("como 150"); empleos de obra: sin dato
   volumeReduction: 90, // % reducción de volumen (rango típico 80–90%)
   furnaceC: 850, // °C mínimo, 2 s (Directiva 2010/75/UE)
-  cleaningStages: 5, // etapas de tratamiento de gases — VERIFICAR con diseño
+  furnaceMaxC: 1100, // °C máximo de operación de la parrilla — confirmado
+  firstSite: 'Cartago', // primera planta — confirmado
+  secondSite: 'Alajuela', // segunda planta — confirmado
+  wasteStudy: { es: 'la Universidad de Costa Rica (UCR)', en: 'the University of Costa Rica (UCR)' }, // en curso — confirmado
+  // Municipalidades con carta de interés firmada (no vinculante) — confirmado. "San Pedro" = Municipalidad de Montes de Oca.
+  lettersOfInterest: ['Santa Ana', 'Curridabat', 'Alajuelita', 'Desamparados', 'Montes de Oca (San Pedro)', 'La Unión'],
 };
 
 /** Límites diarios de emisión de la UE para incineración (Directiva 2010/75/UE, Anexo VI). */

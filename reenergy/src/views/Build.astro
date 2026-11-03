@@ -17,7 +17,7 @@ interface Props {
 }
 const { lang } = Astro.props;
 const es = lang === 'es';
-const refs: SourceKey[] = ['setena', 'ley8839', 'dec39136'];
+const refs: SourceKey[] = ['losPinos', 'setena', 'ley8839', 'dec39136'];
 const r = (k: SourceKey) => refs.indexOf(k) + 1;
 
 const criteria = es
@@ -40,18 +40,18 @@ const criteria = es
 
 const phases = es
   ? [
-      { t: 'Estudios y diálogo', time: 'En curso', d: 'Estudio de la basura real del país, preselección de sitios y conversaciones con municipalidades y comunidades.', icon: 'search', state: 'now' },
-      { t: 'Evaluación ambiental (SETENA)', time: 'Fase 2', d: 'Formulario D1 y Estudio de Impacto Ambiental, con participación ciudadana, hasta obtener la viabilidad ambiental.', icon: 'fileText', state: 'next' },
-      { t: 'Permisos municipales y conexión', time: 'Fase 3', d: 'Uso de suelo, permisos de construcción y acuerdo de conexión a la red eléctrica.', icon: 'landmark', state: 'next' },
-      { t: 'Construcción', time: `~${PROJECT.constructionMonths} meses`, d: 'Obra civil y fabricación de equipos al mismo tiempo. Prioridad a mano de obra local.', icon: 'hardhat', state: 'next' },
-      { t: 'Operación', time: 'Fase 5', d: 'La planta recibe basura, entrega electricidad y publica sus emisiones en este sitio.', icon: 'zap', state: 'next' },
+      { t: 'Estudios y diálogo', time: 'En curso', d: 'La Universidad de Costa Rica estudia la basura real del país. El proyecto ya se presentó a municipalidades y al Ministerio de Salud, y varias municipalidades firmaron cartas de interés.', icon: 'search', state: 'now' },
+      { t: 'Evaluación ambiental (SETENA)', time: `Meta: ${PROJECT.permitsMonths} meses (fases 1 a 3)`, d: 'Formulario D1 y Estudio de Impacto Ambiental, con participación ciudadana, hasta obtener la viabilidad ambiental.', icon: 'fileText', state: 'next' },
+      { t: 'Permisos municipales y conexión', time: `Meta: ${PROJECT.permitsMonths} meses (fases 1 a 3)`, d: 'Uso de suelo, permisos de construcción y acuerdo de conexión a la red eléctrica.', icon: 'landmark', state: 'next' },
+      { t: 'Construcción', time: PROJECT.constructionEs, d: 'Obra civil y fabricación de equipos al mismo tiempo. Prioridad a mano de obra local.', icon: 'hardhat', state: 'next' },
+      { t: 'Operación', time: 'Fase 5', d: 'La planta recibe basura, entrega electricidad y publica sus emisiones en este sitio y en pantallas públicas.', icon: 'zap', state: 'next' },
     ]
   : [
-      { t: 'Studies and dialogue', time: 'Underway', d: 'Study of the country’s actual waste, site shortlisting and conversations with municipalities and communities.', icon: 'search', state: 'now' },
-      { t: 'Environmental review (SETENA)', time: 'Phase 2', d: 'D1 form and Environmental Impact Study, with public participation, through to environmental approval.', icon: 'fileText', state: 'next' },
-      { t: 'Municipal permits and grid connection', time: 'Phase 3', d: 'Land-use permit, building permits and grid connection agreement.', icon: 'landmark', state: 'next' },
-      { t: 'Construction', time: `~${PROJECT.constructionMonths} months`, d: 'Civil works and equipment manufacturing in parallel. Priority for local workers.', icon: 'hardhat', state: 'next' },
-      { t: 'Operation', time: 'Phase 5', d: 'The plant takes trash, delivers electricity and publishes its emissions on this site.', icon: 'zap', state: 'next' },
+      { t: 'Studies and dialogue', time: 'Underway', d: 'The University of Costa Rica is studying the country’s actual waste. The project has been presented to municipalities and the Ministry of Health, and several municipalities have signed letters of interest.', icon: 'search', state: 'now' },
+      { t: 'Environmental review (SETENA)', time: `Target: ${PROJECT.permitsMonths} months (phases 1–3)`, d: 'D1 form and Environmental Impact Study, with public participation, through to environmental approval.', icon: 'fileText', state: 'next' },
+      { t: 'Municipal permits and grid connection', time: `Target: ${PROJECT.permitsMonths} months (phases 1–3)`, d: 'Land-use permit, building permits and grid connection agreement.', icon: 'landmark', state: 'next' },
+      { t: 'Construction', time: PROJECT.constructionEn, d: 'Civil works and equipment manufacturing in parallel. Priority for local workers.', icon: 'hardhat', state: 'next' },
+      { t: 'Operation', time: 'Phase 5', d: 'The plant takes trash, delivers electricity and publishes its emissions on this site and on public screens.', icon: 'zap', state: 'next' },
     ];
 
 const fast = es
@@ -71,12 +71,12 @@ const fast = es
 const c = es
   ? {
       title: 'Dónde y cuándo: ubicación, permisos y plazos de Orchidean One',
-      desc: `Cómo se escoge el terreno de Orchidean One (zona industrial, lejos de casas, cerca de carreteras), qué permisos necesita (SETENA y municipalidad) y por qué se construye en unos ${PROJECT.constructionMonths} meses.`,
+      desc: `Cómo se escoge el terreno de Orchidean One (zona industrial, lejos de casas, cerca de carreteras), qué permisos necesita (SETENA y municipalidad) y por qué se construye en ${PROJECT.constructionEs}.`,
       share: '¿Dónde iría la planta de basura a energía y cuánto tardaría? Aquí está explicado:',
     }
   : {
       title: 'Where and when: Orchidean One’s site, permits and timeline',
-      desc: `How Orchidean One’s site is chosen (industrial zone, away from homes, near highways), which permits it needs (SETENA and municipality) and why it can be built in about ${PROJECT.constructionMonths} months.`,
+      desc: `How Orchidean One’s site is chosen (industrial zone, away from homes, near highways), which permits it needs (SETENA and municipality) and why it can be built in ${PROJECT.constructionEn}.`,
       share: 'Where would the waste-to-energy plant go and how long would it take? Explained here:',
     };
 ---
@@ -95,11 +95,12 @@ const c = es
   <section class="section-tight on-dark">
     <div class="wrap">
       <ul class="key">
-        <li class="reveal"><span class="num">{PROJECT.areaHa} ha</span><span>{es ? 'de terreno aproximado*' : 'of land, approximately*'}</span></li>
-        <li class="reveal"><span class="num">~{PROJECT.constructionMonths}</span><span>{es ? 'meses de construcción tras los permisos*' : 'months of construction after permits*'}</span></li>
-        <li class="reveal"><span class="num">{es ? '1 sitio' : '1 site'}</span><span>{es ? 'en vez de un relleno nuevo cada pocos años' : 'instead of a new landfill every few years'}</span></li>
+        <li class="reveal"><span class="num">{PROJECT.firstSite}</span><span>{es ? `primera planta · la segunda, en ${PROJECT.secondSite}` : `first plant · the second, in ${PROJECT.secondSite}`}</span></li>
+        <li class="reveal"><span class="num">{PROJECT.areaHa}+ ha</span><span>{es ? 'de terreno, como mínimo' : 'of land, at minimum'}</span></li>
+        <li class="reveal"><span class="num">{PROJECT.permitsMonths} {es ? 'meses' : 'months'}</span><span>{es ? 'meta para tener estudios y permisos*' : 'target to complete studies and permits*'}</span></li>
+        <li class="reveal"><span class="num">{PROJECT.constructionShort}</span><span>{es ? 'meses de construcción tras los permisos*' : 'months of construction after permits*'}</span></li>
       </ul>
-      <p class="source">{es ? '* Estimaciones de diseño, sujetas a estudios técnicos y permisos.' : '* Design estimates, subject to technical studies and permits.'}</p>
+      <p class="source">{es ? '* Plazos estimados, sujetos a los tiempos de SETENA y de cada municipalidad.' : '* Estimated timeline, subject to SETENA and municipal review times.'}</p>
     </div>
   </section>
 
@@ -107,8 +108,9 @@ const c = es
     <div class="wrap">
       <div class="measure mb-3" data-listen>
         <p class="eyebrow">{es ? 'Dónde' : 'Where'}</p>
-        <h2>{es ? 'Seis reglas para escoger el lugar.' : 'Six rules for choosing the site.'}</h2>
-        <p class="lead">{es ? 'El terreno se define con estudios técnicos y consulta pública. Estos son los criterios, y no son negociables.' : 'The site is chosen through technical studies and public consultation. These are the criteria, and they’re non-negotiable.'}</p>
+        <h2>{es ? 'Primero Cartago. Después Alajuela.' : 'Cartago first. Then Alajuela.'}</h2>
+        <p class="lead">{es ? 'Orchidean One se construirá en Cartago, la provincia que perdió su relleno de Los Pinos en 2023 y hoy lleva su basura lejos. Una segunda planta está prevista en Alajuela.' : 'Orchidean One will be built in Cartago, the province that lost its Los Pinos landfill in 2023 and now hauls its trash far away. A second plant is planned in Alajuela.'}<Ref n={r('losPinos')} /></p>
+        <p>{es ? 'El terreno exacto se define con estudios técnicos y consulta pública. Estas son las seis reglas, y no son negociables:' : 'The exact site is chosen through technical studies and public consultation. These are the six rules, and they’re non-negotiable:'}</p>
       </div>
       <div class="grid grid-3">
         {

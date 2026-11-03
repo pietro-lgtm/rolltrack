@@ -30,7 +30,7 @@ const r = (k: SourceKey) => refs.indexOf(k) + 1;
 const c = {
   es: {
     title: 'Orchidean One · Basura convertida en energía para Costa Rica',
-    desc: 'Costa Rica se está quedando sin espacio para su basura. Orchidean One, de Reenergy, la convierte en electricidad con tecnología probada en más de 3.000 plantas del mundo y aire medido en público.',
+    desc: 'Costa Rica se está quedando sin espacio para su basura. Orchidean One, de ReEnergy, la convierte en electricidad con tecnología probada en más de 3.000 plantas del mundo y aire medido en público.',
     eyebrow: 'Orchidean One · Costa Rica',
     h1: 'Lo que hoy enterramos, mañana ilumina el país.',
     lead: 'Costa Rica se está quedando sin lugar para su basura. Orchidean One la convierte en electricidad, con tecnología probada en todo el mundo y el aire medido a la vista de todos.',
@@ -41,7 +41,7 @@ const c = {
   },
   en: {
     title: 'Orchidean One · Turning Costa Rica’s trash into energy',
-    desc: 'Costa Rica is running out of room for its trash. Orchidean One, by Reenergy, turns it into electricity with technology proven in 3,000+ plants worldwide and air quality measured in public.',
+    desc: 'Costa Rica is running out of room for its trash. Orchidean One, by ReEnergy, turns it into electricity with technology proven in 3,000+ plants worldwide and air quality measured in public.',
     eyebrow: 'Orchidean One · Costa Rica',
     h1: 'What we bury today can power the country tomorrow.',
     lead: 'Costa Rica is running out of places to put its trash. Orchidean One turns it into electricity, with technology proven around the world and air quality measured in plain sight.',
@@ -168,12 +168,13 @@ const plantLd = {
           }
         </p>
         <ul class="checklist mt-2">
-          <li><Icon name="check" />{lang === 'es' ? `Recibe hasta ${fmt(PROJECT.capacityTpd, 'es')} toneladas de basura al día.*` : `Takes up to ${fmt(PROJECT.capacityTpd, 'en')} tonnes of trash a day.*`}</li>
+          <li><Icon name="check" />{lang === 'es' ? `Recibe ${fmt(PROJECT.capacityTpd, 'es')} toneladas de basura al día y entrega ${PROJECT.powerMW} MW a la red.` : `Takes ${fmt(PROJECT.capacityTpd, 'en')} tonnes of trash a day and delivers ${PROJECT.powerMW} MW to the grid.`}</li>
           <li><Icon name="check" />{lang === 'es' ? `Genera electricidad para el equivalente a unos ${fmt(PROJECT.homes, 'es')} hogares.*` : `Generates power for the equivalent of about ${fmt(PROJECT.homes, 'en')} homes.*`}</li>
           <li><Icon name="check" />{lang === 'es' ? `Reduce el volumen de la basura en cerca de un ${PROJECT.volumeReduction}%.` : `Shrinks trash volume by about ${PROJECT.volumeReduction}%.`}</li>
-          <li><Icon name="check" />{lang === 'es' ? 'Limpia sus gases y publica sus mediciones en este sitio.' : 'Cleans its gases and publishes its readings on this site.'}</li>
+          <li><Icon name="check" />{lang === 'es' ? 'Limpia sus gases y publica sus mediciones en este sitio y en pantallas públicas.' : 'Cleans its gases and publishes its readings on this site and on public screens.'}</li>
+          <li><Icon name="check" />{lang === 'es' ? 'Inversión 100% privada: el Estado no pone ni un colón.' : '100% private investment: not one colón of public money.'}</li>
         </ul>
-        <p class="source">{lang === 'es' ? '* Estimación de diseño; se confirmará con los estudios de ingeniería.' : '* Design estimate, to be confirmed by engineering studies.'}</p>
+        <p class="source">{lang === 'es' ? '* Hogares: estimación calculada a partir de los 20 MW.' : '* Homes: estimate based on the 20 MW output.'}</p>
         <a class="link-arrow mt-1" href={R.plant[lang]}>{lang === 'es' ? 'Conozca Orchidean One' : 'Meet Orchidean One'}<Icon name="arrowRight" /></a>
       </div>
     </div>
@@ -235,7 +236,7 @@ const plantLd = {
         <article class="card reveal benefit">
           <span class="icon-badge verde"><Icon name="hardhat" /></span>
           <h3>{lang === 'es' ? 'Trabajo para la zona' : 'Jobs for the region'}</h3>
-          <p>{lang === 'es' ? `Cerca de ${PROJECT.jobsConstruction} empleos durante la construcción y unos ${PROJECT.jobsOperation} empleos técnicos permanentes.*` : `Around ${PROJECT.jobsConstruction.replace('.', ',')} jobs during construction and some ${PROJECT.jobsOperation} permanent technical jobs.*`}</p>
+          <p>{lang === 'es' ? `Unos ${PROJECT.jobsOperation} empleos técnicos permanentes, además del trabajo que genera la construcción, con prioridad para gente de la zona.*` : `About ${PROJECT.jobsOperation} permanent technical jobs, plus the work the construction creates, with priority for local people.*`}</p>
         </article>
       </div>
       <p class="source">{lang === 'es' ? '* Estimación de diseño.' : '* Design estimate.'}</p>
@@ -342,12 +343,18 @@ const plantLd = {
           <a class="btn" href={R.build[lang]}>{lang === 'es' ? 'Ubicación, permisos y plazos' : 'Site, permits and timeline'}<Icon name="arrowRight" /></a>
         </div>
         <ul class="build-facts">
-          <li class="reveal"><span class="num">{PROJECT.areaHa} ha</span><span>{lang === 'es' ? 'de terreno: una fracción de lo que consume un relleno.*' : 'of land — a fraction of what a landfill consumes.*'}</span></li>
-          <li class="reveal"><span class="num">~{PROJECT.constructionMonths} {lang === 'es' ? 'meses' : 'months'}</span><span>{lang === 'es' ? 'de construcción una vez aprobados los permisos.*' : 'of construction once permits are approved.*'}</span></li>
+          <li class="reveal"><span class="num">{PROJECT.firstSite}</span><span>{lang === 'es' ? `primera planta. La segunda, en ${PROJECT.secondSite}.` : `first plant. The second, in ${PROJECT.secondSite}.`}</span></li>
+          <li class="reveal"><span class="num">{PROJECT.areaHa}+ ha</span><span>{lang === 'es' ? 'de terreno: una fracción de lo que consume un relleno.' : 'of land — a fraction of what a landfill consumes.'}</span></li>
+          <li class="reveal"><span class="num">{PROJECT.constructionShort} {lang === 'es' ? 'meses' : 'months'}</span><span>{lang === 'es' ? `de construcción, después de una meta de ${PROJECT.permitsMonths} meses para estudios y permisos.*` : `of construction, after a ${PROJECT.permitsMonths}-month target for studies and permits.*`}</span></li>
           <li class="reveal"><span class="num">{lang === 'es' ? 'Zona industrial' : 'Industrial zone'}</span><span>{lang === 'es' ? 'lejos de casas, cerca de carreteras y de la red eléctrica.' : 'away from homes, near highways and the power grid.'}</span></li>
         </ul>
       </div>
-      <p class="source">{lang === 'es' ? '* Estimación de diseño, sujeta a estudios y permisos (SETENA y municipalidad).' : '* Design estimate, subject to studies and permits (SETENA and municipality).'}</p>
+      <p class="source">{lang === 'es' ? '* Plazos estimados, sujetos a estudios y permisos (SETENA y municipalidad).' : '* Estimated timeline, subject to studies and permits (SETENA and municipality).'}</p>
+      <div class="letters">
+        <p class="letters-h">{lang === 'es' ? 'Municipalidades que ya firmaron cartas de interés' : 'Municipalities that have signed letters of interest'}</p>
+        <ul>{PROJECT.lettersOfInterest.map((m) => <li>{m}</li>)}<li class="more">{lang === 'es' ? 'y otras' : 'and others'}</li></ul>
+        <p class="source mb-0">{lang === 'es' ? 'Cartas de interés no vinculantes.' : 'Non-binding letters of interest.'}</p>
+      </div>
     </div>
   </section>
 
@@ -460,6 +467,11 @@ const plantLd = {
   .build-facts li { display: grid; gap: 6px; padding: 22px 24px; border-radius: var(--radius); background: rgba(252, 251, 244, 0.6); }
   .build-facts .num { font-size: var(--fs-sub); color: var(--lago); }
   .build .source { color: var(--lago-night); opacity: 0.75; }
+  .letters { margin-top: 36px; padding: 24px 26px; border-radius: var(--radius); background: rgba(252, 251, 244, 0.7); }
+  .letters-h { font-family: var(--font-title); font-weight: 500; margin: 0 0 14px; }
+  .letters ul { list-style: none; margin: 0 0 12px; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  .letters li { padding: 8px 14px; border-radius: 999px; background: var(--lago); color: var(--sky); font-family: var(--font-title); font-size: 15px; }
+  .letters li.more { background: transparent; color: var(--lago-night); border: 1.5px solid var(--lago); }
 
   .faq-sec { align-items: start; }
 </style>

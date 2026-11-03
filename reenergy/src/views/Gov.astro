@@ -24,53 +24,65 @@ const r = (k: SourceKey) => refs.indexOf(k) + 1;
 const value = es
   ? [
       { icon: 'shield', t: 'Destino seguro', d: 'Un lugar estable y de largo plazo para la basura del cantón, sin depender de rellenos que cierran.', k: 'huazo' as SourceKey },
-      { icon: 'scale', t: 'Precio predecible', d: 'Tarifa por tonelada en contrato de largo plazo, en lugar de aumentos repentinos como los de 2025–2026.', k: 'santaAna' as SourceKey },
+      { icon: 'scale', t: 'Igual o más barato', d: 'Tarifa por tonelada igual o menor a lo que hoy paga el cantón por llevar su basura a Guápiles o Puntarenas, en contrato de largo plazo y sin aumentos repentinos como los de 2025–2026.', k: 'santaAna' as SourceKey },
       { icon: 'road', t: 'Menos kilómetros', d: 'Viajes más cortos que bajan costos de transporte y desgaste de flota.', k: 'limon300' as SourceKey },
       { icon: 'fileText', t: 'Cumplimiento de ley', d: 'Avanza la jerarquía de la Ley 8839: menos disposición final, más valorización.', k: 'ley8839' as SourceKey },
       { icon: 'chart', t: 'Datos por cantón', d: 'Reportes de toneladas entregadas, energía generada y emisiones, listos para el concejo y la Contraloría.', k: null },
-      { icon: 'users', t: 'Buena noticia para el vecino', d: 'Un proyecto que se puede explicar con orgullo: menos basura enterrada, más energía y transparencia.', k: null },
+      { icon: 'landmark', t: 'Cero fondos públicos', d: 'La inversión es 100% privada, de ReEnergy. Ni el Estado ni la municipalidad ponen un colón.', k: null },
     ]
   : [
       { icon: 'shield', t: 'A secure destination', d: 'A stable, long-term destination for the canton’s trash, without relying on landfills that close.', k: 'huazo' as SourceKey },
-      { icon: 'scale', t: 'Predictable price', d: 'A per-tonne fee under a long-term contract, instead of sudden hikes like those of 2025–2026.', k: 'santaAna' as SourceKey },
+      { icon: 'scale', t: 'Same price or lower', d: 'A per-tonne fee equal to or below what the canton pays today to haul its trash to Guápiles or Puntarenas, under a long-term contract with no sudden hikes like those of 2025–2026.', k: 'santaAna' as SourceKey },
       { icon: 'road', t: 'Fewer kilometers', d: 'Shorter trips that cut transport costs and fleet wear.', k: 'limon300' as SourceKey },
       { icon: 'fileText', t: 'Legal compliance', d: 'Moves up Law 8839’s hierarchy: less final disposal, more recovery.', k: 'ley8839' as SourceKey },
       { icon: 'chart', t: 'Data by canton', d: 'Reports on tonnes delivered, energy generated and emissions, ready for the council and the Comptroller.', k: null },
-      { icon: 'users', t: 'Good news for residents', d: 'A project you can explain with pride: less buried trash, more energy and transparency.', k: null },
+      { icon: 'landmark', t: 'Zero public funds', d: 'The investment is 100% private, by ReEnergy. Neither the State nor the municipality puts in a single colón.', k: null },
     ];
 
 const sheet = es
   ? [
       ['Tipo de instalación', 'Planta de valorización energética de residuos sólidos ordinarios'],
-      ['Tecnología', 'Combustión en parrilla con recuperación de energía (caldera + turbina de vapor)'],
-      ['Capacidad', `Hasta ${fmt(PROJECT.capacityTpd, 'es')} t/día*`],
-      ['Potencia eléctrica', `~${PROJECT.powerMW} MW netos*`],
+      ['Tecnología', 'Parrilla móvil multietapa de diseño belga, con caldera y turbina de vapor'],
+      ['Capacidad', `${fmt(PROJECT.capacityTpd, 'es')} t/día`],
+      ['Potencia eléctrica', `${PROJECT.powerMW} MW netos`],
       ['Equivalente', `~${fmt(PROJECT.homes, 'es')} hogares*`],
-      ['Temperatura de combustión', `≥ ${PROJECT.furnaceC} °C durante ≥ 2 s`],
+      ['Temperatura de combustión', `${PROJECT.furnaceC}–${fmt(PROJECT.furnaceMaxC, 'es')} °C (gases ≥ 2 s a más de ${PROJECT.furnaceC} °C)`],
       ['Tratamiento de gases', 'Control de NOx, neutralización de ácidos, carbón activado y filtro de mangas*'],
       ['Norma de diseño de emisiones', 'Directiva 2010/75/UE y Decreto 39136-S-MINAE'],
-      ['Monitoreo', 'Medición continua en chimenea con publicación en línea'],
+      ['Monitoreo', 'Medición continua, publicada en línea y en pantallas públicas frente a la planta y en las municipalidades'],
+      ['Auditorías', 'Independientes y periódicas, con resultados públicos'],
       ['Reducción de volumen', `~${PROJECT.volumeReduction}%`],
-      ['Terreno', `${PROJECT.areaHa} ha*`],
-      ['Construcción', `~${PROJECT.constructionMonths} meses tras permisos*`],
-      ['Empleo', `~${PROJECT.jobsConstruction} en obra · ~${PROJECT.jobsOperation} permanentes*`],
-      ['Inversión', 'Privada, por Reenergy*'],
+      ['Ceniza', 'Mezclada con cemento para fabricar adoquines; ceniza fina estabilizada con cemento'],
+      ['Ubicación', `Primera planta: ${PROJECT.firstSite} · Segunda: ${PROJECT.secondSite}`],
+      ['Terreno', `${PROJECT.areaHa} ha como mínimo`],
+      ['Estudios y permisos', `Meta de ${PROJECT.permitsMonths} meses`],
+      ['Construcción', `${PROJECT.constructionEs} tras permisos`],
+      ['Empleo', `~${PROJECT.jobsOperation} empleos permanentes`],
+      ['Inversión', '100% privada, de ReEnergy. El Estado no aporta fondos'],
+      ['Tarifa municipal', 'Por tonelada, igual o menor a lo que hoy cuesta llevar la basura a Guápiles o Puntarenas'],
+      ['Estudio de residuos', `En curso, a cargo de ${PROJECT.wasteStudy.es}`],
     ]
   : [
       ['Facility type', 'Waste-to-energy plant for ordinary municipal solid waste'],
-      ['Technology', 'Grate combustion with energy recovery (boiler + steam turbine)'],
-      ['Capacity', `Up to ${fmt(PROJECT.capacityTpd, 'en')} t/day*`],
-      ['Electrical output', `~${PROJECT.powerMW} MW net*`],
+      ['Technology', 'Belgian-designed moving multi-stage grate, with boiler and steam turbine'],
+      ['Capacity', `${fmt(PROJECT.capacityTpd, 'en')} t/day`],
+      ['Electrical output', `${PROJECT.powerMW} MW net`],
       ['Equivalent', `~${fmt(PROJECT.homes, 'en')} homes*`],
-      ['Combustion temperature', `≥ ${PROJECT.furnaceC} °C for ≥ 2 s`],
+      ['Combustion temperature', `${PROJECT.furnaceC}–${fmt(PROJECT.furnaceMaxC, 'en')} °C (gases ≥ 2 s above ${PROJECT.furnaceC} °C)`],
       ['Flue-gas treatment', 'NOx control, acid neutralization, activated carbon and bag filter*'],
       ['Emissions design standard', 'Directive 2010/75/EU and Decree 39136-S-MINAE'],
-      ['Monitoring', 'Continuous stack measurement, published online'],
+      ['Monitoring', 'Continuous measurement, published online and on public screens outside the plant and at the municipalities'],
+      ['Audits', 'Independent and regular, with public results'],
       ['Volume reduction', `~${PROJECT.volumeReduction}%`],
-      ['Land', `${PROJECT.areaHa.replace(' a ', '–')} ha*`],
-      ['Construction', `~${PROJECT.constructionMonths} months after permits*`],
-      ['Employment', `~${PROJECT.jobsConstruction.replace('.', ',')} construction · ~${PROJECT.jobsOperation} permanent*`],
-      ['Investment', 'Private, by Reenergy*'],
+      ['Ash', 'Mixed with cement to make paving blocks; fine ash stabilized with cement'],
+      ['Location', `First plant: ${PROJECT.firstSite} · Second: ${PROJECT.secondSite}`],
+      ['Land', `${PROJECT.areaHa} ha minimum`],
+      ['Studies and permits', `${PROJECT.permitsMonths}-month target`],
+      ['Construction', `${PROJECT.constructionEn} after permits`],
+      ['Employment', `~${PROJECT.jobsOperation} permanent jobs`],
+      ['Investment', '100% private, by ReEnergy. No public funds'],
+      ['Municipal fee', 'Per tonne, equal to or below what it costs today to haul trash to Guápiles or Puntarenas'],
+      ['Waste study', `Under way, by ${PROJECT.wasteStudy.en}`],
     ];
 
 const legal = es
@@ -140,6 +152,20 @@ const c = es
     </div>
   </section>
 
+  <section class="section-tight on-sprout">
+    <div class="wrap split split-40">
+      <div>
+        <p class="eyebrow">{es ? 'Ya se sumaron' : 'Already on board'}</p>
+        <h2>{es ? 'Municipalidades con carta de interés.' : 'Municipalities with letters of interest.'}</h2>
+        <p class="mb-0">{es ? 'El proyecto ya fue presentado a municipalidades y al Ministerio de Salud. Estas firmaron cartas de interés (no vinculantes):' : 'The project has been presented to municipalities and the Ministry of Health. These have signed (non-binding) letters of interest:'}</p>
+      </div>
+      <ul class="munis">
+        {PROJECT.lettersOfInterest.map((m) => <li><Icon name="check" size={18} />{m}</li>)}
+        <li class="more">{es ? 'y otras' : 'and others'}</li>
+      </ul>
+    </div>
+  </section>
+
   <section class="section bg-cream" id="ficha">
     <div class="wrap split split-40 sheet-sec">
       <div>
@@ -161,7 +187,7 @@ const c = es
             }
           </tbody>
         </table>
-        <p class="source sheet-note">{es ? '* Valores de diseño preliminares, sujetos a ingeniería de detalle, caracterización de residuos y permisos.' : '* Preliminary design values, subject to detailed engineering, waste characterization and permits.'}</p>
+        <p class="source sheet-note">{es ? '* Estimación, sujeta a ingeniería de detalle y al estudio de residuos de la UCR.' : '* Estimate, subject to detailed engineering and the UCR waste study.'}</p>
       </div>
     </div>
   </section>
@@ -206,6 +232,9 @@ const c = es
 
 <style>
   .vt { font-family: var(--font-title); margin-top: 18px; }
+  .munis { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+  .munis li { display: inline-flex; align-items: center; gap: 8px; padding: 12px 18px; border-radius: 999px; background: var(--lago); color: var(--sky); font-family: var(--font-title); }
+  .munis li.more { background: transparent; color: var(--lago-night); border: 1.5px solid var(--lago); }
   .card-flat .vt { margin-top: 0; color: var(--lago); }
   .sheet-sec { align-items: start; }
   .table-wrap { border-radius: var(--radius); background: var(--paper); border: 1px solid var(--line); overflow: hidden; box-shadow: var(--shadow); }

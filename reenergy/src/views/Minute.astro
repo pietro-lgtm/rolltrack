@@ -67,8 +67,8 @@ const c = es
       <div>
         <p class="step">3 / 6</p>
         <h2 class="slide-h big">{es ? 'Orchidean One convierte esa basura en electricidad.' : 'Orchidean One turns that trash into electricity.'}</h2>
-        <p class="lead">{es ? `Hasta ${fmt(PROJECT.capacityTpd, 'es')} toneladas al día que ya no se entierran, y luz para unos ${fmt(PROJECT.homes, 'es')} hogares.*` : `Up to ${fmt(PROJECT.capacityTpd, 'en')} tonnes a day no longer buried, and power for about ${fmt(PROJECT.homes, 'en')} homes.*`}</p>
-        <p class="source">{es ? '* Estimación de diseño.' : '* Design estimate.'}</p>
+        <p class="lead">{es ? `${fmt(PROJECT.capacityTpd, 'es')} toneladas al día que ya no se entierran, ${PROJECT.powerMW} MW de electricidad y luz para unos ${fmt(PROJECT.homes, 'es')} hogares.* Primera planta: ${PROJECT.firstSite}.` : `${fmt(PROJECT.capacityTpd, 'en')} tonnes a day no longer buried, ${PROJECT.powerMW} MW of electricity and power for about ${fmt(PROJECT.homes, 'en')} homes.* First plant: ${PROJECT.firstSite}.`}</p>
+        <p class="source">{es ? '* Hogares: estimación. Inversión 100% privada: el Estado no pone ni un colón.' : '* Homes: estimate. 100% private investment: no public money.'}</p>
       </div>
       <div class="scene"><PlantScene label={es ? 'Ilustración de Orchidean One' : 'Illustration of Orchidean One'} /></div>
     </div>
@@ -80,7 +80,7 @@ const c = es
       <p class="step">4 / 6</p>
       <span class="icon-badge lago big-badge"><Icon name="eye" size={34} /></span>
       <h2 class="slide-h big">{es ? 'Limpia sus gases. Y usted puede ver las mediciones.' : 'It cleans its gases. And you can see the readings.'}</h2>
-      <p class="lead">{es ? 'Varias etapas de filtros, los límites de la Unión Europea y datos publicados en internet. No tiene que creernos: puede comprobarlo.' : 'Several filter stages, European Union limits and data published online. You don’t have to trust us — you can check.'}<Ref n={r('ied')} /></p>
+      <p class="lead">{es ? 'Varias etapas de filtros, los límites de la Unión Europea y datos publicados en internet y en pantallas públicas. No tiene que creernos: puede comprobarlo.' : 'Several filter stages, European Union limits and data published online and on public screens. You don’t have to trust us — you can check.'}<Ref n={r('ied')} /></p>
     </div>
     <a class="next-arrow" href="#s5" aria-label={es ? 'Siguiente' : 'Next'}><Icon name="arrowDown" /></a>
   </section>

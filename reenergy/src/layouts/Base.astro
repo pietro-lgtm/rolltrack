@@ -37,22 +37,22 @@ const org = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
   '@id': `${base}/#org`,
-  name: 'Reenergy',
+  name: 'ReEnergy',
   url: base + '/',
   logo: `${base}/brand/reenergy-logo.png`,
   email: SITE.email,
   areaServed: { '@type': 'Country', name: 'Costa Rica' },
   description:
     lang === 'es'
-      ? 'Reenergy desarrolla Orchidean One, una planta de valorización energética que transforma la basura de Costa Rica en electricidad.'
-      : 'Reenergy is developing Orchidean One, a waste-to-energy plant that turns Costa Rica’s trash into electricity.',
+      ? 'ReEnergy desarrolla Orchidean One, una planta de valorización energética que transforma la basura de Costa Rica en electricidad.'
+      : 'ReEnergy is developing Orchidean One, a waste-to-energy plant that turns Costa Rica’s trash into electricity.',
   sameAs: Object.values(SITE.social).filter(Boolean),
 };
 const website = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   '@id': `${base}/#website`,
-  name: 'Orchidean One · Reenergy',
+  name: 'Orchidean One · ReEnergy',
   url: base + '/',
   inLanguage: ['es-CR', 'en'],
   publisher: { '@id': `${base}/#org` },
@@ -88,7 +88,7 @@ const ld = [org, website, webpage, ...jsonLd];
     <link rel="alternate" hreflang="x-default" href={esUrl} />
 
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Orchidean One · Reenergy" />
+    <meta property="og:site_name" content="Orchidean One · ReEnergy" />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />

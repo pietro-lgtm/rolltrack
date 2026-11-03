@@ -75,7 +75,7 @@ export const UI = {
       forWhom: 'Para',
       contact: 'Contacto',
       rights: 'Todos los derechos reservados.',
-      note: 'Orchidean One es un proyecto propuesto por Reenergy. Las cifras del proyecto son estimaciones de diseño y se actualizarán conforme avancen los estudios y permisos.',
+      note: 'Orchidean One es un proyecto propuesto por ReEnergy. Las cifras del proyecto son estimaciones de diseño y se actualizarán conforme avancen los estudios y permisos.',
     },
   },
   en: {
@@ -120,7 +120,7 @@ export const UI = {
       forWhom: 'For',
       contact: 'Contact',
       rights: 'All rights reserved.',
-      note: 'Orchidean One is a project proposed by Reenergy. Project figures are design estimates and will be updated as studies and permits progress.',
+      note: 'Orchidean One is a project proposed by ReEnergy. Project figures are design estimates and will be updated as studies and permits progress.',
     },
   },
 } as const;

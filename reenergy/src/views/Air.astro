@@ -25,14 +25,14 @@ const r = (k: SourceKey) => refs.indexOf(k) + 1;
 
 const stages = es
   ? [
-      { icon: 'thermometer', t: 'Combustión controlada', d: 'Más de 850 °C durante al menos 2 segundos. A esa temperatura se destruyen los compuestos orgánicos peligrosos.' },
+      { icon: 'thermometer', t: 'Combustión controlada', d: 'Entre 850 y 1.100 °C, con los gases al menos 2 segundos por encima de 850 °C. A esa temperatura se destruyen los compuestos orgánicos peligrosos.' },
       { icon: 'wind', t: 'Reducción de óxidos de nitrógeno', d: 'Se inyecta un reactivo (urea o amoníaco) que convierte los óxidos de nitrógeno en nitrógeno y vapor de agua.' },
       { icon: 'droplets', t: 'Neutralización de ácidos', d: 'Con cal se capturan los gases ácidos: dióxido de azufre, ácido clorhídrico y ácido fluorhídrico.' },
       { icon: 'filter', t: 'Carbón activado', d: 'Atrapa dioxinas, furanos y mercurio, como el filtro de una pecera pero a escala industrial.' },
       { icon: 'shield', t: 'Filtro de mangas', d: 'Miles de mangas de tela retienen el polvo más fino antes de que el gas llegue a la chimenea.' },
     ]
   : [
-      { icon: 'thermometer', t: 'Controlled combustion', d: 'Above 850 °C for at least 2 seconds. At that temperature, hazardous organic compounds are destroyed.' },
+      { icon: 'thermometer', t: 'Controlled combustion', d: 'Between 850 and 1,100 °C, with gases held at least 2 seconds above 850 °C. At that temperature, hazardous organic compounds are destroyed.' },
       { icon: 'wind', t: 'Nitrogen oxide reduction', d: 'A reagent (urea or ammonia) is injected to turn nitrogen oxides into nitrogen and water vapor.' },
       { icon: 'droplets', t: 'Acid neutralization', d: 'Lime captures acid gases: sulfur dioxide, hydrochloric acid and hydrofluoric acid.' },
       { icon: 'filter', t: 'Activated carbon', d: 'Traps dioxins, furans and mercury — like an aquarium filter, at industrial scale.' },
@@ -42,12 +42,12 @@ const stages = es
 const honest = es
   ? [
       { t: 'Sí, emite CO₂.', d: 'Como toda combustión, sobre todo por los plásticos. Pero evita el metano de los rellenos, que en 20 años calienta el planeta unas 80 veces más que el CO₂. Estudios con investigadores de la EPA de EE. UU. encontraron que generar electricidad con residuos emite menos gases de efecto invernadero que un relleno, incluso uno que capture su gas.', refs: ['ipccMethane', 'kaplan'] as SourceKey[] },
-      { t: 'Sí, queda ceniza.', d: 'Cerca de una décima parte del volumen original. La ceniza de fondo se puede usar en construcción. La ceniza fina de los filtros es una porción pequeña: se estabiliza y va a un sitio autorizado para residuos peligrosos.', refs: ['bottomAsh'] as SourceKey[] },
+      { t: 'Sí, queda ceniza.', d: 'Cerca de una décima parte del volumen original. Se mezcla con cemento para fabricar adoquines para calles, urbanizaciones y parqueos. La ceniza fina de los filtros es una porción pequeña y se estabiliza con cemento, bajo el control del Ministerio de Salud.', refs: ['bottomAsh'] as SourceKey[] },
       { t: 'Sí, llegan camiones.', d: 'Los mismos que hoy van al relleno, pero con viajes más cortos. Rutas planificadas, camiones cerrados y descarga dentro del edificio.', refs: [] as SourceKey[] },
     ]
   : [
       { t: 'Yes, it emits CO₂.', d: 'Like any combustion, mainly from plastics. But it avoids landfill methane, which over 20 years warms the planet about 80 times more than CO₂. Studies involving US EPA researchers found that generating electricity from waste emits fewer greenhouse gases than a landfill — even one that captures its gas.', refs: ['ipccMethane', 'kaplan'] as SourceKey[] },
-      { t: 'Yes, there’s ash.', d: 'About a tenth of the original volume. Bottom ash can be used in construction. Fine ash from the filters is a small share: it’s stabilized and sent to a site licensed for hazardous waste.', refs: ['bottomAsh'] as SourceKey[] },
+      { t: 'Yes, there’s ash.', d: 'About a tenth of the original volume. It’s mixed with cement to make paving blocks for streets, housing developments and parking lots. Fine ash from the filters is a small share and is stabilized with cement, under Ministry of Health oversight.', refs: ['bottomAsh'] as SourceKey[] },
       { t: 'Yes, trucks arrive.', d: 'The same ones that go to the landfill today, but with shorter trips. Planned routes, closed trucks and unloading inside the building.', refs: [] as SourceKey[] },
     ];
 
@@ -101,9 +101,9 @@ const c = es
           <ul>
             <li><strong>{es ? 'Sin metano de relleno.' : 'No landfill methane.'}</strong> {es ? 'Lo que no se entierra no se pudre.' : 'What isn’t buried doesn’t rot.'}</li>
             <li><strong>{es ? 'Sin lixiviados.' : 'No leachate.'}</strong> {es ? 'La basura se transforma en días, no se queda para siempre.' : 'Trash is transformed in days, it doesn’t stay forever.'}</li>
-            <li><strong>{es ? 'Gases tratados.' : 'Treated gases.'}</strong> {es ? `${PROJECT.cleaningStages} etapas de limpieza antes de la chimenea.*` : `${PROJECT.cleaningStages} cleaning stages before the stack.*`}</li>
+            <li><strong>{es ? 'Gases tratados.' : 'Treated gases.'}</strong> {es ? 'Varias etapas de limpieza antes de la chimenea.*' : 'Several cleaning stages before the stack.*'}</li>
             <li><strong>{es ? 'Edificio cerrado.' : 'Sealed building.'}</strong> {es ? 'Los olores se aspiran y se queman.' : 'Odors are drawn in and burned.'}</li>
-            <li><strong>{es ? 'Datos públicos.' : 'Public data.'}</strong> {es ? 'Mediciones continuas publicadas en este sitio.' : 'Continuous readings published on this site.'}</li>
+            <li><strong>{es ? 'Datos públicos.' : 'Public data.'}</strong> {es ? 'Mediciones continuas en este sitio y en pantallas públicas.' : 'Continuous readings on this site and on public screens.'}</li>
           </ul>
         </div>
       </div>
@@ -115,7 +115,7 @@ const c = es
     <div class="wrap">
       <div class="measure mb-3" data-listen>
         <p class="eyebrow">{es ? 'Cómo se limpia el aire' : 'How the air is cleaned'}</p>
-        <h2>{es ? `${PROJECT.cleaningStages} barreras antes de la chimenea.` : `${PROJECT.cleaningStages} barriers before the stack.`}</h2>
+        <h2>{es ? 'Varias barreras antes de la chimenea.' : 'Several barriers before the stack.'}</h2>
         <p class="lead">{es ? 'Lo que sale por la chimenea de una planta moderna es, en su mayoría, vapor de agua, nitrógeno y CO₂. Lo demás se atrapa en el camino.' : 'What leaves a modern plant’s stack is mostly water vapor, nitrogen and CO₂. The rest is caught along the way.'}</p>
       </div>
       <ol class="stages">
@@ -142,7 +142,7 @@ const c = es
           </span>
           <div>
             <h3 class="st-t">{es ? 'Y al final: medición continua y pública' : 'And at the end: continuous, public measurement'}</h3>
-            <p class="mb-0">{es ? 'Analizadores en la chimenea miden las emisiones todo el tiempo. Los resultados se publican en la página de monitoreo.' : 'Analyzers in the stack measure emissions all the time. Results are published on the monitoring page.'} <a href={ROUTES.monitor[lang]}>{es ? 'Ver monitoreo' : 'See monitoring'}</a></p>
+            <p class="mb-0">{es ? 'Analizadores en la chimenea miden las emisiones todo el tiempo. Los resultados se publican en este sitio y en pantallas públicas frente a la planta y en las municipalidades.' : 'Analyzers in the stack measure emissions all the time. Results are published on this site and on public screens outside the plant and at the municipalities.'} <a href={ROUTES.monitor[lang]}>{es ? 'Ver monitoreo' : 'See monitoring'}</a></p>
           </div>
         </li>
       </ol>
@@ -233,7 +233,7 @@ const c = es
     <div class="wrap split">
       <div data-listen>
         <h2>{es ? 'No nos crea. Compruébelo.' : 'Don’t trust us. Check.'}</h2>
-        <p class="lead mb-0">{es ? 'Cuando Orchidean One opere, usted verá en este sitio lo que sale por la chimenea, comparado con el límite.' : 'When Orchidean One operates, you’ll see on this site what leaves the stack, compared to the limit.'}</p>
+        <p class="lead mb-0">{es ? 'Cuando Orchidean One opere, usted verá lo que sale por la chimenea, comparado con el límite: en este sitio y en pantallas frente a la planta y en las municipalidades.' : 'When Orchidean One operates, you’ll see what leaves the stack, compared to the limit: on this site and on screens outside the plant and at the municipalities.'}</p>
       </div>
       <div class="btn-row">
         <a class="btn btn-lg" href={ROUTES.monitor[lang]}><Icon name="activity" />{es ? 'Ver el monitoreo público' : 'See public monitoring'}</a>

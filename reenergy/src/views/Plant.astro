@@ -19,33 +19,35 @@ const refs: SourceKey[] = ['ied', 'bottomAsh', 'iswa', 'copenhill'];
 const r = (k: SourceKey) => refs.indexOf(k) + 1;
 
 const numbers = [
-  { n: fmt(PROJECT.capacityTpd, lang), u: es ? 't/día' : 't/day', l: es ? 'de basura que deja de enterrarse*' : 'of trash no longer buried*' },
-  { n: `~${PROJECT.powerMW}`, u: 'MW', l: es ? 'de electricidad firme para la red*' : 'of firm power for the grid*' },
+  { n: fmt(PROJECT.capacityTpd, lang), u: es ? 't/día' : 't/day', l: es ? 'de basura que deja de enterrarse' : 'of trash no longer buried' },
+  { n: `${PROJECT.powerMW}`, u: 'MW', l: es ? 'netos de electricidad firme para la red' : 'net of firm power for the grid' },
   { n: fmt(PROJECT.homes, lang), u: es ? 'hogares' : 'homes', l: es ? 'equivalentes abastecidos*' : 'equivalent supplied*' },
   { n: `${PROJECT.volumeReduction}%`, u: '', l: es ? 'menos volumen de basura' : 'less trash volume' },
 ];
 
 const lanes = es
   ? [
-      { tone: 'lago', icon: 'zap', t: 'Energía', steps: ['Fosa cerrada', 'Horno a +850 °C', 'Caldera: vapor', 'Turbina', 'Red nacional'] },
+      { tone: 'lago', icon: 'zap', t: 'Energía', steps: ['Fosa cerrada', 'Parrilla a 850–1.100 °C', 'Caldera: vapor', 'Turbina', 'Red nacional'] },
       { tone: 'sprout', icon: 'wind', t: 'Aire', steps: ['Gases calientes', 'Limpieza en varias etapas', 'Medición continua', 'Chimenea'] },
-      { tone: 'verde', icon: 'recycle', t: 'Materiales', steps: ['Metales → reciclaje', 'Ceniza de fondo → construcción', 'Ceniza fina → sitio autorizado'] },
+      { tone: 'verde', icon: 'recycle', t: 'Materiales', steps: ['Metales → reciclaje', 'Ceniza + cemento → adoquines', 'Ceniza fina → estabilizada con cemento'] },
     ]
   : [
-      { tone: 'lago', icon: 'zap', t: 'Energy', steps: ['Sealed pit', 'Furnace at 850 °C+', 'Boiler: steam', 'Turbine', 'National grid'] },
+      { tone: 'lago', icon: 'zap', t: 'Energy', steps: ['Sealed pit', 'Grate at 850–1,100 °C', 'Boiler: steam', 'Turbine', 'National grid'] },
       { tone: 'sprout', icon: 'wind', t: 'Air', steps: ['Hot gases', 'Multi-stage cleaning', 'Continuous measuring', 'Stack'] },
-      { tone: 'verde', icon: 'recycle', t: 'Materials', steps: ['Metals → recycling', 'Bottom ash → construction', 'Fine ash → licensed site'] },
+      { tone: 'verde', icon: 'recycle', t: 'Materials', steps: ['Metals → recycling', 'Ash + cement → paving blocks', 'Fine ash → stabilized with cement'] },
     ];
 
 const design = es
   ? [
-      { icon: 'droplets', t: 'Para basura húmeda', d: 'Nuestra basura tiene mucha materia orgánica. La planta la deja escurrir en una fosa cerrada y usa parrillas pensadas para residuos húmedos.' },
+      { icon: 'flame', t: 'Parrilla móvil multietapa', d: 'Tecnología de diseño belga que mueve y mezcla la basura sin parar, para una combustión completa y pareja entre 850 y 1.100 °C.' },
+      { icon: 'droplets', t: 'Para basura húmeda', d: 'Nuestra basura tiene mucha materia orgánica. La Universidad de Costa Rica está estudiando la basura real del país para ajustar el diseño, y la fosa cerrada la deja escurrir antes del horno.' },
       { icon: 'shield', t: 'Sismorresistente', d: 'Diseñada según el Código Sísmico de Costa Rica, como exige cualquier obra de su tamaño en el país.' },
       { icon: 'leaf', t: 'Parte del paisaje', d: 'Techo verde, arquitectura baja y áreas de árboles alrededor. Que se vea como lo que es: una planta para un país verde.' },
       { icon: 'users', t: 'Abierta a la gente', d: 'Un centro de visitas para escuelas, colegios y comunidades. Como CopenHill en Copenhague, la planta también es un lugar para aprender.' },
     ]
   : [
-      { icon: 'droplets', t: 'Built for wet waste', d: 'Our trash has a lot of organic matter. The plant lets it drain in a sealed pit and uses grates designed for wet waste.' },
+      { icon: 'flame', t: 'Moving multi-stage grate', d: 'Belgian-designed technology that keeps the waste moving and mixing, for complete, even combustion between 850 and 1,100 °C.' },
+      { icon: 'droplets', t: 'Built for wet waste', d: 'Our trash has a lot of organic matter. The University of Costa Rica is studying the country’s actual waste to fine-tune the design, and the sealed pit lets it drain before the furnace.' },
       { icon: 'shield', t: 'Earthquake-resistant', d: 'Designed to Costa Rica’s Seismic Code, as required for any structure of its size in the country.' },
       { icon: 'leaf', t: 'Part of the landscape', d: 'Green roof, low-profile architecture and trees all around. It should look like what it is: a plant for a green country.' },
       { icon: 'users', t: 'Open to people', d: 'A visitor center for schools and communities. Like CopenHill in Copenhagen, the plant is also a place to learn.' },
@@ -54,12 +56,12 @@ const design = es
 const c = es
   ? {
       title: 'Orchidean One: la planta que convierte basura en electricidad',
-      desc: `Cómo funciona Orchidean One, la planta de valorización energética de Reenergy: hasta ${fmt(PROJECT.capacityTpd, 'es')} toneladas de basura al día convertidas en electricidad, con limpieza de gases y medición pública.`,
+      desc: `Cómo funciona Orchidean One, la planta de valorización energética de ReEnergy: ${fmt(PROJECT.capacityTpd, 'es')} toneladas de basura al día convertidas en ${PROJECT.powerMW} MW de electricidad, con limpieza de gases y medición pública.`,
       share: 'Así funciona la planta que convierte basura en luz para Costa Rica:',
     }
   : {
       title: 'Orchidean One: the plant that turns trash into electricity',
-      desc: `How Orchidean One, Reenergy’s waste-to-energy plant, works: up to ${fmt(PROJECT.capacityTpd, 'en')} tonnes of trash a day turned into electricity, with gas cleaning and public measurement.`,
+      desc: `How Orchidean One, ReEnergy’s waste-to-energy plant, works: ${fmt(PROJECT.capacityTpd, 'en')} tonnes of trash a day turned into ${PROJECT.powerMW} MW of electricity, with gas cleaning and public measurement.`,
       share: 'This is how the plant that turns trash into power for Costa Rica works:',
     };
 ---
@@ -93,7 +95,7 @@ const c = es
           ))
         }
       </ul>
-      <p class="source">{es ? '* Estimaciones de diseño; se confirmarán con los estudios de ingeniería y de caracterización de residuos.' : '* Design estimates, to be confirmed by engineering and waste characterization studies.'}</p>
+      <p class="source">{es ? '* Estimación. Las cifras finales se confirman con la ingeniería de detalle y el estudio de la basura que realiza la UCR.' : '* Estimate. Final figures will be confirmed by detailed engineering and the waste study being carried out by UCR.'}</p>
     </div>
   </section>
 

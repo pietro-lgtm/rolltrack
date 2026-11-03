@@ -3,7 +3,7 @@
  * ⚠️ Los valores marcados VERIFICAR deben confirmarse antes de publicar.
  */
 export const SITE = {
-  name: 'Reenergy',
+  name: 'ReEnergy',
   plant: 'Orchidean One',
   // VERIFICAR: dominio definitivo. Se puede sobreescribir con la variable SITE_URL al compilar.
   url: (import.meta.env.SITE_URL as string | undefined) ?? 'https://reenergygroup.com',

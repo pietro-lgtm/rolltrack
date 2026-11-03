@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Sitio público de Reenergy y la planta Orchidean One (ES/EN).",
+  "description": "Sitio público de ReEnergy y la planta Orchidean One (ES/EN).",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",

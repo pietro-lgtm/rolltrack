@@ -1,6 +1,6 @@
 ---
 /**
- * Logotipo Reenergy — isotipo de hojas + logotipo vectorizado del brand book.
+ * Logotipo ReEnergy — isotipo de hojas + logotipo vectorizado del brand book.
  * Variantes de color según el brand book ("color variations").
  */
 import { LOGO } from '../data/logo';
@@ -13,7 +13,7 @@ interface Props {
   title?: string;
   height?: number;
 }
-const { variant = 'light', mark = false, class: cls = '', title = 'Reenergy', height } = Astro.props;
+const { variant = 'light', mark = false, class: cls = '', title = 'ReEnergy', height } = Astro.props;
 
 const PALETTES: Record<Variant, { circle: string; leaf: string; word: string }> = {
   light: { circle: '#a1c93e', leaf: '#f9f6e4', word: '#a1c93e' },
