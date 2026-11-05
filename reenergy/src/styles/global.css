@@ -206,7 +206,6 @@ strong, b { font-weight: 700; }
 .btn-verde { --bg: var(--verde); --fg: var(--lago-night); }
 .btn-ghost { --bg: transparent; --fg: currentColor; border-color: currentColor; }
 .btn-light { --bg: var(--sky); --fg: var(--lago-night); }
-.btn-whatsapp { --bg: #1f7a4d; --fg: #fff; }
 .btn-lg { min-height: 60px; padding-inline: 1.7em; }
 .btn-row { display: flex; flex-wrap: wrap; gap: 12px; }
 .center .btn-row { justify-content: center; }

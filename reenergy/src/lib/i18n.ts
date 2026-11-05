@@ -57,7 +57,6 @@ export const UI = {
     langHintCta: 'Read in English',
     share: {
       title: 'Compártalo con alguien que necesita saberlo',
-      whatsapp: 'Enviar por WhatsApp',
       facebook: 'Facebook',
       x: 'X',
       copy: 'Copiar enlace',
@@ -102,7 +101,6 @@ export const UI = {
     langHintCta: 'Leer en español',
     share: {
       title: 'Share it with someone who needs to know',
-      whatsapp: 'Send on WhatsApp',
       facebook: 'Facebook',
       x: 'X',
       copy: 'Copy link',

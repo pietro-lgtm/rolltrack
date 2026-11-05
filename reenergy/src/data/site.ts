@@ -7,11 +7,10 @@ export const SITE = {
   plant: 'Orchidean One',
   // VERIFICAR: dominio definitivo. Se puede sobreescribir con la variable SITE_URL al compilar.
   url: (import.meta.env.SITE_URL as string | undefined) ?? 'https://reenergygroup.com',
-  // VERIFICAR: correos y canales oficiales
-  email: 'hola@reenergygroup.com',
-  pressEmail: 'prensa@reenergygroup.com',
-  govEmail: 'municipalidades@reenergygroup.com',
-  whatsapp: '', // p. ej. '50688887777' — vacío = oculto
+  // Correo de contacto (recibe también los formularios por correo)
+  email: 'reenergygroupcr@gmail.com',
+  pressEmail: 'reenergygroupcr@gmail.com',
+  govEmail: 'reenergygroupcr@gmail.com',
   social: {
     facebook: '',
     instagram: '',

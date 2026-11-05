@@ -48,12 +48,7 @@ const socials = Object.entries(SITE.social).filter(([, v]) => v);
         <h2 class="f-h">{ui.footer.contact}</h2>
         <ul>
           <li><a href={`mailto:${SITE.email}`}>{SITE.email}</a></li>
-          <li><a href={`mailto:${SITE.pressEmail}`}>{SITE.pressEmail}</a></li>
-          {SITE.whatsapp && (
-            <li>
-              <a href={`https://wa.me/${SITE.whatsapp}`} rel="noopener">WhatsApp</a>
-            </li>
-          )}
+          {SITE.pressEmail !== SITE.email && <li><a href={`mailto:${SITE.pressEmail}`}>{SITE.pressEmail}</a></li>}
         </ul>
         {socials.length > 0 && (
           <ul class="socials">

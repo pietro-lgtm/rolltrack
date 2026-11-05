@@ -1,6 +1,6 @@
 ---
 /**
- * Barra para compartir. WhatsApp va primero y en grande: es como se mueve la información en Costa Rica.
+ * Barra para compartir: copiar enlace, compartir nativo del teléfono, Facebook y X.
  * El enlace lleva parámetros UTM para medir qué se comparte y por dónde.
  */
 import Icon from './Icon.astro';
@@ -19,7 +19,6 @@ const { lang, route, message, title, tone = 'light', compact = false } = Astro.p
 const ui = UI[lang].share;
 const url = SITE.url.replace(/\/$/, '') + ROUTES[route][lang];
 const withUtm = (source: string) => `${url}?utm_source=${source}&utm_medium=share&utm_campaign=orchidean-one`;
-const wa = `https://wa.me/?text=${encodeURIComponent(`${message}\n${withUtm('whatsapp')}`)}`;
 const fb = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(withUtm('facebook'))}`;
 const xUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}&url=${encodeURIComponent(withUtm('x'))}`;
 ---
@@ -27,10 +26,10 @@ const xUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(message
 <div class:list={['share-bar', `tone-${tone}`, { compact }]} data-share-url={withUtm('link')} data-share-text={message}>
   {!compact && <p class="share-title">{title ?? ui.title}</p>}
   <div class="share-buttons">
-    <a class="btn btn-whatsapp" href={wa} target="_blank" rel="noopener" data-track="share_whatsapp">
-      <Icon name="whatsapp" />
-      {ui.whatsapp}
-    </a>
+    <button type="button" class="btn share-copy" data-copied={ui.copied} data-track="share_copy">
+      <Icon name="copy" />
+      {ui.copy}
+    </button>
     <button type="button" class="btn share-native" hidden data-track="share_native">
       <Icon name="share" />
       {ui.native}
@@ -41,9 +40,6 @@ const xUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(message
     <a class="share-icon" href={xUrl} target="_blank" rel="noopener" aria-label={ui.x} data-track="share_x">
       <Icon name="xsocial" />
     </a>
-    <button type="button" class="share-icon share-copy" aria-label={ui.copy} data-copied={ui.copied} data-track="share_copy">
-      <Icon name="copy" />
-    </button>
     <span class="share-toast" role="status" aria-live="polite"></span>
   </div>
 </div>
@@ -52,6 +48,7 @@ const xUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(message
   .share-bar { display: grid; gap: 14px; }
   .share-title { font-family: var(--font-title); font-size: var(--fs-body); margin: 0; }
   .share-buttons { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; position: relative; }
+  .share-copy { --bg: var(--sprout); --fg: var(--lago-night); }
   .share-native { --bg: var(--lago); --fg: var(--sky); }
   .share-icon {
     width: 52px; height: 52px; border-radius: 50%;

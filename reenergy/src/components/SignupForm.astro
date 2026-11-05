@@ -18,7 +18,7 @@ const { lang, variant = 'public', tone = 'light' } = Astro.props;
 const c = {
   es: {
     name: 'Nombre',
-    contact: 'WhatsApp o correo',
+    contact: 'Correo o teléfono',
     canton: 'Cantón',
     org: 'Institución o municipalidad',
     outlet: 'Medio',
@@ -33,7 +33,7 @@ const c = {
   },
   en: {
     name: 'Name',
-    contact: 'WhatsApp or email',
+    contact: 'Email or phone',
     canton: 'Canton / city',
     org: 'Institution or municipality',
     outlet: 'Outlet',
@@ -69,7 +69,7 @@ const to = variant === 'gov' ? SITE.govEmail : variant === 'press' ? SITE.pressE
     </label>
     <label>
       <span>{c.contact}</span>
-      <input name="contact" autocomplete="email" inputmode="email" required />
+      <input name="contact" autocomplete="email" required />
     </label>
   </div>
   <div class="f-row">

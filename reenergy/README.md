@@ -16,7 +16,7 @@ npm run check:links  # after build: verifies internal links + hreflang pairs
 
 | Use case | Where it lands | Why it works |
 |---|---|---|
-| **Quick link to explain the idea** (WhatsApp, email) | `/en-1-minuto/` · `/en/in-1-minute/` | Six thumb-scroll screens, one idea each, big numbers, “Escuchar” read-aloud button, share bar at the end. |
+| **Quick link to explain the idea** (messaging apps, email) | `/en-1-minuto/` · `/en/in-1-minute/` | Six thumb-scroll screens, one idea each, big numbers, “Escuchar” read-aloud button, share bar at the end. |
 | **Paid PR push: videos and images for the general public** | `/` (home) | Video-ready hero (`PUBLIC_HERO_VIDEO`), one emotional line, crisis → solution → proof → share. Add `?utm_source=…` to ad links. |
 | **Dominating Google** | Every page | One URL per topic and language, `hreflang` pairs, sitemap, FAQPage, Breadcrumb and Organization structured data, sourced copy, per-page social cards. |
 | **Governance (municipalities, councils, Asamblea)** | `/municipalidades/` | Value for the canton, printable fact sheet (“Descargar ficha (PDF)”), legal framework, technical-meeting form. |
@@ -46,7 +46,7 @@ npm run check:links  # after build: verifies internal links + hreflang pairs
 
 **Master line:** *Lo que hoy enterramos, mañana ilumina el país.* (“What we bury today can power the country tomorrow.”)
 
-Every page follows the same arc: **crisis (red) → solution (green) → proof (blue) → share (WhatsApp)**.
+Every page follows the same arc: **crisis (red) → solution (green) → proof (blue) → share**.
 
 - **Problem first, in their words.** Landfills closing, trucks driving 300+ km, fees going up. These are local, dated, sourced facts, not abstractions.
 - **The world normalizes it.** CopenHill's ski slope, Spittelau in central Vienna, 21 plants inside Tokyo. *This is what clean countries do.*
@@ -95,7 +95,7 @@ All sources are in **`src/data/facts.ts` → `SOURCES`** and appear as numbered 
 - `SITE_URL`: the final domain (used for canonical URLs, sitemap and social cards).
 - `PUBLIC_FORM_ENDPOINT`: Formspree, Getform or your own backend. Without it, forms open the visitor's email app.
 - `PUBLIC_HERO_VIDEO`: the campaign video file (for example `/media/orchidean-one.mp4`; keep it muted-loop friendly and under 8 MB).
-- Emails, WhatsApp number and social profiles.
+- Contact email (currently reenergygroupcr@gmail.com for everything) and social profiles.
 
 ---
 
@@ -133,7 +133,7 @@ src/
     logo.ts       ← generated logo geometry (do not edit by hand)
   lib/i18n.ts     ← routes for both languages, UI strings, number format
   layouts/Base.astro   ← <head>: SEO, hreflang, OG, JSON-LD
-  components/     ← Header, Footer, ShareBar (WhatsApp first), ListenButton,
+  components/     ← Header, Footer, ShareBar (copy link, native share, Facebook, X), ListenButton,
                     PageHero, HowItWorks, PlantScene (SVG), WorldCards, Faq,
                     SignupForm, CtaBand, Sources, Ref (footnotes)
   views/          ← one file per page, Spanish + English copy side by side
@@ -165,4 +165,4 @@ scripts/
   - `A` record, name `@`, value `76.76.21.21` (replace GoDaddy's default “Parked” A record)
   - `CNAME` record, name `www`, value `cname.vercel-dns.com` (replace the existing `www` record)
   - Vercel issues the HTTPS certificate automatically once DNS resolves (minutes to a few hours).
-- **Email:** the site lists `hola@`, `prensa@` and `municipalidades@reenergygroup.com`. Create these mailboxes or forwards in GoDaddy (or Google Workspace) **before launch**, and keep the existing MX records when you edit DNS.
+- **Email:** every contact link and the forms' email fallback go to `reenergygroupcr@gmail.com` (set in `src/data/site.ts`). The domain has no mailboxes; if you later create `@reenergygroup.com` addresses, change them there.
