@@ -70,7 +70,7 @@ export const UI = {
     sources: 'Fuentes',
     breadcrumbHome: 'Inicio',
     footer: {
-      tagline: 'Lo que hoy enterramos, mañana ilumina el país.',
+      tagline: 'Nadie tiene por qué sufrir el problema de la basura.',
       explore: 'Entienda el proyecto',
       forWhom: 'Para',
       contact: 'Contacto',
@@ -115,7 +115,7 @@ export const UI = {
     sources: 'Sources',
     breadcrumbHome: 'Home',
     footer: {
-      tagline: 'What we bury today can power the country tomorrow.',
+      tagline: 'No one should have to suffer the trash problem.',
       explore: 'Understand the project',
       forWhom: 'For',
       contact: 'Contact',

@@ -56,8 +56,8 @@ const c = es
     <div class="wrap slide-inner" data-listen>
       <p class="step">2 / 6</p>
       <p class="num huge">{es ? '8 de 10' : '8 in 10'}</p>
-      <h2 class="slide-h">{es ? 'toneladas se entierran. Y los rellenos se están llenando.' : 'tonnes get buried. And the landfills are filling up.'}<Ref n={r('ocde80')} /></h2>
-      <p class="lead">{es ? 'El relleno de El Huazo recibe la basura de más de 35 municipalidades y se está quedando sin espacio.' : 'The El Huazo landfill takes trash from more than 35 municipalities and is running out of space.'}<Ref n={r('huazo')} /></p>
+      <h2 class="slide-h">{es ? 'toneladas se entierran, afectando a comunidades y al medio ambiente.' : 'tonnes get buried, harming communities and the environment.'}<Ref n={r('ocde80')} /></h2>
+      <p class="lead">{es ? 'Y esos rellenos: están llenos.' : 'And those landfills: they’re full.'}<Ref n={r('huazo')} /></p>
     </div>
     <a class="next-arrow" href="#s3" aria-label={es ? 'Siguiente' : 'Next'}><Icon name="arrowDown" /></a>
   </section>
@@ -66,9 +66,9 @@ const c = es
     <div class="wrap slide-inner split" data-listen>
       <div>
         <p class="step">3 / 6</p>
-        <h2 class="slide-h big">{es ? 'Orchidean One convierte esa basura en electricidad.' : 'Orchidean One turns that trash into electricity.'}</h2>
-        <p class="lead">{es ? `${fmt(PROJECT.capacityTpd, 'es')} toneladas al día que ya no se entierran, ${PROJECT.powerMW} MW de electricidad y luz para unos ${fmt(PROJECT.homes, 'es')} hogares.* Primera planta: ${PROJECT.firstSite}.` : `${fmt(PROJECT.capacityTpd, 'en')} tonnes a day no longer buried, ${PROJECT.powerMW} MW of electricity and power for about ${fmt(PROJECT.homes, 'en')} homes.* First plant: ${PROJECT.firstSite}.`}</p>
-        <p class="source">{es ? '* Hogares: estimación. Inversión 100% privada: el Estado no pone ni un colón.' : '* Homes: estimate. 100% private investment: no public money.'}</p>
+        <h2 class="slide-h big">{es ? `Con su planta, ReEnergy convierte esa basura en energía: ${PROJECT.powerMW} MW.` : `With its plant, ReEnergy turns that trash into energy: ${PROJECT.powerMW} MW.`}</h2>
+        <p class="lead">{es ? 'El proyecto tiene contemplado empezar en Alajuela y Cartago.' : 'The project plans to start in Alajuela and Cartago.'}</p>
+        <p class="source">{es ? 'Inversión 100% privada: el Estado no pone ni un colón.' : '100% private investment: no public money.'}</p>
       </div>
       <div class="scene"><PlantScene label={es ? 'Ilustración de Orchidean One' : 'Illustration of Orchidean One'} /></div>
     </div>
@@ -79,7 +79,7 @@ const c = es
     <div class="wrap slide-inner" data-listen>
       <p class="step">4 / 6</p>
       <span class="icon-badge lago big-badge"><Icon name="eye" size={34} /></span>
-      <h2 class="slide-h big">{es ? 'Limpia sus gases. Y usted puede ver las mediciones.' : 'It cleans its gases. And you can see the readings.'}</h2>
+      <h2 class="slide-h">{es ? 'ReEnergy crea energía de la basura, limpia sus gases y siempre publica sus mediciones.' : 'ReEnergy creates energy from trash, cleans its gases and always publishes its readings.'}</h2>
       <p class="lead">{es ? 'Varias etapas de filtros, los límites de la Unión Europea y datos publicados en internet y en pantallas públicas. No tiene que creernos: puede comprobarlo.' : 'Several filter stages, European Union limits and data published online and on public screens. You don’t have to trust us — you can check.'}<Ref n={r('ied')} /></p>
     </div>
     <a class="next-arrow" href="#s5" aria-label={es ? 'Siguiente' : 'Next'}><Icon name="arrowDown" /></a>
@@ -89,7 +89,7 @@ const c = es
     <div class="wrap slide-inner" data-listen>
       <p class="step">5 / 6</p>
       <p class="num huge">3.000+</p>
-      <h2 class="slide-h">{es ? 'plantas como esta funcionan en el mundo.' : 'plants like this run around the world.'}<Ref n={r('ecoprog')} /></h2>
+      <h2 class="slide-h">{es ? 'plantas funcionando en todo el mundo.' : 'plants running around the world.'}<Ref n={r('ecoprog')} /></h2>
       <ul class="cities">
         <li>{es ? 'Copenhague: con pista de esquí en el techo' : 'Copenhagen: with a ski slope on the roof'}</li>
         <li>{es ? 'Viena: en el centro de la ciudad' : 'Vienna: right in the city center'}</li>
@@ -104,7 +104,7 @@ const c = es
       <div data-listen>
         <p class="step">6 / 6</p>
         <Logo variant="blue" mark height={64} />
-        <h2 class="slide-h big mt-2">{es ? 'Menos basura enterrada. Más luz para el país.' : 'Less buried trash. More power for the country.'}</h2>
+        <h2 class="slide-h big mt-2">{es ? 'Menos basura enterrada. Un mejor futuro para el país.' : 'Less buried trash. A better future for the country.'}</h2>
         <p class="lead">{es ? 'Ahora usted sabe más que la mayoría. Páselo.' : 'Now you know more than most people. Pass it on.'}</p>
       </div>
       <ShareBar lang={lang} route="minute" message={c.share} tone="dark" compact />

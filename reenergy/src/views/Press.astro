@@ -19,20 +19,20 @@ const { lang } = Astro.props;
 const es = lang === 'es';
 
 const boiler = es
-  ? `ReEnergy es la empresa que desarrolla Orchidean One, una planta de valorización energética propuesta en ${PROJECT.firstSite}, Costa Rica. La planta convertirá ${fmt(PROJECT.capacityTpd, 'es')} toneladas diarias de residuos sólidos ordinarios —que hoy terminan en rellenos sanitarios— en ${PROJECT.powerMW} MW de electricidad para la red nacional. La inversión es 100% privada, el tratamiento de gases se diseña según los límites de la Unión Europea y las mediciones de emisiones se publicarán en línea y en pantallas públicas. Una segunda planta está prevista en ${PROJECT.secondSite}.`
-  : `ReEnergy is the company developing Orchidean One, a waste-to-energy plant proposed in ${PROJECT.firstSite}, Costa Rica. The plant will turn ${fmt(PROJECT.capacityTpd, 'en')} tonnes a day of ordinary solid waste — which today ends up in landfills — into ${PROJECT.powerMW} MW of electricity for the national grid. The investment is 100% private, flue-gas treatment is designed to European Union limits, and emissions readings will be published online and on public screens. A second plant is planned in ${PROJECT.secondSite}.`;
+  ? `ReEnergy es la empresa que desarrolla Orchidean One, una planta de valorización energética propuesta en ${PROJECT.firstSite}, Costa Rica. La planta convertirá ${fmt(PROJECT.capacityTpd, 'es')} toneladas diarias de residuos sólidos ordinarios —que hoy terminan en rellenos sanitarios— en ${PROJECT.powerMW} MW de energía. La inversión es 100% privada, el tratamiento de gases se diseña según los límites de la Unión Europea y las mediciones de emisiones se publicarán en línea y en pantallas públicas. Una segunda planta está prevista en ${PROJECT.secondSite}.`
+  : `ReEnergy is the company developing Orchidean One, a waste-to-energy plant proposed in ${PROJECT.firstSite}, Costa Rica. The plant will turn ${fmt(PROJECT.capacityTpd, 'en')} tonnes a day of ordinary solid waste — which today ends up in landfills — into ${PROJECT.powerMW} MW of energy. The investment is 100% private, flue-gas treatment is designed to European Union limits, and emissions readings will be published online and on public screens. A second plant is planned in ${PROJECT.secondSite}.`;
 
 const messages = es
   ? [
       'Costa Rica se está quedando sin espacio para su basura: 8 de cada 10 toneladas se entierran y los rellenos del Valle Central están al límite.',
-      'Orchidean One convierte en electricidad la basura que no se puede reciclar y que hoy se entierra, sin un colón de fondos públicos.',
+      'Orchidean One convierte en energía la basura que no se puede reciclar y que hoy se entierra, sin un colón de fondos públicos.',
       'Es tecnología probada: más de 3.000 plantas en el mundo, muchas en el centro de ciudades como Copenhague, Viena y Tokio.',
       'El aire es lo primero: límites de la Unión Europea, auditorías independientes y mediciones públicas en línea y en pantallas.',
       'Complementa el reciclaje, no lo reemplaza: así lo establece la Ley 8839.',
     ]
   : [
       'Costa Rica is running out of room for its trash: 8 in 10 tonnes are buried and Central Valley landfills are at their limit.',
-      'Orchidean One turns into electricity the trash that can’t be recycled and is buried today, with no public money.',
+      'Orchidean One turns into energy the trash that can’t be recycled and is buried today, with no public money.',
       'It’s proven technology: more than 3,000 plants worldwide, many in the center of cities like Copenhagen, Vienna and Tokyo.',
       'Air comes first: European Union limits, independent audits and public readings online and on screens.',
       'It complements recycling, it doesn’t replace it — as Costa Rica’s Law 8839 sets out.',

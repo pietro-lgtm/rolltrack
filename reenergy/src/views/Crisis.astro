@@ -165,7 +165,7 @@ const c = es
         <p class="eyebrow">{es ? 'La salida' : 'The way out'}</p>
         <h2>{es ? 'No se trata de enterrar más. Se trata de enterrar menos.' : 'It’s not about burying more. It’s about burying less.'}</h2>
         <p class="lead">{es ? 'La Ley 8839 ya lo dice: enterrar es el último recurso. Antes hay que reducir, reciclar y valorizar, incluido el aprovechamiento energético.' : 'Costa Rica’s Law 8839 already says it: burying is the last resort. First comes reducing, recycling and recovering — including energy recovery.'}<Ref n={r('ley8839')} /></p>
-        <p>{es ? 'Orchidean One es la pieza que falta: convierte en electricidad lo que no se puede reciclar y que hoy termina bajo tierra.' : 'Orchidean One is the missing piece: it turns into electricity what can’t be recycled and today ends up underground.'}</p>
+        <p>{es ? 'Orchidean One es la pieza que falta: convierte en energía lo que no se puede reciclar y que hoy termina bajo tierra.' : 'Orchidean One is the missing piece: it turns into energy what can’t be recycled and today ends up underground.'}</p>
         <div class="btn-row mt-2">
           <a class="btn" href={ROUTES.plant[lang]}>{es ? 'Conozca la solución' : 'See the solution'}<Icon name="arrowRight" /></a>
           <a class="btn btn-ghost" href={ROUTES.minute[lang]}><Icon name="play" />{es ? 'En 1 minuto' : 'In 1 minute'}</a>
@@ -186,7 +186,7 @@ const c = es
     lang={lang}
     route="crisis"
     share={c.share}
-    next={{ key: 'plant', label: es ? 'Orchidean One: la planta por dentro' : 'Orchidean One: inside the plant', teaser: es ? 'Cómo se convierte la basura en luz, paso a paso.' : 'How trash becomes light, step by step.' }}
+    next={{ key: 'plant', label: es ? 'Orchidean One: la planta por dentro' : 'Orchidean One: inside the plant', teaser: es ? 'Cómo se convierte la basura en energía, paso a paso.' : 'How trash becomes energy, step by step.' }}
   />
   <Sources lang={lang} items={sourceList(refs)} />
 </Base>

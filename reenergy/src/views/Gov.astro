@@ -18,7 +18,7 @@ interface Props {
 }
 const { lang } = Astro.props;
 const es = lang === 'es';
-const refs: SourceKey[] = ['huazo', 'santaAna', 'desamparados', 'limon300', 'ley8839', 'dec39136', 'setena', 'ied', 'ice2024'];
+const refs: SourceKey[] = ['huazo', 'santaAna', 'desamparados', 'limon300', 'ley8839', 'dec39136', 'setena', 'ied'];
 const r = (k: SourceKey) => refs.indexOf(k) + 1;
 
 const value = es
@@ -44,7 +44,7 @@ const sheet = es
       ['Tipo de instalación', 'Planta de valorización energética de residuos sólidos ordinarios'],
       ['Tecnología', 'Parrilla móvil multietapa de diseño belga, con caldera y turbina de vapor'],
       ['Capacidad', `${fmt(PROJECT.capacityTpd, 'es')} t/día`],
-      ['Potencia eléctrica', `${PROJECT.powerMW} MW netos`],
+      ['Potencia', `${PROJECT.powerMW} MW de energía`],
       ['Equivalente', `~${fmt(PROJECT.homes, 'es')} hogares*`],
       ['Temperatura de combustión', `${PROJECT.furnaceC}–${fmt(PROJECT.furnaceMaxC, 'es')} °C (gases ≥ 2 s a más de ${PROJECT.furnaceC} °C)`],
       ['Tratamiento de gases', 'Control de NOx, neutralización de ácidos, carbón activado y filtro de mangas*'],
@@ -66,7 +66,7 @@ const sheet = es
       ['Facility type', 'Waste-to-energy plant for ordinary municipal solid waste'],
       ['Technology', 'Belgian-designed moving multi-stage grate, with boiler and steam turbine'],
       ['Capacity', `${fmt(PROJECT.capacityTpd, 'en')} t/day`],
-      ['Electrical output', `${PROJECT.powerMW} MW net`],
+      ['Output', `${PROJECT.powerMW} MW of energy`],
       ['Equivalent', `~${fmt(PROJECT.homes, 'en')} homes*`],
       ['Combustion temperature', `${PROJECT.furnaceC}–${fmt(PROJECT.furnaceMaxC, 'en')} °C (gases ≥ 2 s above ${PROJECT.furnaceC} °C)`],
       ['Flue-gas treatment', 'NOx control, acid neutralization, activated carbon and bag filter*'],
@@ -211,7 +211,6 @@ const c = es
           ))
         }
       </div>
-      <p class="mt-2">{es ? 'Además, la electricidad firme aporta seguridad al sistema eléctrico nacional, que en 2024 tuvo racionamientos y alto gasto en generación térmica e importaciones.' : 'Firm power also adds security to the national grid, which in 2024 saw blackouts and high spending on thermal generation and imports.'}<Ref n={r('ice2024')} /></p>
     </div>
   </section>
 

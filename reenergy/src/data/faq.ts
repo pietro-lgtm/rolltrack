@@ -1,6 +1,6 @@
 /**
  * Preguntas frecuentes. Tono: claro, corto, sin evasivas. En un tema político, una respuesta
- * honesta convence más que una promesa: no prometemos “cero emisiones” ni “luz más barata”.
+ * honesta convence más que una promesa: no prometemos “cero emisiones” ni tarifas más bajas.
  * `home: true` = aparece en la portada.
  * ⚠️ Las respuestas marcadas [VERIFICAR] en comentarios dependen de decisiones del proyecto.
  */
@@ -40,7 +40,7 @@ export const FAQ: { es: Item[]; en: Item[] } = {
     {
       home: true,
       q: '¿Dónde se va a construir?',
-      a: `<p>La primera planta, Orchidean One, será en <strong>${PROJECT.firstSite}</strong>; la segunda, en <strong>${PROJECT.secondSite}</strong>. El terreno exacto se define con estudios técnicos y consulta pública: <strong>zona industrial o compatible</strong> según el plan regulador, lejos de casas, fuera de áreas protegidas y de zonas de recarga de acuíferos, cerca de carreteras principales y de una subestación eléctrica. <a href="${ROUTES.build.es}">Vea los criterios y los plazos</a>.</p>`,
+      a: `<p>La primera planta, Orchidean One, será en <strong>${PROJECT.firstSite}</strong>; la segunda, en <strong>${PROJECT.secondSite}</strong>. El terreno exacto se define con estudios técnicos y consulta pública: <strong>zona industrial o compatible</strong> según el plan regulador, lejos de casas, fuera de áreas protegidas y de zonas de recarga de acuíferos, cerca de carreteras principales y de una subestación. <a href="${ROUTES.build.es}">Vea los criterios y los plazos</a>.</p>`,
     },
     {
       q: '¿Cuánto tarda en construirse?',
@@ -61,10 +61,6 @@ export const FAQ: { es: Item[]; en: Item[] } = {
     {
       q: '¿Qué pasa con la ceniza?',
       a: `<p>La basura se reduce a cerca de una décima parte de su volumen. Los metales se recuperan para reciclar. La ceniza de fondo puede reutilizarse en obras (Dinamarca reutiliza casi toda la suya). La ceniza fina de los filtros —una porción pequeña— se maneja bajo el control del Ministerio de Salud.</p>`,
-    },
-    {
-      q: '¿Va a bajar el recibo de la luz?',
-      a: `<p>No le vamos a prometer eso: las tarifas las fija ARESEP. Lo que sí aporta Orchidean One es <strong>energía firme</strong>, que se produce todos los días, llueva o no. En 2024 hubo racionamientos y el país gastó cientos de millones de dólares en combustibles e importaciones de electricidad. Cada megavatio que no depende de la lluvia ayuda.</p>`,
     },
     {
       q: '¿Quién paga la planta?',
@@ -114,7 +110,7 @@ export const FAQ: { es: Item[]; en: Item[] } = {
     {
       home: true,
       q: 'Where will it be built?',
-      a: `<p>The first plant, Orchidean One, will be in <strong>${PROJECT.firstSite}</strong>; the second, in <strong>${PROJECT.secondSite}</strong>. The exact site is chosen through technical studies and public consultation: an <strong>industrial or compatible zone</strong> under the local zoning plan, away from homes, outside protected areas and aquifer recharge zones, close to main highways and an electrical substation. <a href="${ROUTES.build.en}">See the criteria and timeline</a>.</p>`,
+      a: `<p>The first plant, Orchidean One, will be in <strong>${PROJECT.firstSite}</strong>; the second, in <strong>${PROJECT.secondSite}</strong>. The exact site is chosen through technical studies and public consultation: an <strong>industrial or compatible zone</strong> under the local zoning plan, away from homes, outside protected areas and aquifer recharge zones, close to main highways and a substation. <a href="${ROUTES.build.en}">See the criteria and timeline</a>.</p>`,
     },
     {
       q: 'How long does it take to build?',
@@ -135,10 +131,6 @@ export const FAQ: { es: Item[]; en: Item[] } = {
     {
       q: 'What happens to the ash?',
       a: `<p>Trash shrinks to about a tenth of its volume. Metals are recovered for recycling. Bottom ash can be reused in construction (Denmark reuses nearly all of its own). The fine ash from the filters — a small share — is handled under Ministry of Health oversight.</p>`,
-    },
-    {
-      q: 'Will my electricity bill go down?',
-      a: `<p>We won’t promise that: rates are set by the regulator, ARESEP. What Orchidean One does provide is <strong>firm power</strong>, produced every day, rain or shine. In 2024 there were blackouts and the country spent hundreds of millions of dollars on fuel and electricity imports. Every megawatt that doesn’t depend on rain helps.</p>`,
     },
     {
       q: 'Who pays for the plant?',

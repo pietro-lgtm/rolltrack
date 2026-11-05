@@ -22,7 +22,7 @@ const { lang } = Astro.props;
 const R = ROUTES;
 
 const refs: SourceKey[] = [
-  'gen4000', 'ocde80', 'recycling', 'limon300', 'huazo', 'ice2024', 'ghg', 'ecoprog',
+  'gen4000', 'ocde80', 'recycling', 'limon300', 'huazo', 'ghg', 'ecoprog',
   'copenhill', 'spittelau', 'tokyo', 'sweden', 'swiss', 'singapore', 'germany', 'ied',
 ];
 const r = (k: SourceKey) => refs.indexOf(k) + 1;
@@ -30,24 +30,24 @@ const r = (k: SourceKey) => refs.indexOf(k) + 1;
 const c = {
   es: {
     title: 'Orchidean One · Basura convertida en energía para Costa Rica',
-    desc: 'Costa Rica se está quedando sin espacio para su basura. Orchidean One, de ReEnergy, la convierte en electricidad con tecnología probada en más de 3.000 plantas del mundo y aire medido en público.',
+    desc: 'Costa Rica se está quedando sin espacio para su basura. Orchidean One, de ReEnergy, la convierte en energía con tecnología probada en más de 3.000 plantas del mundo y aire medido en público.',
     eyebrow: 'Orchidean One · Costa Rica',
-    h1: 'Lo que hoy enterramos, mañana ilumina el país.',
-    lead: 'Costa Rica se está quedando sin lugar para su basura. Orchidean One la convierte en electricidad, con tecnología probada en todo el mundo y el aire medido a la vista de todos.',
+    h1: 'Nadie tiene por qué sufrir el problema de la basura.',
+    lead: 'ReEnergy presenta una solución moderna y limpia para el problema de la basura en Costa Rica, utilizando tecnología de Waste to Energy, probada en todo el mundo.',
     cta1: 'Entiéndalo en 1 minuto',
     cta2: '¿Contamina? La respuesta clara',
-    chips: ['Basura → electricidad', `${PROJECT.volumeReduction}% menos volumen`, 'Emisiones públicas en vivo'],
+    chips: ['Basura → energía', `${PROJECT.volumeReduction}% menos volumen`, 'Emisiones públicas en vivo'],
     share: 'Costa Rica se está quedando sin espacio para la basura. Hay una solución que ya usan Copenhague, Viena y Tokio. Mire:',
   },
   en: {
     title: 'Orchidean One · Turning Costa Rica’s trash into energy',
-    desc: 'Costa Rica is running out of room for its trash. Orchidean One, by ReEnergy, turns it into electricity with technology proven in 3,000+ plants worldwide and air quality measured in public.',
+    desc: 'Costa Rica is running out of room for its trash. Orchidean One, by ReEnergy, turns it into energy with technology proven in 3,000+ plants worldwide and air quality measured in public.',
     eyebrow: 'Orchidean One · Costa Rica',
-    h1: 'What we bury today can power the country tomorrow.',
-    lead: 'Costa Rica is running out of places to put its trash. Orchidean One turns it into electricity, with technology proven around the world and air quality measured in plain sight.',
+    h1: 'No one should have to suffer the trash problem.',
+    lead: 'ReEnergy brings a modern, clean solution to Costa Rica’s trash problem, using waste-to-energy technology proven around the world.',
     cta1: 'Get it in 1 minute',
     cta2: 'Does it pollute? A straight answer',
-    chips: ['Trash → electricity', `${PROJECT.volumeReduction}% less volume`, 'Live public emissions'],
+    chips: ['Trash → energy', `${PROJECT.volumeReduction}% less volume`, 'Live public emissions'],
     share: 'Costa Rica is running out of room for its trash. There’s a solution Copenhagen, Vienna and Tokyo already use. Take a look:',
   },
 }[lang];
@@ -154,22 +154,22 @@ const plantLd = {
   <section class="section solution">
     <div class="wrap split">
       <div class="scene-wrap reveal">
-        <PlantScene label={lang === 'es' ? 'Ilustración de Orchidean One: edificio con techo verde, chimenea con anillo de monitoreo y energía hacia la red' : 'Illustration of Orchidean One: green-roofed building, stack with monitoring ring, power to the grid'} />
+        <PlantScene label={lang === 'es' ? 'Ilustración de Orchidean One: edificio con techo verde, chimenea con anillo de monitoreo y energía para el país' : 'Illustration of Orchidean One: green-roofed building, stack with monitoring ring, energy for the country'} />
         <span class="scene-tag">{lang === 'es' ? 'Ilustración de concepto' : 'Concept illustration'}</span>
       </div>
       <div data-listen>
         <p class="eyebrow">{lang === 'es' ? 'La solución' : 'The solution'}</p>
-        <h2>{lang === 'es' ? 'Una planta que convierte basura en luz.' : 'A plant that turns trash into light.'}</h2>
+        <h2>{lang === 'es' ? 'Una planta que convierte basura en energía.' : 'A plant that turns trash into energy.'}</h2>
         <p class="lead">
           {
             lang === 'es'
-              ? 'Orchidean One recibe la basura que hoy se entierra y la transforma en electricidad para la red nacional. Es una planta de valorización energética: lo mismo que usan las ciudades más limpias del mundo.'
-              : 'Orchidean One takes the trash we bury today and turns it into electricity for the national grid. It’s a waste-to-energy plant — the same kind the world’s cleanest cities rely on.'
+              ? 'Orchidean One recibe la basura que hoy se entierra y la transforma en energía. Es una planta de valorización energética: lo mismo que usan las ciudades más limpias del mundo.'
+              : 'Orchidean One takes the trash we bury today and turns it into energy. It’s a waste-to-energy plant — the same kind the world’s cleanest cities rely on.'
           }
         </p>
         <ul class="checklist mt-2">
-          <li><Icon name="check" />{lang === 'es' ? `Recibe ${fmt(PROJECT.capacityTpd, 'es')} toneladas de basura al día y entrega ${PROJECT.powerMW} MW a la red.` : `Takes ${fmt(PROJECT.capacityTpd, 'en')} tonnes of trash a day and delivers ${PROJECT.powerMW} MW to the grid.`}</li>
-          <li><Icon name="check" />{lang === 'es' ? `Genera electricidad para el equivalente a unos ${fmt(PROJECT.homes, 'es')} hogares.*` : `Generates power for the equivalent of about ${fmt(PROJECT.homes, 'en')} homes.*`}</li>
+          <li><Icon name="check" />{lang === 'es' ? `Recibe ${fmt(PROJECT.capacityTpd, 'es')} toneladas de basura al día y genera ${PROJECT.powerMW} MW de energía.` : `Takes ${fmt(PROJECT.capacityTpd, 'en')} tonnes of trash a day and generates ${PROJECT.powerMW} MW of energy.`}</li>
+          <li><Icon name="check" />{lang === 'es' ? `Produce energía equivalente al consumo de unos ${fmt(PROJECT.homes, 'es')} hogares.*` : `Produces energy equivalent to the use of about ${fmt(PROJECT.homes, 'en')} homes.*`}</li>
           <li><Icon name="check" />{lang === 'es' ? `Reduce el volumen de la basura en cerca de un ${PROJECT.volumeReduction}%.` : `Shrinks trash volume by about ${PROJECT.volumeReduction}%.`}</li>
           <li><Icon name="check" />{lang === 'es' ? 'Limpia sus gases y publica sus mediciones en este sitio y en pantallas públicas.' : 'Cleans its gases and publishes its readings on this site and on public screens.'}</li>
           <li><Icon name="check" />{lang === 'es' ? 'Inversión 100% privada: el Estado no pone ni un colón.' : '100% private investment: not one colón of public money.'}</li>
@@ -208,12 +208,9 @@ const plantLd = {
           <p>{lang === 'es' ? 'Cada tonelada que entra a la planta es una tonelada menos en un relleno que ya no da abasto.' : 'Every tonne the plant takes is a tonne less in a landfill that’s already overflowing.'}</p>
         </article>
         <article class="card reveal benefit">
-          <span class="icon-badge lago"><Icon name="cloudRain" /></span>
-          <h3>{lang === 'es' ? 'Luz que no depende de la lluvia' : 'Power that doesn’t depend on rain'}</h3>
-          <p>
-            {lang === 'es' ? 'En 2024 hubo racionamientos y el ICE gastó cientos de millones de dólares en combustibles e importaciones. La basura se produce todos los días, llueva o no.' : 'In 2024 there were blackouts and ICE spent hundreds of millions of dollars on fuel and imports. Trash is produced every day, rain or shine.'}
-            <Ref n={r('ice2024')} />
-          </p>
+          <span class="icon-badge lago"><Icon name="zap" /></span>
+          <h3>{lang === 'es' ? 'Energía a partir de lo que botamos' : 'Energy from what we throw away'}</h3>
+          <p>{lang === 'es' ? `Lo que hoy es un problema se convierte en ${PROJECT.powerMW} MW de energía, todos los días del año.` : `What’s a problem today becomes ${PROJECT.powerMW} MW of energy, every day of the year.`}</p>
         </article>
         <article class="card reveal benefit">
           <span class="icon-badge verde"><Icon name="leaf" /></span>
@@ -346,7 +343,7 @@ const plantLd = {
           <li class="reveal"><span class="num">{PROJECT.firstSite}</span><span>{lang === 'es' ? `primera planta. La segunda, en ${PROJECT.secondSite}.` : `first plant. The second, in ${PROJECT.secondSite}.`}</span></li>
           <li class="reveal"><span class="num">{PROJECT.areaHa}+ ha</span><span>{lang === 'es' ? 'de terreno: una fracción de lo que consume un relleno.' : 'of land — a fraction of what a landfill consumes.'}</span></li>
           <li class="reveal"><span class="num">{PROJECT.constructionShort} {lang === 'es' ? 'meses' : 'months'}</span><span>{lang === 'es' ? `de construcción, después de una meta de ${PROJECT.permitsMonths} meses para estudios y permisos.*` : `of construction, after a ${PROJECT.permitsMonths}-month target for studies and permits.*`}</span></li>
-          <li class="reveal"><span class="num">{lang === 'es' ? 'Zona industrial' : 'Industrial zone'}</span><span>{lang === 'es' ? 'lejos de casas, cerca de carreteras y de la red eléctrica.' : 'away from homes, near highways and the power grid.'}</span></li>
+          <li class="reveal"><span class="num">{lang === 'es' ? 'Zona industrial' : 'Industrial zone'}</span><span>{lang === 'es' ? 'lejos de casas y cerca de carreteras principales.' : 'away from homes and close to main highways.'}</span></li>
         </ul>
       </div>
       <p class="source">{lang === 'es' ? '* Plazos estimados, sujetos a estudios y permisos (SETENA y municipalidad).' : '* Estimated timeline, subject to studies and permits (SETENA and municipality).'}</p>
@@ -406,7 +403,7 @@ const plantLd = {
   }
   @keyframes kenburns { from { transform: scale(1.02); } to { transform: scale(1.14) translate(-1.5%, -1%); } }
   .hero-inner { position: relative; z-index: 1; padding-block: 72px 120px; }
-  .hero-h1 { max-width: 13ch; font-size: calc(var(--fs-title) * 1.25); color: #2f302c; }
+  .hero-h1 { max-width: 15ch; font-size: calc(var(--fs-title) * 1.25); color: #2f302c; }
   .hero-lead { max-width: 34rem; color: #3a3a36; }
   .hero-inner .btn-row { margin-top: 32px; }
   .hero-inner .eyebrow { color: var(--verde-ink); }

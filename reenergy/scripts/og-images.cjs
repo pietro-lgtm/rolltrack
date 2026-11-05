@@ -24,10 +24,10 @@ const T = {
   photo: { bg: '#eceee9', fg: '#2f302c', accent: '#56701a', logo: '', photo: true },
 };
 const pages = {
-  home: { t: 'photo', es: ['Orchidean One', 'Lo que hoy enterramos, mañana ilumina el país.'], en: ['Orchidean One', 'What we bury today can power the country tomorrow.'] },
+  home: { t: 'photo', es: ['Orchidean One', 'Nadie tiene por qué sufrir el problema de la basura.'], en: ['Orchidean One', 'No one should have to suffer the trash problem.'] },
   minute: { t: 'green', es: ['En 1 minuto', 'La crisis de la basura y su solución, en un minuto.'], en: ['In 1 minute', 'The trash crisis and its solution, in one minute.'] },
   crisis: { t: 'red', es: ['La crisis', 'Costa Rica se está quedando sin lugar para su basura.'], en: ['The crisis', 'Costa Rica is running out of places to put its trash.'] },
-  plant: { t: 'sky', es: ['La solución', 'Orchidean One: basura que se convierte en luz.'], en: ['The solution', 'Orchidean One: trash that becomes light.'] },
+  plant: { t: 'sky', es: ['La solución', 'Orchidean One: basura que se convierte en energía.'], en: ['The solution', 'Orchidean One: trash that becomes energy.'] },
   air: { t: 'lago', es: ['Aire y salud', '¿Contamina? La respuesta clara, con datos.'], en: ['Air & health', 'Does it pollute? The straight answer, with data.'] },
   world: { t: 'green', es: ['El mundo ya lo hace', 'Copenhague, Viena, Tokio: plantas en medio de la ciudad.'], en: ['The world does it', 'Copenhagen, Vienna, Tokyo: plants in the middle of the city.'] },
   build: { t: 'sky', es: ['Dónde y cuándo', 'El lugar correcto. El tiempo justo.'], en: ['Where and when', 'The right place. The right timeline.'] },
