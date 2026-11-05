@@ -1,0 +1,164 @@
+---
+/**
+ * Video adaptable: versión horizontal en computadora y vertical en celular.
+ * - Carga el archivo solo cuando el video se acerca a la pantalla.
+ * - Se reproduce en silencio cuando está visible y se pausa al salir.
+ * - Si la persona prefiere menos movimiento, no se reproduce solo: muestra el póster y un botón.
+ * - Al girar el celular cambia a la versión que corresponde.
+ * - mode="feature": botón para activar el sonido.
+ */
+import Icon from './Icon.astro';
+
+interface Props {
+  landscape: string; // MP4 horizontal (16:9)
+  portrait?: string; // MP4 vertical (9:16); si falta, se usa el horizontal
+  posterLandscape?: string;
+  posterPortrait?: string;
+  label: string; // descripción para lectores de pantalla
+  mode?: 'background' | 'feature';
+  lang?: 'es' | 'en';
+  class?: string;
+}
+
+const { landscape, portrait, posterLandscape, posterPortrait, label, mode = 'background', lang = 'es', class: cls } = Astro.props;
+const t = {
+  play: lang === 'es' ? 'Reproducir video' : 'Play video',
+  pause: lang === 'es' ? 'Pausar video' : 'Pause video',
+  sound: lang === 'es' ? 'Activar sonido' : 'Turn sound on',
+  mute: lang === 'es' ? 'Silenciar' : 'Mute',
+};
+---
+
+<div
+  class:list={['rv', `rv-${mode}`, cls]}
+  data-rv
+  data-land={landscape}
+  data-port={portrait || landscape}
+  data-poster-land={posterLandscape || ''}
+  data-poster-port={posterPortrait || posterLandscape || ''}
+  data-t-play={t.play}
+  data-t-pause={t.pause}
+  data-t-sound={t.sound}
+  data-t-mute={t.mute}
+>
+  <video class="rv-video" muted loop playsinline preload="none" aria-label={label} poster={posterLandscape || undefined}></video>
+  <div class="rv-controls">
+    <button type="button" class="rv-btn rv-toggle" aria-label={t.pause} data-track="video_toggle">
+      <span class="rv-i-pause"><Icon name="pause" size={18} /></span>
+      <span class="rv-i-play"><Icon name="play" size={18} /></span>
+    </button>
+    {
+      mode === 'feature' && (
+        <button type="button" class="rv-btn rv-sound" aria-label={t.sound} aria-pressed="false" data-track="video_sound">
+          <span class="rv-i-muted"><Icon name="volumeX" size={18} /></span>
+          <span class="rv-i-sound"><Icon name="volume2" size={18} /></span>
+        </button>
+      )
+    }
+  </div>
+</div>
+
+<style>
+  .rv { position: relative; overflow: hidden; background: var(--lago-night, #10234f); }
+  .rv-video { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .rv-feature { border-radius: var(--radius, 18px); aspect-ratio: 16 / 9; }
+  .rv-feature[data-orient='port'] { aspect-ratio: 9 / 16; max-height: 82svh; margin-inline: auto; }
+  .rv-controls { position: absolute; right: 12px; bottom: 12px; display: flex; gap: 8px; z-index: 2; }
+  .rv-btn {
+    width: 40px; height: 40px; border: 0; border-radius: 50%; display: grid; place-items: center; cursor: pointer;
+    background: rgba(252, 251, 244, 0.88); color: var(--lago-night, #10234f); backdrop-filter: blur(6px);
+  }
+  .rv-btn:focus-visible { outline: 3px solid var(--sprout, #9bd14b); outline-offset: 2px; }
+  .rv-i-play, .rv-i-sound { display: none; }
+  .rv[data-paused] .rv-i-play, .rv[data-sound] .rv-i-sound { display: contents; }
+  .rv[data-paused] .rv-i-pause, .rv[data-sound] .rv-i-muted { display: none; }
+  .rv-feature[data-paused]::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(180deg, rgba(16, 35, 79, 0) 55%, rgba(16, 35, 79, 0.35));
+  }
+</style>
+
+<script>
+  const PORTRAIT_Q = '(max-width: 700px), (orientation: portrait) and (max-width: 1024px)';
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const portraitMq = window.matchMedia(PORTRAIT_Q);
+
+  function setup(root: HTMLElement) {
+    const video = root.querySelector<HTMLVideoElement>('video')!;
+    const toggle = root.querySelector<HTMLButtonElement>('.rv-toggle')!;
+    const sound = root.querySelector<HTMLButtonElement>('.rv-sound');
+    let visible = false;
+    let userPaused = reduce.matches;
+    let loadedOrient = '';
+
+    const orient = () => (portraitMq.matches ? 'port' : 'land');
+
+    function load() {
+      const o = orient();
+      if (o === loadedOrient) return;
+      const t = video.currentTime;
+      loadedOrient = o;
+      root.dataset.orient = o;
+      const poster = root.dataset[o === 'port' ? 'posterPort' : 'posterLand'];
+      if (poster) video.poster = poster;
+      video.src = root.dataset[o] || '';
+      video.load();
+      if (t) video.addEventListener('loadedmetadata', () => (video.currentTime = Math.min(t, video.duration || t)), { once: true });
+      sync();
+    }
+
+    function sync() {
+      const shouldPlay = visible && !userPaused && loadedOrient;
+      if (shouldPlay) video.play().catch(() => markPaused(true));
+      else video.pause();
+      markPaused(!shouldPlay);
+    }
+
+    function markPaused(p: boolean) {
+      root.toggleAttribute('data-paused', p);
+      toggle.setAttribute('aria-label', p ? root.dataset.tPlay! : root.dataset.tPause!);
+    }
+
+    toggle.addEventListener('click', () => {
+      userPaused = !video.paused;
+      if (!loadedOrient) load();
+      sync();
+    });
+
+    sound?.addEventListener('click', () => {
+      video.muted = !video.muted;
+      root.toggleAttribute('data-sound', !video.muted);
+      sound.setAttribute('aria-pressed', String(!video.muted));
+      sound.setAttribute('aria-label', video.muted ? root.dataset.tSound! : root.dataset.tMute!);
+      if (!video.muted) {
+        userPaused = false;
+        sync();
+      }
+    });
+
+    // Precarga cuando el video está cerca de la pantalla…
+    const near = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          load();
+          near.disconnect();
+        }
+      },
+      { rootMargin: '400px 0px' },
+    );
+    near.observe(root);
+    // …y se reproduce solo cuando al menos una cuarta parte está a la vista.
+    new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) visible = e.isIntersecting;
+        sync();
+      },
+      { threshold: 0.25 },
+    ).observe(root);
+
+    portraitMq.addEventListener('change', () => loadedOrient && load());
+    markPaused(true);
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-rv]').forEach(setup);
+</script>
