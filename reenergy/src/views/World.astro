@@ -1,0 +1,139 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import WorldCards from '../components/WorldCards.astro';
+import Icon from '../components/Icon.astro';
+import Ref from '../components/Ref.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Sources from '../components/Sources.astro';
+import { ROUTES, type Lang } from '../lib/i18n';
+import { sourceList, type SourceKey } from '../data/facts';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const es = lang === 'es';
+const refs: SourceKey[] = ['ecoprog', 'cewep', 'japan', 'tokyo', 'copenhill', 'spittelau', 'sweden', 'swiss', 'singapore', 'germany', 'bottomAsh', 'barueri'];
+const r = (k: SourceKey) => refs.indexOf(k) + 1;
+
+const big = [
+  { n: '3.100+', l: es ? 'plantas en el mundo (2025)' : 'plants worldwide (2025)', k: 'ecoprog' as SourceKey },
+  { n: '499', l: es ? 'plantas en Europa' : 'plants in Europe', k: 'cewep' as SourceKey },
+  { n: '~1.000', l: es ? 'instalaciones en Japón' : 'facilities in Japan', k: 'japan' as SourceKey },
+  { n: '21', l: es ? 'plantas dentro de Tokio' : 'plants inside Tokyo', k: 'tokyo' as SourceKey },
+];
+const fixNum = (n: string) => (es ? n : n.replace('.', ','));
+
+const c = es
+  ? {
+      title: 'Plantas de basura a energía en el mundo: Copenhague, Viena, Tokio',
+      desc: 'Más de 3.000 plantas de valorización energética funcionan en el mundo, muchas en el centro de ciudades como Copenhague, Viena y Tokio. Ejemplos reales y lo que Costa Rica puede aprender.',
+      share: 'Copenhague tiene una planta de basura a energía con pista de esquí en el techo. Mire lo que hace el mundo:',
+    }
+  : {
+      title: 'Waste-to-energy plants worldwide: Copenhagen, Vienna, Tokyo',
+      desc: 'More than 3,000 waste-to-energy plants operate worldwide, many in the center of cities like Copenhagen, Vienna and Tokyo. Real examples and what Costa Rica can learn.',
+      share: 'Copenhagen has a waste-to-energy plant with a ski slope on the roof. See what the world is doing:',
+    };
+---
+
+<Base lang={lang} route="world" title={c.title} description={c.desc}>
+  <PageHero
+    lang={lang}
+    route="world"
+    crumb={es ? 'El mundo' : 'The world'}
+    tone="green"
+    eyebrow={es ? 'El mundo ya lo hace' : 'The world already does it'}
+    title={es ? 'No es un experimento. Es lo normal en los países más limpios.' : 'Not an experiment. It’s normal in the cleanest countries.'}
+    lead={es ? 'Las ciudades que más admiramos por limpias y ordenadas no entierran su basura: la convierten en energía. Y lo hacen en medio de la ciudad.' : 'The cities we admire most for being clean and orderly don’t bury their trash: they turn it into energy. And they do it right in the middle of town.'}
+  />
+
+  <section class="section-tight on-night">
+    <div class="wrap">
+      <ul class="bign">
+        {
+          big.map((b) => (
+            <li class="reveal">
+              <span class="num">{fixNum(b.n)}</span>
+              <span>
+                {b.l}
+                <Ref n={r(b.k)} />
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="measure mb-3" data-listen>
+        <p class="eyebrow">{es ? 'Ejemplos reales' : 'Real examples'}</p>
+        <h2>{es ? 'Plantas que son vecinas, no amenazas.' : 'Plants that are neighbors, not threats.'}</h2>
+      </div>
+      <WorldCards lang={lang} refs={refs} />
+    </div>
+  </section>
+
+  <section class="section bg-cream">
+    <div class="wrap split">
+      <div data-listen>
+        <p class="eyebrow">{es ? 'El mito del reciclaje' : 'The recycling myth'}</p>
+        <h2>{es ? 'Los que más reciclan también lo usan.' : 'The biggest recyclers use it too.'}</h2>
+        <p class="lead">{es ? 'Alemania recicla o composta el 69% de su basura municipal, y convierte gran parte del resto en energía. No es reciclar o valorizar: es reciclar y valorizar.' : 'Germany recycles or composts 69% of its municipal waste, and turns much of the rest into energy. It’s not recycling or energy recovery — it’s both.'}<Ref n={r('germany')} /></p>
+        <p>{es ? 'Y lo que queda también se aprovecha: Dinamarca reutiliza casi toda su ceniza de fondo en carreteras y construcción.' : 'Even what’s left gets used: Denmark reuses nearly all its bottom ash in roads and construction.'}<Ref n={r('bottomAsh')} /></p>
+      </div>
+      <div class="de reveal">
+        <p class="num">69%</p>
+        <p>{es ? 'de la basura municipal de Alemania se recicla o se composta' : 'of Germany’s municipal waste is recycled or composted'}</p>
+        <div class="de-bar"><span style="width:69%"></span></div>
+        <p class="small mb-0">{es ? 'El resto, en gran parte, se convierte en energía.' : 'Much of the rest becomes energy.'}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap split">
+      <div data-listen>
+        <p class="eyebrow">{es ? 'Nuestra región' : 'Our region'}</p>
+        <h2>{es ? 'América Latina ya empezó.' : 'Latin America has started.'}</h2>
+        <p class="lead">{es ? 'En São Paulo, Brasil, la planta URE Barueri ya supera el 88% de construcción y empezará a operar en 2027: 870 toneladas de basura al día convertidas en 20 MW.' : 'In São Paulo, Brazil, the URE Barueri plant is over 88% built and will start operating in 2027: 870 tonnes of trash a day turned into 20 MW.'}<Ref n={r('barueri')} /></p>
+        <p>{es ? 'Costa Rica, el país que el mundo conoce por cuidar la naturaleza, puede ser de los primeros de la región en resolver su basura con la misma tecnología que usan Europa y Asia.' : 'Costa Rica, the country the world knows for protecting nature, can be among the first in the region to solve its trash problem with the same technology Europe and Asia use.'}</p>
+        <a class="btn mt-1" href={ROUTES.plant[lang]}>{es ? 'Así sería aquí' : 'Here’s how it would work here'}<Icon name="arrowRight" /></a>
+      </div>
+      <ul class="region reveal">
+        <li><span class="dot lago"></span><strong>{es ? 'Europa' : 'Europe'}</strong> — {es ? '499 plantas' : '499 plants'}</li>
+        <li><span class="dot verde"></span><strong>{es ? 'Japón' : 'Japan'}</strong> — {es ? 'cerca de 1.000' : 'about 1,000'}</li>
+        <li><span class="dot sprout"></span><strong>{es ? 'Brasil' : 'Brazil'}</strong> — {es ? 'Barueri, 2027' : 'Barueri, 2027'}</li>
+        <li class="cr"><span class="dot volcano"></span><strong>Costa Rica</strong> — Orchidean One</li>
+      </ul>
+    </div>
+  </section>
+
+  <CtaBand
+    lang={lang}
+    route="world"
+    share={c.share}
+    next={{ key: 'build', label: es ? 'Dónde y cuándo' : 'Where and when', teaser: es ? 'Cómo se escoge el lugar, qué permisos se necesitan y cuánto tarda.' : 'How the site is chosen, which permits are needed and how long it takes.' }}
+  />
+  <Sources lang={lang} items={sourceList(refs)} />
+</Base>
+
+<style>
+  .bign { list-style: none; padding: 0; margin: 0; display: grid; gap: 24px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); }
+  .bign li { display: grid; gap: 8px; padding-top: 18px; border-top: 2px solid var(--sprout); }
+  .bign .num { color: var(--sprout); }
+  .on-night :global(sup.ref a) { color: var(--sprout); }
+  .de { padding: 32px; border-radius: var(--radius); background: var(--paper); box-shadow: var(--shadow); }
+  .de .num { color: var(--verde-ink); font-size: calc(var(--fs-title) * 1.4); margin-bottom: 8px; }
+  .de-bar { height: 16px; border-radius: 999px; background: var(--cream-2); overflow: hidden; margin: 18px 0 12px; }
+  .de-bar span { display: block; height: 100%; background: var(--verde); border-radius: 999px; }
+  .region { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+  .region li { display: flex; align-items: center; gap: 12px; padding: 18px 20px; border-radius: 16px; background: var(--paper); border: 1px solid var(--line); font-family: var(--font-title); }
+  .region strong { font-weight: 500; }
+  .region .cr { background: var(--lago); color: var(--sky); border-color: transparent; }
+  .dot { width: 14px; height: 14px; border-radius: 50%; flex: none; }
+  .dot.lago { background: var(--lago); } .dot.verde { background: var(--verde); } .dot.sprout { background: var(--sprout); border: 1px solid var(--verde); } .dot.volcano { background: var(--sprout); }
+</style>

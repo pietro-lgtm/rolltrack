@@ -1,0 +1,6 @@
+---
+/** Llamada a fuente: <Ref n={3} /> → ³ enlazado a la lista de fuentes de la página. */
+interface Props { n: number }
+const { n } = Astro.props;
+---
+{n > 0 && <sup class="ref"><a href={`#src-${n}`} aria-label={`Fuente ${n}`}>{n}</a></sup>}

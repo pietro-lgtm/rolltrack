@@ -1,0 +1,211 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import PlantScene from '../components/PlantScene.astro';
+import HowItWorks from '../components/HowItWorks.astro';
+import Icon from '../components/Icon.astro';
+import Ref from '../components/Ref.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Sources from '../components/Sources.astro';
+import { ROUTES, fmt, type Lang } from '../lib/i18n';
+import { PROJECT, sourceList, type SourceKey } from '../data/facts';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const es = lang === 'es';
+const refs: SourceKey[] = ['ied', 'bottomAsh', 'iswa', 'copenhill'];
+const r = (k: SourceKey) => refs.indexOf(k) + 1;
+
+const numbers = [
+  { n: fmt(PROJECT.capacityTpd, lang), u: es ? 't/día' : 't/day', l: es ? 'de basura que deja de enterrarse' : 'of trash no longer buried' },
+  { n: `${PROJECT.powerMW}`, u: 'MW', l: es ? 'de energía, todos los días' : 'of energy, every day' },
+  { n: fmt(PROJECT.homes, lang), u: es ? 'hogares' : 'homes', l: es ? 'equivalentes abastecidos*' : 'equivalent supplied*' },
+  { n: `${PROJECT.volumeReduction}%`, u: '', l: es ? 'menos volumen de basura' : 'less trash volume' },
+];
+
+const lanes = es
+  ? [
+      { tone: 'lago', icon: 'zap', t: 'Energía', steps: ['Fosa cerrada', 'Parrilla a 850–1.100 °C', 'Caldera: vapor', 'Turbina', 'Energía para el país'] },
+      { tone: 'sprout', icon: 'wind', t: 'Aire', steps: ['Gases calientes', 'Limpieza en varias etapas', 'Medición continua', 'Chimenea'] },
+      { tone: 'verde', icon: 'recycle', t: 'Materiales', steps: ['Metales → reciclaje', 'Ceniza de fondo → reutilizable en obras', 'Ceniza fina → manejo controlado'] },
+    ]
+  : [
+      { tone: 'lago', icon: 'zap', t: 'Energy', steps: ['Sealed pit', 'Grate at 850–1,100 °C', 'Boiler: steam', 'Turbine', 'Energy for the country'] },
+      { tone: 'sprout', icon: 'wind', t: 'Air', steps: ['Hot gases', 'Multi-stage cleaning', 'Continuous measuring', 'Stack'] },
+      { tone: 'verde', icon: 'recycle', t: 'Materials', steps: ['Metals → recycling', 'Bottom ash → reusable in construction', 'Fine ash → controlled handling'] },
+    ];
+
+const design = es
+  ? [
+      { icon: 'flame', t: 'Parrilla móvil multietapa', d: 'Tecnología de diseño belga que mueve y mezcla la basura sin parar, para una combustión completa y pareja entre 850 y 1.100 °C.' },
+      { icon: 'droplets', t: 'Para basura húmeda', d: 'Nuestra basura tiene mucha materia orgánica. Por eso se está haciendo un estudio de la basura real del país para ajustar el diseño, y la fosa cerrada la deja escurrir antes del horno.' },
+      { icon: 'shield', t: 'Sismorresistente', d: 'Diseñada según el Código Sísmico de Costa Rica, como exige cualquier obra de su tamaño en el país.' },
+      { icon: 'leaf', t: 'Parte del paisaje', d: 'Techo verde, arquitectura baja y áreas de árboles alrededor. Que se vea como lo que es: una planta para un país verde.' },
+      { icon: 'users', t: 'Abierta a la gente', d: 'Un centro de visitas para escuelas, colegios y comunidades. Como CopenHill en Copenhague, la planta también es un lugar para aprender.' },
+    ]
+  : [
+      { icon: 'flame', t: 'Moving multi-stage grate', d: 'Belgian-designed technology that keeps the waste moving and mixing, for complete, even combustion between 850 and 1,100 °C.' },
+      { icon: 'droplets', t: 'Built for wet waste', d: 'Our trash has a lot of organic matter. That’s why a study of the country’s actual waste is under way to fine-tune the design, and the sealed pit lets it drain before the furnace.' },
+      { icon: 'shield', t: 'Earthquake-resistant', d: 'Designed to Costa Rica’s Seismic Code, as required for any structure of its size in the country.' },
+      { icon: 'leaf', t: 'Part of the landscape', d: 'Green roof, low-profile architecture and trees all around. It should look like what it is: a plant for a green country.' },
+      { icon: 'users', t: 'Open to people', d: 'A visitor center for schools and communities. Like CopenHill in Copenhagen, the plant is also a place to learn.' },
+    ];
+
+const c = es
+  ? {
+      title: 'Orchidean One: la planta que convierte basura en energía',
+      desc: `Cómo funciona Orchidean One, la planta de valorización energética de ReEnergy: ${fmt(PROJECT.capacityTpd, 'es')} toneladas de basura al día convertidas en ${PROJECT.powerMW} MW de energía, con limpieza de gases y medición pública.`,
+      share: 'Así funciona la planta que convierte basura en energía para Costa Rica:',
+    }
+  : {
+      title: 'Orchidean One: the plant that turns trash into energy',
+      desc: `How Orchidean One, ReEnergy’s waste-to-energy plant, works: ${fmt(PROJECT.capacityTpd, 'en')} tonnes of trash a day turned into ${PROJECT.powerMW} MW of energy, with gas cleaning and public measurement.`,
+      share: 'This is how the plant that turns trash into energy for Costa Rica works:',
+    };
+---
+
+<Base lang={lang} route="plant" title={c.title} description={c.desc}>
+  <PageHero
+    lang={lang}
+    route="plant"
+    crumb="Orchidean One"
+    eyebrow={es ? 'La solución' : 'The solution'}
+    title={es ? 'Orchidean One: basura que se convierte en energía.' : 'Orchidean One: trash that becomes energy.'}
+    lead={es ? 'Una planta de valorización energética: recibe la basura que hoy se entierra, la transforma en energía y deja el aire limpio y medido. Tecnología probada, diseñada para Costa Rica.' : 'A waste-to-energy plant: it takes the trash we bury today, turns it into energy and leaves the air clean and measured. Proven technology, designed for Costa Rica.'}
+  >
+    <div slot="media" class="ph-media-slot hero-scene">
+      <PlantScene label={es ? 'Ilustración de concepto de Orchidean One' : 'Concept illustration of Orchidean One'} />
+    </div>
+  </PageHero>
+
+  <section class="section-tight on-dark">
+    <div class="wrap">
+      <ul class="numbers">
+        {
+          numbers.map((n) => (
+            <li class="reveal">
+              <span class="num">
+                {n.n}
+                <small>{n.u}</small>
+              </span>
+              <span>{n.l}</span>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="source">{es ? '* Estimación. Las cifras finales se confirman con la ingeniería de detalle y el estudio de la basura en curso.' : '* Estimate. Final figures will be confirmed by detailed engineering and the ongoing waste study.'}</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="measure mb-3" data-listen>
+        <p class="eyebrow">{es ? 'Paso a paso' : 'Step by step'}</p>
+        <h2>{es ? 'Cómo funciona.' : 'How it works.'}</h2>
+        <p class="lead">{es ? 'Sin palabras difíciles: así entra la basura y así sale la energía.' : 'No jargon: this is how trash goes in and energy comes out.'}</p>
+      </div>
+      <HowItWorks lang={lang} detailed />
+    </div>
+  </section>
+
+  <section class="section bg-cream">
+    <div class="wrap">
+      <div class="measure mb-3" data-listen>
+        <p class="eyebrow">{es ? 'Por dentro' : 'Inside'}</p>
+        <h2>{es ? 'Tres caminos, todo controlado.' : 'Three paths, all under control.'}</h2>
+        <p class="lead">{es ? 'Todo lo que entra a la planta sale por uno de estos tres caminos. Ninguno es un misterio.' : 'Everything that enters the plant leaves by one of these three paths. None of them is a mystery.'}</p>
+      </div>
+      <div class="lanes">
+        {
+          lanes.map((l) => (
+            <div class={`lane reveal tone-${l.tone}`}>
+              <p class="lane-h">
+                <span class="icon-badge">
+                  <Icon name={l.icon} />
+                </span>
+                {l.t}
+              </p>
+              <ol>
+                {l.steps.map((s) => (
+                  <li>{s}</li>
+                ))}
+              </ol>
+            </div>
+          ))
+        }
+      </div>
+      <p class="source">
+        {es ? 'Temperatura mínima de 850 °C por 2 segundos según la Directiva europea 2010/75/UE.' : 'Minimum 850 °C for 2 seconds, per EU Directive 2010/75/EU.'}<Ref n={r('ied')} />
+        {es ? ' Reutilización de ceniza de fondo en construcción: práctica común en Dinamarca y Países Bajos.' : ' Bottom ash reuse in construction: common practice in Denmark and the Netherlands.'}<Ref n={r('bottomAsh')} />
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="measure mb-3" data-listen>
+        <p class="eyebrow">{es ? 'Hecha para aquí' : 'Made for here'}</p>
+        <h2>{es ? 'Diseñada para Costa Rica.' : 'Designed for Costa Rica.'}</h2>
+      </div>
+      <div class="grid grid-4">
+        {
+          design.map((d) => (
+            <article class="card reveal">
+              <span class="icon-badge verde">
+                <Icon name={d.icon} />
+              </span>
+              <h3 class="dt">{d.t}</h3>
+              <p class="mb-0">{d.d}</p>
+            </article>
+          ))
+        }
+      </div>
+      <p class="source">
+        {es ? 'La organización internacional de residuos ISWA establece un poder calorífico mínimo para este tipo de plantas; el diseño se valida con la caracterización de la basura costarricense.' : 'The international waste association ISWA sets a minimum heating value for this type of plant; the design is validated against characterization of Costa Rican waste.'}<Ref n={r('iswa')} />
+      </p>
+    </div>
+  </section>
+
+  <section class="section-tight on-sprout">
+    <div class="wrap split">
+      <div data-listen>
+        <h2>{es ? '¿Y el aire?' : 'And the air?'}</h2>
+        <p class="lead mb-0">{es ? 'Es la pregunta más importante, y tiene su propia página: qué sale, cuánto y cómo usted puede comprobarlo.' : 'It’s the most important question, and it has its own page: what comes out, how much and how you can check it.'}</p>
+      </div>
+      <div class="btn-row">
+        <a class="btn btn-lg" href={ROUTES.air[lang]}>{es ? 'Aire y salud' : 'Air & health'}<Icon name="arrowRight" /></a>
+        <a class="btn btn-lg btn-ghost" href={ROUTES.monitor[lang]}><Icon name="activity" />{es ? 'Monitoreo público' : 'Public monitoring'}</a>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand
+    lang={lang}
+    route="plant"
+    share={c.share}
+    next={{ key: 'air', label: es ? '¿Contamina? La respuesta clara' : 'Does it pollute? A straight answer', teaser: es ? 'Filtros, límites europeos y datos a la vista.' : 'Filters, European limits and data in plain sight.' }}
+  />
+  <Sources lang={lang} items={sourceList(refs)} />
+</Base>
+
+<style>
+  .hero-scene { border-radius: calc(var(--radius) + 6px); overflow: hidden; aspect-ratio: 5 / 3.8; box-shadow: var(--shadow); }
+  .numbers { list-style: none; padding: 0; margin: 0; display: grid; gap: 24px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); }
+  .numbers li { display: grid; gap: 8px; padding-top: 18px; border-top: 2px solid var(--sprout); }
+  .numbers .num { color: var(--sprout); }
+  .numbers small { font-size: 0.42em; margin-left: 6px; letter-spacing: 0; color: var(--sky); }
+  .lanes { display: grid; gap: 14px; }
+  .lane { border-radius: var(--radius); padding: 22px 24px; background: var(--paper); border: 1px solid var(--line); display: grid; gap: 14px; }
+  @media (min-width: 900px) { .lane { grid-template-columns: 200px 1fr; align-items: center; } }
+  .lane-h { display: flex; align-items: center; gap: 14px; margin: 0; font-family: var(--font-title); font-size: var(--fs-sub); }
+  .lane ol { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  .lane li { display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 12px; background: var(--cream-2); font-family: var(--font-title); font-size: 15px; }
+  .lane li:not(:last-child)::after { content: '→'; margin-left: 6px; opacity: 0.5; }
+  .tone-verde ol li::after { content: none !important; }
+  .tone-lago .icon-badge { background: var(--lago); color: var(--sprout); }
+  .tone-verde .icon-badge { background: var(--verde); }
+  .dt { font-family: var(--font-title); margin-top: 18px; }
+  .on-dark .source { margin-top: 24px; }
+</style>

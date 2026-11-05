@@ -1,0 +1,96 @@
+---
+/**
+ * Barra para compartir: copiar enlace, compartir nativo del teléfono, Facebook y X.
+ * El enlace lleva parámetros UTM para medir qué se comparte y por dónde.
+ */
+import Icon from './Icon.astro';
+import { ROUTES, UI, type Lang, type RouteKey } from '../lib/i18n';
+import { SITE } from '../data/site';
+
+interface Props {
+  lang: Lang;
+  route: RouteKey;
+  message: string; // texto que acompaña el enlace
+  title?: string;
+  tone?: 'light' | 'dark';
+  compact?: boolean;
+}
+const { lang, route, message, title, tone = 'light', compact = false } = Astro.props;
+const ui = UI[lang].share;
+const url = SITE.url.replace(/\/$/, '') + ROUTES[route][lang];
+const withUtm = (source: string) => `${url}?utm_source=${source}&utm_medium=share&utm_campaign=orchidean-one`;
+const fb = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(withUtm('facebook'))}`;
+const xUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}&url=${encodeURIComponent(withUtm('x'))}`;
+---
+
+<div class:list={['share-bar', `tone-${tone}`, { compact }]} data-share-url={withUtm('link')} data-share-text={message}>
+  {!compact && <p class="share-title">{title ?? ui.title}</p>}
+  <div class="share-buttons">
+    <button type="button" class="btn share-copy" data-copied={ui.copied} data-track="share_copy">
+      <Icon name="copy" />
+      {ui.copy}
+    </button>
+    <button type="button" class="btn share-native" hidden data-track="share_native">
+      <Icon name="share" />
+      {ui.native}
+    </button>
+    <a class="share-icon" href={fb} target="_blank" rel="noopener" aria-label={ui.facebook} data-track="share_facebook">
+      <Icon name="facebook" />
+    </a>
+    <a class="share-icon" href={xUrl} target="_blank" rel="noopener" aria-label={ui.x} data-track="share_x">
+      <Icon name="xsocial" />
+    </a>
+    <span class="share-toast" role="status" aria-live="polite"></span>
+  </div>
+</div>
+
+<style>
+  .share-bar { display: grid; gap: 14px; }
+  .share-title { font-family: var(--font-title); font-size: var(--fs-body); margin: 0; }
+  .share-buttons { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; position: relative; }
+  .share-copy { --bg: var(--sprout); --fg: var(--lago-night); }
+  .share-native { --bg: var(--lago); --fg: var(--sky); }
+  .share-icon {
+    width: 52px; height: 52px; border-radius: 50%;
+    display: grid; place-items: center;
+    background: var(--paper); color: var(--lago); border: 1px solid var(--line);
+    cursor: pointer; transition: transform 0.2s var(--ease), background-color 0.2s;
+  }
+  .share-icon:hover { transform: translateY(-2px); background: var(--sprout); color: var(--lago-night); }
+  .tone-dark .share-icon { background: rgba(249, 246, 228, 0.08); color: var(--sky); border-color: rgba(249, 246, 228, 0.25); }
+  .tone-dark .share-icon:hover { background: var(--sprout); color: var(--lago-night); }
+  .tone-dark .share-native { --bg: var(--sky); --fg: var(--lago-night); }
+  .share-toast { font-family: var(--font-title); font-size: 14px; padding-left: 4px; }
+  .compact .btn { min-height: 46px; }
+  .compact .share-icon { width: 46px; height: 46px; }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.share-bar').forEach((bar) => {
+    const url = bar.dataset.shareUrl || location.href;
+    const text = bar.dataset.shareText || document.title;
+    const native = bar.querySelector<HTMLButtonElement>('.share-native');
+    const toast = bar.querySelector<HTMLElement>('.share-toast');
+    if (native && 'share' in navigator) {
+      native.hidden = false;
+      native.addEventListener('click', () => navigator.share({ title: document.title, text, url }).catch(() => {}));
+    }
+    const copyBtn = bar.querySelector<HTMLButtonElement>('.share-copy');
+    copyBtn?.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(url);
+      } catch {
+        const ta = document.createElement('textarea');
+        ta.value = url;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+      }
+      if (toast) {
+        toast.textContent = copyBtn.dataset.copied || '✓';
+        setTimeout(() => (toast.textContent = ''), 2400);
+      }
+    });
+  });
+</script>

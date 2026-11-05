@@ -1,0 +1,220 @@
+---
+/**
+ * Dónde y cuándo — responde las dos objeciones prácticas: zonificación y velocidad.
+ * ⚠️ Las fases y duraciones son estimaciones de diseño: VERIFICAR con el cronograma real.
+ */
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import Ref from '../components/Ref.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Sources from '../components/Sources.astro';
+import { ROUTES, type Lang } from '../lib/i18n';
+import { PROJECT, sourceList, type SourceKey } from '../data/facts';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const es = lang === 'es';
+const refs: SourceKey[] = ['losPinos', 'setena', 'ley8839', 'dec39136'];
+const r = (k: SourceKey) => refs.indexOf(k) + 1;
+
+const criteria = es
+  ? [
+      { icon: 'factory', t: 'Zona industrial', d: 'En terrenos industriales o compatibles según el plan regulador del cantón.' },
+      { icon: 'home', t: 'Lejos de las casas', d: 'Con una franja de amortiguamiento verde entre la planta y cualquier vivienda.' },
+      { icon: 'leaf', t: 'Fuera de áreas protegidas', d: 'Lejos de parques, refugios, humedales y zonas de recarga de acuíferos.' },
+      { icon: 'road', t: 'Cerca de carreteras', d: 'Acceso directo a vías principales, para que los camiones no crucen barrios.' },
+      { icon: 'plug', t: 'Cerca de una subestación', d: 'A poca distancia de una subestación, para entregar la energía sin grandes obras.' },
+      { icon: 'mountain', t: 'Terreno estable', d: 'Con estudios geológicos y sísmicos favorables, como exige el Código Sísmico.' },
+    ]
+  : [
+      { icon: 'factory', t: 'Industrial zone', d: 'On industrial or compatible land under the canton’s zoning plan.' },
+      { icon: 'home', t: 'Away from homes', d: 'With a green buffer strip between the plant and any housing.' },
+      { icon: 'leaf', t: 'Outside protected areas', d: 'Away from parks, refuges, wetlands and aquifer recharge zones.' },
+      { icon: 'road', t: 'Near highways', d: 'Direct access to main roads, so trucks don’t cross neighborhoods.' },
+      { icon: 'plug', t: 'Near a substation', d: 'Close to a substation, to deliver the energy without major works.' },
+      { icon: 'mountain', t: 'Stable ground', d: 'With favorable geological and seismic studies, as the Seismic Code requires.' },
+    ];
+
+const phases = es
+  ? [
+      { t: 'Estudios y diálogo', time: 'En curso', d: 'Se está estudiando la basura real del país. El proyecto ya se presentó a municipalidades y al Ministerio de Salud, y varias municipalidades firmaron cartas de interés.', icon: 'search', state: 'now' },
+      { t: 'Evaluación ambiental (SETENA)', time: `Meta: ${PROJECT.permitsMonths} meses (fases 1 a 3)`, d: 'Formulario D1 y Estudio de Impacto Ambiental, con participación ciudadana, hasta obtener la viabilidad ambiental.', icon: 'fileText', state: 'next' },
+      { t: 'Permisos municipales y conexión', time: `Meta: ${PROJECT.permitsMonths} meses (fases 1 a 3)`, d: 'Uso de suelo, permisos de construcción y permisos de conexión.', icon: 'landmark', state: 'next' },
+      { t: 'Construcción', time: PROJECT.constructionEs, d: 'Obra civil y fabricación de equipos al mismo tiempo. Prioridad a mano de obra local.', icon: 'hardhat', state: 'next' },
+      { t: 'Operación', time: 'Fase 5', d: 'La planta recibe basura, genera energía y publica sus emisiones en este sitio y en pantallas públicas.', icon: 'zap', state: 'next' },
+    ]
+  : [
+      { t: 'Studies and dialogue', time: 'Underway', d: 'A study of the country’s actual waste is under way. The project has been presented to municipalities and the Ministry of Health, and several municipalities have signed letters of interest.', icon: 'search', state: 'now' },
+      { t: 'Environmental review (SETENA)', time: `Target: ${PROJECT.permitsMonths} months (phases 1–3)`, d: 'D1 form and Environmental Impact Study, with public participation, through to environmental approval.', icon: 'fileText', state: 'next' },
+      { t: 'Municipal permits and grid connection', time: `Target: ${PROJECT.permitsMonths} months (phases 1–3)`, d: 'Land-use permit, building permits and connection permits.', icon: 'landmark', state: 'next' },
+      { t: 'Construction', time: PROJECT.constructionEn, d: 'Civil works and equipment manufacturing in parallel. Priority for local workers.', icon: 'hardhat', state: 'next' },
+      { t: 'Operation', time: 'Phase 5', d: 'The plant takes trash, generates energy and publishes its emissions on this site and on public screens.', icon: 'zap', state: 'next' },
+    ];
+
+const fast = es
+  ? [
+      { t: 'Diseño probado', d: 'La ingeniería ya funciona en cientos de plantas. Se adapta, no se inventa.' },
+      { t: 'Trabajo en paralelo', d: 'Mientras se hace la obra civil, los equipos se fabrican. Se ahorran meses.' },
+      { t: 'Construcción modular', d: 'Muchos componentes llegan listos para montar en sitio.' },
+      { t: 'Un solo sitio', d: 'Una planta compacta en vez de buscar, cada pocos años, un relleno nuevo.' },
+    ]
+  : [
+      { t: 'Proven design', d: 'The engineering already works in hundreds of plants. It’s adapted, not invented.' },
+      { t: 'Work in parallel', d: 'Equipment is manufactured while civil works are under way. That saves months.' },
+      { t: 'Modular construction', d: 'Many components arrive ready to assemble on site.' },
+      { t: 'One site', d: 'One compact plant instead of hunting for a new landfill every few years.' },
+    ];
+
+const c = es
+  ? {
+      title: 'Dónde y cuándo: ubicación, permisos y plazos de Orchidean One',
+      desc: `Cómo se escoge el terreno de Orchidean One (zona industrial, lejos de casas, cerca de carreteras), qué permisos necesita (SETENA y municipalidad) y por qué se construye en ${PROJECT.constructionEs}.`,
+      share: '¿Dónde iría la planta de basura a energía y cuánto tardaría? Aquí está explicado:',
+    }
+  : {
+      title: 'Where and when: Orchidean One’s site, permits and timeline',
+      desc: `How Orchidean One’s site is chosen (industrial zone, away from homes, near highways), which permits it needs (SETENA and municipality) and why it can be built in ${PROJECT.constructionEn}.`,
+      share: 'Where would the waste-to-energy plant go and how long would it take? Explained here:',
+    };
+---
+
+<Base lang={lang} route="build" title={c.title} description={c.desc}>
+  <PageHero
+    lang={lang}
+    route="build"
+    crumb={es ? 'Dónde y cuándo' : 'Where and when'}
+    tone="cream"
+    eyebrow={es ? 'Dónde y cuándo' : 'Where and when'}
+    title={es ? 'El lugar correcto. El tiempo justo.' : 'The right place. The right timeline.'}
+    lead={es ? 'Una planta compacta, en zona industrial, con todos los permisos de ley y construida en un plazo corto porque su diseño ya está probado.' : 'A compact plant, in an industrial zone, with every legal permit, built on a short timeline because its design is already proven.'}
+  />
+
+  <section class="section-tight on-dark">
+    <div class="wrap">
+      <ul class="key">
+        <li class="reveal"><span class="num">{PROJECT.firstSite}</span><span>{es ? `primera planta · la segunda, en ${PROJECT.secondSite}` : `first plant · the second, in ${PROJECT.secondSite}`}</span></li>
+        <li class="reveal"><span class="num">{PROJECT.areaHa}+ ha</span><span>{es ? 'de terreno, como mínimo' : 'of land, at minimum'}</span></li>
+        <li class="reveal"><span class="num">{PROJECT.permitsMonths} {es ? 'meses' : 'months'}</span><span>{es ? 'meta para tener estudios y permisos*' : 'target to complete studies and permits*'}</span></li>
+        <li class="reveal"><span class="num">{PROJECT.constructionShort}</span><span>{es ? 'meses de construcción tras los permisos*' : 'months of construction after permits*'}</span></li>
+      </ul>
+      <p class="source">{es ? '* Plazos estimados, sujetos a los tiempos de SETENA y de cada municipalidad.' : '* Estimated timeline, subject to SETENA and municipal review times.'}</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="measure mb-3" data-listen>
+        <p class="eyebrow">{es ? 'Dónde' : 'Where'}</p>
+        <h2>{es ? 'Primero Cartago. Después Alajuela.' : 'Cartago first. Then Alajuela.'}</h2>
+        <p class="lead">{es ? 'Orchidean One se construirá en Cartago, la provincia que perdió su relleno de Los Pinos en 2023 y hoy lleva su basura lejos. Una segunda planta está prevista en Alajuela.' : 'Orchidean One will be built in Cartago, the province that lost its Los Pinos landfill in 2023 and now hauls its trash far away. A second plant is planned in Alajuela.'}<Ref n={r('losPinos')} /></p>
+        <p>{es ? 'El terreno exacto se define con estudios técnicos y consulta pública. Estas son las seis reglas, y no son negociables:' : 'The exact site is chosen through technical studies and public consultation. These are the six rules, and they’re non-negotiable:'}</p>
+      </div>
+      <div class="grid grid-3">
+        {
+          criteria.map((x) => (
+            <article class="card reveal">
+              <span class="icon-badge">
+                <Icon name={x.icon} />
+              </span>
+              <h3 class="xt">{x.t}</h3>
+              <p class="mb-0">{x.d}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-cream">
+    <div class="wrap">
+      <div class="measure mb-3" data-listen>
+        <p class="eyebrow">{es ? 'Cuándo' : 'When'}</p>
+        <h2>{es ? 'De la idea a la energía, paso a paso.' : 'From idea to energy, step by step.'}</h2>
+        <p class="lead">{es ? 'Cada paso sigue la ley costarricense: SETENA para lo ambiental y la municipalidad para el uso del suelo.' : 'Every step follows Costa Rican law: SETENA for the environment and the municipality for land use.'}<Ref n={r('setena')} /></p>
+      </div>
+      <ol class="phases">
+        {
+          phases.map((p, i) => (
+            <li class={`reveal ph-${p.state}`}>
+              <span class="ph-icon">
+                <Icon name={p.icon} />
+              </span>
+              <div>
+                <p class="ph-time">{p.time}</p>
+                <h3 class="ph-t">
+                  {i + 1}. {p.t}
+                </h3>
+                <p class="mb-0">{p.d}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap split">
+      <div data-listen>
+        <p class="eyebrow">{es ? 'Por qué es rápido' : 'Why it’s fast'}</p>
+        <h2>{es ? 'Rápido no es apurado. Es probado.' : 'Fast isn’t rushed. It’s proven.'}</h2>
+        <p class="lead">{es ? 'Los permisos se cumplen todos. Lo que acorta el plazo es que la tecnología no se tiene que inventar.' : 'Every permit is met. What shortens the timeline is that the technology doesn’t need inventing.'}</p>
+      </div>
+      <ul class="fast">
+        {
+          fast.map((f) => (
+            <li class="reveal">
+              <Icon name="check" />
+              <div>
+                <strong>{f.t}</strong>
+                <span>{f.d}</span>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section-tight on-sprout">
+    <div class="wrap split">
+      <div data-listen>
+        <h2>{es ? 'Con la ley en la mano.' : 'By the book.'}</h2>
+        <p class="lead mb-0">{es ? 'La Ley 8839 reconoce el aprovechamiento energético de residuos y el Decreto 39136 regula sus emisiones desde 2015.' : 'Law 8839 recognizes energy recovery from waste, and Decree 39136 has regulated its emissions since 2015.'}<Ref n={r('ley8839')} /><Ref n={r('dec39136')} /></p>
+      </div>
+      <div class="btn-row">
+        <a class="btn btn-lg" href={ROUTES.gov[lang]}><Icon name="landmark" />{es ? 'Información para municipalidades' : 'Information for municipalities'}</a>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand
+    lang={lang}
+    route="build"
+    share={c.share}
+    next={{ key: 'faq', label: es ? 'Todas las preguntas' : 'All the questions', teaser: es ? 'Olores, salud, reciclaje, ceniza, tarifas: respuestas claras.' : 'Smells, health, recycling, ash, fees: clear answers.' }}
+  />
+  <Sources lang={lang} items={sourceList(refs)} />
+</Base>
+
+<style>
+  .key { list-style: none; padding: 0; margin: 0; display: grid; gap: 24px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); }
+  .key li { display: grid; gap: 8px; padding-top: 18px; border-top: 2px solid var(--sprout); }
+  .key .num { color: var(--sprout); }
+  .xt { font-family: var(--font-title); margin-top: 18px; }
+  .phases { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; position: relative; }
+  .phases li { display: grid; grid-template-columns: 64px 1fr; gap: 18px; align-items: start; padding: 22px 24px; border-radius: var(--radius); background: var(--paper); border: 1px solid var(--line); }
+  .ph-icon { width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; background: var(--cream-2); color: var(--lago); }
+  .ph-now { border-color: var(--verde) !important; box-shadow: var(--shadow); }
+  .ph-now .ph-icon { background: var(--sprout); color: var(--lago-night); }
+  .ph-time { font-family: var(--font-title); font-weight: 500; font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--verde-ink); margin: 0 0 4px; }
+  .ph-t { font-family: var(--font-title); font-size: var(--fs-body); font-weight: 500; margin-bottom: 6px; }
+  .fast { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+  .fast li { display: grid; grid-template-columns: 32px 1fr; gap: 14px; padding: 18px 20px; border-radius: 16px; background: var(--paper); border: 1px solid var(--line); }
+  .fast li > :global(svg) { width: 32px; height: 32px; padding: 6px; border-radius: 50%; background: var(--sprout); color: var(--lago-night); }
+  .fast div { display: grid; gap: 2px; }
+  .fast strong { font-family: var(--font-title); font-weight: 500; }
+</style>

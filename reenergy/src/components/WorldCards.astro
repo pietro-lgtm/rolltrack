@@ -1,0 +1,118 @@
+---
+import Ref from './Ref.astro';
+import type { Lang } from '../lib/i18n';
+import type { SourceKey } from '../data/facts';
+
+interface Props {
+  lang: Lang;
+  refs: SourceKey[];
+  limit?: number;
+}
+const { lang, refs, limit } = Astro.props;
+const r = (k: SourceKey) => refs.indexOf(k) + 1;
+
+const cards = [
+  {
+    code: 'DK',
+    city: { es: 'Copenhague, Dinamarca', en: 'Copenhagen, Denmark' },
+    big: { es: 'Con pista de esquí en el techo', en: 'With a ski slope on the roof' },
+    text: {
+      es: 'CopenHill abrió en 2017 en plena ciudad. Su techo es una pista de esquí y un sendero. En 2023 dio energía a unos 94.000 hogares y calefacción para 87.000 apartamentos.',
+      en: 'CopenHill opened in 2017 inside the city. Its roof is a ski slope and hiking trail. In 2023 it supplied energy to about 94,000 households and heated 87,000 apartments.',
+    },
+    src: 'copenhill' as SourceKey,
+    tone: 'lago',
+  },
+  {
+    code: 'AT',
+    city: { es: 'Viena, Austria', en: 'Vienna, Austria' },
+    big: { es: 'En el centro de la ciudad', en: 'In the middle of the city' },
+    text: {
+      es: 'La planta de Spittelau, decorada por el artista Hundertwasser, funciona dentro de Viena desde hace más de 50 años y calienta a más de 60.000 hogares.',
+      en: 'The Spittelau plant, decorated by artist Hundertwasser, has run inside Vienna for over 50 years and heats more than 60,000 households.',
+    },
+    src: 'spittelau' as SourceKey,
+    tone: 'verde',
+  },
+  {
+    code: 'JP',
+    city: { es: 'Tokio, Japón', en: 'Tokyo, Japan' },
+    big: { es: '21 plantas dentro de la ciudad', en: '21 plants inside the city' },
+    text: {
+      es: 'Los 23 distritos de Tokio —una de las ciudades más limpias del mundo— tienen 21 plantas. Japón cuenta con cerca de 1.000.',
+      en: 'Tokyo’s 23 wards — one of the cleanest cities on Earth — have 21 plants. Japan has around 1,000.',
+    },
+    src: 'tokyo' as SourceKey,
+    tone: 'sprout',
+  },
+  {
+    code: 'SE',
+    city: { es: 'Suecia', en: 'Sweden' },
+    big: { es: 'Entierra menos del 1%', en: 'Buries less than 1%' },
+    text: {
+      es: 'Suecia casi no entierra basura doméstica: cerca de la mitad se convierte en energía. Es tan eficiente que importa basura de otros países.',
+      en: 'Sweden barely landfills household waste: about half becomes energy. It’s so efficient it imports waste from other countries.',
+    },
+    src: 'sweden' as SourceKey,
+    tone: 'volcano',
+  },
+  {
+    code: 'CH',
+    city: { es: 'Suiza', en: 'Switzerland' },
+    big: { es: 'Prohibió enterrar basura en 2000', en: 'Banned burying trash in 2000' },
+    text: {
+      es: 'Desde el año 2000 en Suiza no se puede enterrar basura que se pueda aprovechar. Unas 30 plantas la convierten en energía.',
+      en: 'Since 2000, Switzerland has banned landfilling combustible waste. About 30 plants turn it into energy.',
+    },
+    src: 'swiss' as SourceKey,
+    tone: 'lago',
+  },
+  {
+    code: 'SG',
+    city: { es: 'Singapur', en: 'Singapore' },
+    big: { es: '90% menos volumen', en: '90% less volume' },
+    text: {
+      es: 'Una isla sin espacio para rellenos. Sus plantas reducen la basura en cerca de un 90% de volumen y la ceniza va a un relleno en el mar.',
+      en: 'An island with no room for landfills. Its plants cut waste volume by about 90%, and the ash goes to an offshore landfill.',
+    },
+    src: 'singapore' as SourceKey,
+    tone: 'verde',
+  },
+];
+const list = limit ? cards.slice(0, limit) : cards;
+---
+
+<ul class="world">
+  {
+    list.map((c, i) => (
+      <li class={`wc reveal tone-${c.tone}`} style={`transition-delay:${i * 60}ms`}>
+        <span class="wc-code" aria-hidden="true">
+          {c.code}
+        </span>
+        <p class="wc-city">{c.city[lang]}</p>
+        <h3 class="wc-big">{c.big[lang]}</h3>
+        <p class="wc-text">
+          {c.text[lang]}
+          <Ref n={r(c.src)} />
+        </p>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .world { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
+  .wc { position: relative; overflow: hidden; border-radius: var(--radius); padding: 28px 26px 30px; background: var(--paper); border: 1px solid var(--line); }
+  .wc-code {
+    position: absolute; right: -6px; top: -18px;
+    font-family: var(--font-title); font-size: clamp(84px, 12vw, 120px); line-height: 1; letter-spacing: -0.06em; opacity: 0.1; pointer-events: none;
+  }
+  .wc-city { font-family: var(--font-title); font-weight: 500; font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase; margin: 0 0 10px; }
+  .wc-big { font-family: var(--font-title); font-size: var(--fs-sub); line-height: 1.15; margin-bottom: 12px; max-width: 16ch; }
+  .wc-text { margin: 0; font-size: 0.95em; }
+  .tone-lago .wc-code, .tone-lago .wc-city { color: var(--lago); }
+  .tone-verde .wc-code, .tone-verde .wc-city { color: var(--verde-ink); }
+  .tone-sprout { background: var(--sprout); border-color: transparent; color: var(--lago-night); }
+  .tone-sprout .wc-code { color: var(--lago); }
+  .tone-volcano .wc-code, .tone-volcano .wc-city { color: var(--volcano-deep); }
+</style>

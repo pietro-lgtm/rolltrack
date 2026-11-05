@@ -1,0 +1,24 @@
+{
+  "name": "reenergy-site",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Sitio público de ReEnergy y la planta Orchidean One (ES/EN).",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "og": "node scripts/og-images.cjs",
+    "brand": "node scripts/brand-png.cjs",
+    "check:links": "node scripts/check-links.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@fontsource/gelasio": "5.3.0",
+    "@fontsource/poppins": "5.3.0",
+    "astro": "5.18.2",
+    "lucide-static": "0.460.0"
+  }
+}

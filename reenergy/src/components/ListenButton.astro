@@ -1,0 +1,91 @@
+---
+/**
+ * "Escuchar esta página": lectura en voz alta con la voz del propio teléfono (Web Speech API).
+ * Pensado para personas que prefieren escuchar que leer. Sin costo, sin servidor.
+ * Lee el contenido marcado con [data-listen] dentro de <main>.
+ */
+import Icon from './Icon.astro';
+import { UI, type Lang } from '../lib/i18n';
+interface Props {
+  lang: Lang;
+  tone?: 'light' | 'dark';
+}
+const { lang, tone = 'light' } = Astro.props;
+const ui = UI[lang];
+---
+
+<button
+  type="button"
+  class:list={['listen', `tone-${tone}`]}
+  hidden
+  data-lang={lang === 'es' ? 'es' : 'en'}
+  data-label-play={ui.listen}
+  data-label-stop={ui.listenStop}
+  aria-pressed="false"
+>
+  <span class="i-play"><Icon name="volume" size={20} /></span>
+  <span class="i-stop"><Icon name="square" size={18} /></span>
+  <span class="label">{ui.listen}</span>
+</button>
+
+<style>
+  .listen {
+    display: inline-flex; align-items: center; gap: 10px;
+    min-height: 46px; padding: 0 18px 0 8px; border-radius: 999px;
+    border: 1.5px solid var(--line-strong); background: var(--paper); color: var(--ink);
+    font-family: var(--font-title); font-weight: 500; font-size: 15px; cursor: pointer;
+  }
+  .listen[hidden] { display: none; }
+  .listen > span:not(.label) { width: 32px; height: 32px; border-radius: 50%; background: var(--sprout); color: var(--lago-night); display: grid; place-items: center; }
+  .listen .i-stop { display: none !important; }
+  .listen[aria-pressed='true'] .i-stop { display: grid !important; }
+  .listen[aria-pressed='true'] .i-play { display: none !important; }
+  .tone-dark { background: rgba(249, 246, 228, 0.08); color: var(--sky); border-color: rgba(249, 246, 228, 0.35); }
+</style>
+
+<script>
+  const synth = 'speechSynthesis' in window ? window.speechSynthesis : null;
+  document.querySelectorAll<HTMLButtonElement>('button.listen').forEach((btn) => {
+    if (!synth) return;
+    btn.hidden = false;
+    const label = btn.querySelector('.label')!;
+    const lang = btn.dataset.lang || 'es';
+    const pickVoice = () => {
+      const voices = synth.getVoices();
+      const pref = lang === 'es' ? ['es-CR', 'es-419', 'es-MX', 'es-US', 'es-ES', 'es'] : ['en-US', 'en-GB', 'en'];
+      for (const p of pref) {
+        const v = voices.find((v) => v.lang.toLowerCase().startsWith(p.toLowerCase()));
+        if (v) return v;
+      }
+      return null;
+    };
+    const stop = () => {
+      synth.cancel();
+      btn.setAttribute('aria-pressed', 'false');
+      label.textContent = btn.dataset.labelPlay || '';
+    };
+    btn.addEventListener('click', () => {
+      if (btn.getAttribute('aria-pressed') === 'true') return stop();
+      const nodes = document.querySelectorAll<HTMLElement>('main [data-listen]');
+      const text = Array.from(nodes.length ? nodes : [document.querySelector('main')!])
+        .map((n) => n.innerText)
+        .join('. ')
+        .replace(/\s+/g, ' ');
+      // Fragmentar por oraciones: algunos navegadores cortan textos largos.
+      const parts = text.match(/[^.!?¿¡]+[.!?]*/g) || [text];
+      const voice = pickVoice();
+      synth.cancel();
+      parts.forEach((p, i) => {
+        const u = new SpeechSynthesisUtterance(p.trim());
+        u.lang = voice?.lang || (lang === 'es' ? 'es-CR' : 'en-US');
+        if (voice) u.voice = voice;
+        u.rate = 0.98;
+        if (i === parts.length - 1) u.onend = stop;
+        synth.speak(u);
+      });
+      btn.setAttribute('aria-pressed', 'true');
+      label.textContent = btn.dataset.labelStop || '';
+    });
+    window.addEventListener('pagehide', () => synth.cancel());
+  });
+</script>

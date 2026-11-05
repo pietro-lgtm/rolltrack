@@ -1,0 +1,66 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Faq from '../components/Faq.astro';
+import SignupForm from '../components/SignupForm.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Sources from '../components/Sources.astro';
+import { type Lang } from '../lib/i18n';
+import { sourceList, type SourceKey } from '../data/facts';
+import { FAQ } from '../data/faq';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const es = lang === 'es';
+const refs: SourceKey[] = ['ley8839', 'dec39136', 'setena', 'epaDioxin', 'bmu2005', 'germany', 'bottomAsh', 'limon300', 'iswa'];
+
+const c = es
+  ? {
+      title: 'Preguntas frecuentes sobre Orchidean One',
+      desc: '¿Contamina? ¿Huele? ¿Acaba con el reciclaje? ¿Dónde se construye? ¿Es legal en Costa Rica? Respuestas claras sobre la planta de valorización energética Orchidean One.',
+      share: 'Las preguntas que todos se hacen sobre la planta de basura a energía, con respuestas claras:',
+    }
+  : {
+      title: 'Frequently asked questions about Orchidean One',
+      desc: 'Does it pollute? Does it smell? Does it kill recycling? Where will it be built? Is it legal in Costa Rica? Clear answers about the Orchidean One waste-to-energy plant.',
+      share: 'The questions everyone asks about the waste-to-energy plant, with clear answers:',
+    };
+---
+
+<Base lang={lang} route="faq" title={c.title} description={c.desc}>
+  <PageHero
+    lang={lang}
+    route="faq"
+    crumb={es ? 'Preguntas' : 'Questions'}
+    eyebrow={es ? 'Preguntas frecuentes' : 'Frequently asked questions'}
+    title={es ? 'Pregunte sin pena. Respondemos claro.' : 'Ask anything. We answer plainly.'}
+    lead={es ? 'Las preguntas que más nos hacen vecinos, municipalidades y periodistas, con respuestas cortas y sin rodeos.' : 'The questions residents, municipalities and journalists ask us most, with short, straight answers.'}
+  />
+
+  <section class="section-tight">
+    <div class="wrap measure" data-listen>
+      <Faq items={FAQ[lang]} open={0} />
+    </div>
+  </section>
+
+  <section class="section bg-cream" id="pregunte">
+    <div class="wrap split split-40">
+      <div>
+        <p class="eyebrow">{es ? '¿No está su pregunta?' : 'Question not here?'}</p>
+        <h2>{es ? 'Escríbanos.' : 'Write to us.'}</h2>
+        <p class="lead">{es ? 'Respondemos todas las preguntas. Las más comunes las publicamos aquí.' : 'We answer every question. The most common ones get published here.'}</p>
+      </div>
+      <SignupForm lang={lang} />
+    </div>
+  </section>
+
+  <CtaBand
+    lang={lang}
+    route="faq"
+    share={c.share}
+    next={{ key: 'minute', label: es ? 'Todo en 1 minuto' : 'All of it in 1 minute', teaser: es ? 'La versión corta para compartir.' : 'The short version to share.' }}
+  />
+  <Sources lang={lang} items={sourceList(refs)} />
+</Base>

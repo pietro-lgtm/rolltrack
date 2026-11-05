@@ -1,0 +1,105 @@
+---
+/**
+ * Íconos de línea (Lucide, licencia ISC) + íconos propios de marca/redes.
+ * Uso: <Icon name="flame" />
+ */
+import truck from 'lucide-static/icons/truck.svg?raw';
+import flame from 'lucide-static/icons/flame.svg?raw';
+import zap from 'lucide-static/icons/zap.svg?raw';
+import wind from 'lucide-static/icons/wind.svg?raw';
+import filter from 'lucide-static/icons/filter.svg?raw';
+import recycle from 'lucide-static/icons/recycle.svg?raw';
+import droplets from 'lucide-static/icons/droplets.svg?raw';
+import home from 'lucide-static/icons/house.svg?raw';
+import factory from 'lucide-static/icons/factory.svg?raw';
+import chart from 'lucide-static/icons/chart-line.svg?raw';
+import clock from 'lucide-static/icons/clock.svg?raw';
+import pin from 'lucide-static/icons/map-pin.svg?raw';
+import check from 'lucide-static/icons/check.svg?raw';
+import shield from 'lucide-static/icons/shield-check.svg?raw';
+import leaf from 'lucide-static/icons/leaf.svg?raw';
+import play from 'lucide-static/icons/play.svg?raw';
+import share from 'lucide-static/icons/share-2.svg?raw';
+import copy from 'lucide-static/icons/copy.svg?raw';
+import volume from 'lucide-static/icons/volume-2.svg?raw';
+import square from 'lucide-static/icons/square.svg?raw';
+import menu from 'lucide-static/icons/menu.svg?raw';
+import x from 'lucide-static/icons/x.svg?raw';
+import arrowRight from 'lucide-static/icons/arrow-right.svg?raw';
+import arrowDown from 'lucide-static/icons/arrow-down.svg?raw';
+import chevronDown from 'lucide-static/icons/chevron-down.svg?raw';
+import languages from 'lucide-static/icons/languages.svg?raw';
+import mountain from 'lucide-static/icons/mountain.svg?raw';
+import users from 'lucide-static/icons/users.svg?raw';
+import briefcase from 'lucide-static/icons/briefcase.svg?raw';
+import sun from 'lucide-static/icons/cloud-sun.svg?raw';
+import cloudRain from 'lucide-static/icons/cloud-rain.svg?raw';
+import thermometer from 'lucide-static/icons/thermometer.svg?raw';
+import eye from 'lucide-static/icons/eye.svg?raw';
+import fileText from 'lucide-static/icons/file-text.svg?raw';
+import download from 'lucide-static/icons/download.svg?raw';
+import mail from 'lucide-static/icons/mail.svg?raw';
+import building from 'lucide-static/icons/building-2.svg?raw';
+import landmark from 'lucide-static/icons/landmark.svg?raw';
+import globe from 'lucide-static/icons/globe.svg?raw';
+import alert from 'lucide-static/icons/triangle-alert.svg?raw';
+import trash from 'lucide-static/icons/trash-2.svg?raw';
+import bricks from 'lucide-static/icons/brick-wall.svg?raw';
+import gauge from 'lucide-static/icons/gauge.svg?raw';
+import activity from 'lucide-static/icons/activity.svg?raw';
+import road from 'lucide-static/icons/route.svg?raw';
+import hardhat from 'lucide-static/icons/hard-hat.svg?raw';
+import plug from 'lucide-static/icons/plug-zap.svg?raw';
+import printer from 'lucide-static/icons/printer.svg?raw';
+import heart from 'lucide-static/icons/heart.svg?raw';
+import sparkles from 'lucide-static/icons/sparkles.svg?raw';
+import ban from 'lucide-static/icons/ban.svg?raw';
+import fish from 'lucide-static/icons/fish.svg?raw';
+import mapIcon from 'lucide-static/icons/map.svg?raw';
+import calendar from 'lucide-static/icons/calendar-check.svg?raw';
+import scale from 'lucide-static/icons/scale.svg?raw';
+import search from 'lucide-static/icons/search.svg?raw';
+import messages from 'lucide-static/icons/messages-square.svg?raw';
+import plus from 'lucide-static/icons/plus.svg?raw';
+import external from 'lucide-static/icons/external-link.svg?raw';
+import pause from 'lucide-static/icons/pause.svg?raw';
+import volumeX from 'lucide-static/icons/volume-x.svg?raw';
+
+const custom: Record<string, string> = {
+  facebook:
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-7.5h2.53l.38-2.93H13.5V8.7c0-.85.24-1.43 1.46-1.43h1.55V4.65a20.6 20.6 0 0 0-2.26-.12c-2.24 0-3.77 1.37-3.77 3.88v2.16H7.95v2.93h2.53V21h3.02Z"/></svg>',
+  xsocial:
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M17.75 3h3.07l-6.71 7.67L22 21h-6.18l-4.84-6.33L5.44 21H2.37l7.18-8.2L2 3h6.33l4.38 5.79L17.75 3Zm-1.08 16.18h1.7L7.4 4.73H5.57l11.1 14.45Z"/></svg>',
+};
+
+const lucide: Record<string, string> = {
+  truck, flame, zap, wind, filter, recycle, droplets, home, factory, chart, clock, pin, check, shield, leaf, play,
+  share, copy, volume, square, menu, x, arrowRight, arrowDown, chevronDown, languages, mountain, users, briefcase,
+  sun, cloudRain, thermometer, eye, fileText, download, mail, building, landmark, globe, alert, trash, bricks, gauge,
+  activity, road, hardhat, plug, printer, heart, sparkles, ban, fish, map: mapIcon, calendar, scale, search, messages,
+  plus, external, pause, volumeX, volume2: volume,
+};
+
+interface Props {
+  name: string;
+  size?: number;
+  class?: string;
+  label?: string;
+  stroke?: number;
+}
+const { name, size = 24, class: cls = '', label, stroke = 1.75 } = Astro.props;
+let svg = custom[name] ?? lucide[name];
+if (!svg) throw new Error(`Icon "${name}" no existe`);
+svg = svg
+  .replace(/<!--[\s\S]*?-->/g, '')
+  .replace(/\swidth="[^"]*"/, '')
+  .replace(/\sheight="[^"]*"/, '')
+  .replace(/\sclass="[^"]*"/, '')
+  .replace(/stroke-width="[^"]*"/, `stroke-width="${stroke}"`)
+  .replace(
+    '<svg',
+    `<svg width="${size}" height="${size}" class="icon ${cls}" ${label ? `role="img" aria-label="${label}"` : 'aria-hidden="true" focusable="false"'}`,
+  );
+---
+
+<Fragment set:html={svg} />
