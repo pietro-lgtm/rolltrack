@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Every Single Day — style transfer study</title>
+<style>html,body{margin:0;background:#141414}canvas{display:block;margin:0 auto;width:540px;height:540px}</style>
+</head>
+<body>
+<canvas id="c" width="1080" height="1080"></canvas>
+<script>
+'use strict';
+const W=1080,H=1080,FPS=24,LOOP=360,TOTAL=720;
+const cv=document.getElementById('c'),ctx=cv.getContext('2d');
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const lerp=(a,b,t)=>a+(b-a)*t;
+const seg=(f,a,b)=>clamp((f-a)/(b-a),0,1);
+const E={io:t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2, o:t=>1-Math.pow(1-t,3), i:t=>t*t*t, o5:t=>1-Math.pow(1-t,5)};
+function mb32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;}}
+function vn(seed){const r=mb32(seed),g=new Float32Array(256);for(let i=0;i<256;i++)g[i]=r();
+  return x=>{const xi=Math.floor(x)&255,xf=x-Math.floor(x),s=xf*xf*(3-2*xf);return g[xi]*(1-s)+g[(xi+1)&255]*s;};}
+const wob=vn(31);
+
+// palette — deliberately NOT the source's: neon amber / near-black / paper / ink
+const GOLD='#f0a428', GOLDHOT='#ffd98a', INK='#17150f', PAPER='#efe8d8', PAPER2='#e6dcc4', NIGHT='#0a0806', REDNEON='#e8503a';
+
+// ---------------- the constant subject: a taking hand (36f cycle) ----------------
+// Arm from the RIGHT edge reaches LEFT to a source of discs, closes, carries back, releases off-frame.
+// Parametric 2-segment IK, elbow-down. All local coords; caller positions/scales/colors it.
+const CYC=36;
+function cyclePose(u){ // u in [0,1) -> {tx,ty (hand target), grip 0..1, carrying bool}
+  // waypoints: 0.00 rest-right  0.22 over heap  0.30 descend+close  0.42 lift  0.80 exit right  0.86..1 return empty
+  let tx,ty,grip,carry=false;
+  if(u<0.22){const t=E.io(u/0.22); tx=lerp(430,60,t); ty=lerp(-60,-10,t); grip=0.15;}
+  else if(u<0.30){const t=E.io((u-0.22)/0.08); tx=60; ty=lerp(-10,28,t); grip=lerp(0.15,1,t);}
+  else if(u<0.42){const t=E.o((u-0.30)/0.12); tx=lerp(60,120,t); ty=lerp(28,-55,t); grip=1; carry=true;}
+  else if(u<0.80){const t=E.i((u-0.42)/0.38); tx=lerp(120,560,t); ty=lerp(-55,-40,t); grip=1; carry=true;}
+  else if(u<0.86){const t=(u-0.80)/0.06; tx=lerp(560,520,t); ty=-40; grip=lerp(1,0.15,t);}
+  else {const t=E.io((u-0.86)/0.14); tx=lerp(520,430,t); ty=lerp(-40,-60,t); grip=0.15;}
+  return {tx,ty,grip,carry};
+}
+// draw arm in local space: origin = heap center; shoulder at (SHX, SHY); scale 1 ≈ 520px reach
+function drawArm(x,F,color,opts={}){
+  const {lw=34,hand=30,glow=0}=opts;
+  const u=((F%CYC)+CYC)%CYC/CYC;
+  const p=cyclePose(u);
+  const bob=(wob(F*0.37)-0.5)*3;
+  const SHX=640, SHY=-250+bob;
+  const L1=340,L2=310;
+  let dx=p.tx-SHX, dy=p.ty-SHY, d=Math.hypot(dx,dy);
+  d=Math.min(d,L1+L2-4);
+  const a=Math.atan2(dy,dx);
+  const cosS=(L1*L1+d*d-L2*L2)/(2*L1*d);
+  const shA=a-Math.acos(clamp(cosS,-1,1)); // elbow toward frame edge (reads as reaching arm)
+  const ex=SHX+Math.cos(shA)*L1, ey=SHY+Math.sin(shA)*L1;
+  const draw=(lwid,col,blur)=>{
+    x.save();
+    if(blur)x.filter=`blur(${blur}px)`;
+    x.strokeStyle=col; x.fillStyle=col; x.lineWidth=lwid; x.lineCap='round'; x.lineJoin='round';
+    x.beginPath(); x.moveTo(SHX+150,SHY-40); x.lineTo(SHX,SHY); x.lineTo(ex,ey); x.lineTo(p.tx,p.ty); x.stroke();
+    // hand: palm + fingers closing toward grab point
+    const hx=p.tx, hy=p.ty;
+    x.beginPath(); x.arc(hx,hy,hand*0.9,0,7); x.fill();
+    const fa=Math.atan2(28-hy===0?1:0,0); // fingers point down-left when open, curl when gripping
+    for(let i=-1;i<=1;i++){
+      const base=Math.PI*0.5+i*0.38;              // downward spread
+      const curl=lerp(0.0,0.9,p.grip);
+      const f1x=hx+Math.cos(base)*hand*1.5, f1y=hy+Math.sin(base)*hand*1.5;
+      const f2x=f1x+Math.cos(base+curl)*hand*1.1, f2y=f1y+Math.sin(base+curl)*hand*1.1;
+      x.lineWidth=lwid*0.38;
+      x.beginPath(); x.moveTo(hx,hy); x.lineTo(f1x,f1y); x.lineTo(f2x,f2y); x.stroke();
+    }
+    // thumb
+    x.lineWidth=lwid*0.42;
+    const tb=Math.PI*0.95, tcurl=lerp(-0.3,0.5,p.grip);
+    x.beginPath(); x.moveTo(hx,hy);
+    x.lineTo(hx+Math.cos(tb)*hand*1.3, hy+Math.sin(tb)*hand*1.3);
+    x.lineTo(hx+Math.cos(tb+tcurl)*hand*2.1, hy+Math.sin(tb+tcurl)*hand*2.1);
+    x.stroke();
+    x.restore();
+  };
+  if(glow>0){draw(lw*1.9,color,18*glow); }
+  draw(lw,color,0);
+  // carried disc
+  if(p.carry){
+    x.save(); x.fillStyle=opts.disc||color;
+    if(glow>0){x.shadowColor=color;x.shadowBlur=24*glow;}
+    x.beginPath(); x.arc(p.tx-6,p.ty+hand*1.5,hand*0.85,0,7); x.fill(); x.restore();
+  }
+  return p;
+}
+// the endless supply: small stack of discs at origin; one fades back in each cycle
+function drawHeap(x,F,color,opts={}){
+  const {glow=0,r=30}=opts;
+  const u=((F%CYC)+CYC)%CYC/CYC;
+  x.save();
+  if(glow>0){x.shadowColor=color;x.shadowBlur=20*glow;}
+  x.fillStyle=color;
+  const taken=u>0.30&&u<0.98;          // top disc missing while carried
+  const refill=seg(u,0.60,0.95);       // next quietly rises in
+  const n=3;
+  for(let i=0;i<n;i++){
+    const yy=56-i*22;
+    if(i===n-1){ if(taken&&refill<1){x.globalAlpha=refill;} }
+    x.beginPath(); x.ellipse(0,yy,r*1.35,r*0.55,0,0,7); x.fill();
+    x.globalAlpha=1;
+  }
+  x.restore();
+}
+// micro version for grid cells (cheap)
+function microArm(x,F,s,color){
+  const u=((F%CYC)+CYC)%CYC/CYC, p=cyclePose(u);
+  x.save(); x.scale(s,s);
+  x.strokeStyle=color; x.fillStyle=color; x.lineWidth=34; x.lineCap='round';
+  const SHX=640,SHY=-250, L1=340,L2=310;
+  let dx=p.tx-SHX,dy=p.ty-SHY,d=Math.min(Math.hypot(dx,dy),L1+L2-4);
+  const a=Math.atan2(dy,dx);
+  const shA=a-Math.acos(clamp((L1*L1+d*d-L2*L2)/(2*L1*d),-1,1));
+  const ex=SHX+Math.cos(shA)*L1, ey=SHY+Math.sin(shA)*L1;
+  x.beginPath(); x.moveTo(SHX+120,SHY-20); x.lineTo(SHX,SHY); x.lineTo(ex,ey); x.lineTo(p.tx,p.ty); x.stroke();
+  x.beginPath(); x.arc(p.tx,p.ty,40,0,7); x.fill();
+  x.beginPath(); x.ellipse(0,56,44,20,0,0,7); x.fill();
+  if(p.carry){x.beginPath(); x.arc(p.tx-6,p.ty+40,26,0,7); x.fill();}
+  x.restore();
+}
+
+// ---------------- world pieces ----------------
+function grainPass(F,amt=0.05){
+  const r=mb32(F*131+7);
+  ctx.save(); ctx.globalAlpha=amt; ctx.fillStyle='#fff';
+  for(let i=0;i<90;i++){ctx.globalAlpha=amt*r();ctx.fillRect(r()*W,r()*H,1.6,1.6);}
+  ctx.restore();
+}
+function vign(a=0.5){
+  const g=ctx.createRadialGradient(W/2,H/2,H*0.35,W/2,H/2,H*0.78);
+  g.addColorStop(0,'rgba(0,0,0,0)'); g.addColorStop(1,`rgba(0,0,0,${a})`);
+  ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+}
+// neon marquee frame: rounded rect of chasing bulbs + tube border
+function marquee(x,F,cx,cy,w,h,on=1,chase=true){
+  if(on<=0)return;
+  x.save(); x.globalAlpha=on;
+  x.strokeStyle=GOLD; x.lineWidth=6; x.shadowColor=GOLD; x.shadowBlur=26;
+  const r=36;
+  x.beginPath(); x.roundRect(cx-w/2,cy-h/2,w,h,r); x.stroke();
+  // bulbs
+  const per=2*(w+h-4*r)+2*Math.PI*r, nB=46;
+  for(let i=0;i<nB;i++){
+    const t=(i/nB + (chase?F*0.004:0))%1;
+    const p=pointOnRound(cx,cy,w,h,r,t);
+    const lit=chase? (Math.floor(t*nB+F*0.18)%3!==0):true;
+    x.fillStyle=lit?GOLDHOT:'#5c431c';
+    x.shadowBlur=lit?18:0;
+    x.beginPath(); x.arc(p[0],p[1],7,0,7); x.fill();
+  }
+  x.restore();
+}
+function pointOnRound(cx,cy,w,h,r,t){
+  const sw=w-2*r, sh=h-2*r, arc=Math.PI*r/2;
+  const per=2*sw+2*sh+4*arc; let d=t*per;
+  const x0=cx-w/2, y0=cy-h/2;
+  if(d<sw) return [x0+r+d, y0]; d-=sw;
+  if(d<arc){const a=-Math.PI/2+d/r; return [cx+w/2-r+Math.cos(a)*r, y0+r+Math.sin(a)*r];} d-=arc;
+  if(d<sh) return [cx+w/2, y0+r+d]; d-=sh;
+  if(d<arc){const a=0+d/r; return [cx+w/2-r+Math.cos(a)*r, cy+h/2-r+Math.sin(a)*r];} d-=arc;
+  if(d<sw) return [cx+w/2-r-d, cy+h/2]; d-=sw;
+  if(d<arc){const a=Math.PI/2+d/r; return [x0+r+Math.cos(a)*r, cy+h/2-r+Math.sin(a)*r];} d-=arc;
+  if(d<sh) return [x0, cy+h/2-r-d]; d-=sh;
+  const a=Math.PI+d/r; return [x0+r+Math.cos(a)*r, y0+r+Math.sin(a)*r];
+}
+function neonText(x,F,txt,cx,cy,size,on,color=REDNEON){
+  if(on<=0)return;
+  // flicker-on with stutter
+  const flick=on<1 ? (wob(F*1.7)>0.45?on:on*0.2) : (wob(F*0.9)>0.04?1:0.55);
+  x.save(); x.globalAlpha=flick;
+  x.font=`italic 700 ${size}px Georgia, serif`;
+  x.textAlign='center';
+  x.shadowColor=color; x.shadowBlur=30;
+  x.strokeStyle=color; x.lineWidth=2.5;
+  x.strokeText(txt,cx,cy);
+  x.fillStyle='#ffe9e2'; x.globalAlpha=flick*0.85;
+  x.fillText(txt,cx,cy);
+  x.restore();
+}
+// audience: silhouette heads along bottom
+function audience(x,F,a){
+  if(a<=0)return;
+  x.save(); x.globalAlpha=a; x.fillStyle='#020202';
+  const r=mb32(8);
+  for(let i=0;i<11;i++){
+    const hx=60+i*100+(r()-0.5)*30, hy=H-40+(r()-0.5)*18+Math.sin(F*0.05+i)*2.5;
+    const hr=52+r()*16;
+    x.beginPath(); x.arc(hx,hy,hr,Math.PI,2*Math.PI); x.fill();
+  }
+  x.restore();
+}
+// one receipt line: greeked item bar, dotted leader, amount blocks
+function receiptLine(x,lx,ly,wgt,seed,ink){
+  const r=mb32(seed);
+  x.fillStyle=ink;
+  x.fillRect(lx,ly,60+r()*110,10);
+  for(let dx2=200;dx2<330;dx2+=14)x.fillRect(lx+dx2,ly+4,4,4);
+  x.fillRect(lx+350,ly,26,10); x.fillRect(lx+384,ly,14,10);
+}
+// stamp: circled check
+function stamp(x,sx,sy,sc,a,ink='#2a2415'){
+  if(a<=0)return;
+  x.save(); x.globalAlpha=a; x.translate(sx,sy); x.scale(sc,sc); x.rotate(-0.12);
+  x.strokeStyle=ink; x.lineWidth=7;
+  x.beginPath(); x.arc(0,0,46,0,7); x.stroke();
+  x.lineWidth=9; x.beginPath(); x.moveTo(-20,2); x.lineTo(-4,18); x.lineTo(24,-16); x.stroke();
+  x.restore();
+}
+function paperBG(x,shade=PAPER){
+  x.fillStyle=shade; x.fillRect(0,0,W,H);
+  x.save(); x.globalAlpha=0.5; x.strokeStyle='rgba(120,105,75,0.18)'; x.lineWidth=1.5;
+  for(let y=90;y<H;y+=54){x.beginPath();x.moveTo(0,y);x.lineTo(W,y);x.stroke();}
+  x.restore();
+}
+
+// ---------------- timeline: one 360-frame loop ----------------
+// anchors: arm local origin (heap) sits at (ARMX, ARMY) in stage scenes
+const ARMX=330, ARMY=620;
+function sceneSpectacle(x,F,phase){ // shared by open (phase 0: F0-78) and close (phase 1: F296-360)
+  x.fillStyle=NIGHT; x.fillRect(0,0,W,H);
+  // warm pool of light
+  const g=x.createRadialGradient(W/2,H*0.55,60,W/2,H*0.55,640);
+  g.addColorStop(0,'rgba(120,70,15,0.45)'); g.addColorStop(1,'rgba(0,0,0,0)');
+  x.fillStyle=g; x.fillRect(0,0,W,H);
+  return g;
+}
+function renderLoop(F){
+  const x=ctx;
+  if(F<78){ // S1 spectacle hold: the act as event
+    sceneSpectacle(x,F,0);
+    neonText(x,F,'ALL YOU CAN EAT',W/2,170,86,1);
+    marquee(x,F,W/2,H*0.56,860,560,1);
+    x.save(); x.translate(ARMX,ARMY);
+    drawHeap(x,F,GOLD,{glow:0.8});
+    drawArm(x,F,GOLD,{glow:0.8,disc:GOLDHOT});
+    x.restore();
+    audience(x,F,1);
+    vign(0.55);
+  }
+  else if(F<128){ // S2 the frame leaves; the act persists
+    sceneSpectacle(x,F,0);
+    const out=E.i(seg(F,80,112));
+    // light pool cools
+    x.save(); x.globalAlpha=out*0.85; x.fillStyle=NIGHT; x.fillRect(0,0,W,H); x.restore();
+    neonText(x,F,'ALL YOU CAN EAT',W/2,170-out*300,86,1-out);
+    marquee(x,F,W/2,H*0.56+out*720,860,560,1-out*0.3);
+    audience(x,F,1-seg(F,78,96));
+    x.save(); x.translate(ARMX,ARMY);
+    drawHeap(x,F,'#cfc6b4',{glow:lerp(0.8,0.1,out)});
+    drawArm(x,F,lerp01Color(out),{glow:lerp(0.8,0.1,out),disc:'#e8e0cf'});
+    x.restore();
+    vign(0.6);
+  }
+  else if(F<200){ // S3 itemization: each take prints a line
+    x.fillStyle=NIGHT; x.fillRect(0,0,W,H);
+    x.save(); x.translate(ARMX,ARMY);
+    drawHeap(x,F,'#cfc6b4',{glow:0.1});
+    drawArm(x,F,'#d8d2c2',{glow:0.1,disc:'#e8e0cf'});
+    x.restore();
+    // receipt strip grows beneath, one line per completed cycle
+    const slip=seg(F,132,146);
+    const stripX=ARMX-210, stripTop=ARMY+120;
+    const lines=Math.floor((F-128)/CYC*3)+1; // prints faster than the takes: the count outruns the act
+    const stripH=Math.min(40+lines*34, H-stripTop-30);
+    x.save(); x.globalAlpha=E.o(slip);
+    x.fillStyle=PAPER;
+    x.fillRect(stripX,stripTop,430,stripH);
+    // torn bottom
+    x.fillStyle=PAPER;
+    for(let tx=0;tx<430;tx+=28){x.beginPath();x.moveTo(stripX+tx,stripTop+stripH);
+      x.lineTo(stripX+tx+14,stripTop+stripH+10);x.lineTo(stripX+tx+28,stripTop+stripH);x.fill();}
+    for(let i=0;i<lines;i++){
+      const ly=stripTop+26+i*34;
+      if(ly<stripTop+stripH-18) receiptLine(x,stripX+26,ly,0,100+i,'#2a2415');
+    }
+    x.restore();
+    vign(0.6);
+  }
+  else if(F<252){ // S4 HARD CUT: the grid — one of countless identical cells
+    paperBG(x,PAPER2);
+    // header band
+    x.fillStyle='#d6c9a8'; x.fillRect(0,0,W,96);
+    x.fillStyle='#2a2415'; x.font='700 40px Georgia, serif'; x.textAlign='left';
+    x.fillText('EVERY  SINGLE  DAY',44,62);
+    const drift=(F-200)*1.1;
+    const CS=180; // cell size
+    x.save();
+    x.beginPath(); x.rect(0,96,W,H-96); x.clip();
+    x.translate(-drift%CS,96);
+    x.strokeStyle='rgba(70,60,40,0.5)'; x.lineWidth=2;
+    for(let gx=0;gx<=W+CS;gx+=CS){x.beginPath();x.moveTo(gx,0);x.lineTo(gx,H);x.stroke();}
+    for(let gy=0;gy<=H;gy+=CS){x.beginPath();x.moveTo(0,gy);x.lineTo(W+CS,gy);x.stroke();}
+    for(let gy=0;gy+CS<=H-60;gy+=CS)for(let gx=0;gx<=W+CS;gx+=CS){
+      x.save(); x.translate(gx+CS*0.30,gy+CS*0.64);
+      microArm(x,F,0.155,'#2a2415');
+      x.restore();
+    }
+    x.restore();
+  }
+  else if(F<300){ // S5 zoom into one cell → a room, a table, a calendar
+    const z=E.io(seg(F,252,268));
+    paperBG(x,PAPER);
+    // room fades in
+    x.save(); x.globalAlpha=E.o(seg(F,252,266));
+    // window with flat daylight
+    x.fillStyle='#f6f2e6'; x.fillRect(120,130,300,330);
+    x.strokeStyle='#4a4232'; x.lineWidth=10; x.strokeRect(120,130,300,330);
+    x.beginPath();x.moveTo(270,130);x.lineTo(270,460);x.stroke();
+    x.beginPath();x.moveTo(120,295);x.lineTo(420,295);x.stroke();
+    // calendar, pages flipping fast
+    x.fillStyle='#fff'; x.fillRect(700,150,220,260);
+    x.strokeStyle='#4a4232'; x.lineWidth=6; x.strokeRect(700,150,220,260);
+    x.fillStyle='#b5422e'; x.fillRect(700,150,220,58);
+    const day=Math.floor(F/6)%31+1;
+    x.fillStyle='#2a2415'; x.font='700 120px Georgia, serif'; x.textAlign='center';
+    x.fillText(String(day),810,350);
+    // table
+    x.fillStyle='#cdbd98'; x.fillRect(80,760,920,26);
+    x.fillRect(160,786,30,200); x.fillRect(880,786,30,200);
+    x.restore();
+    // the same act, ink on paper, flat light — no glow
+    x.save(); x.translate(ARMX+60,ARMY+90);
+    drawHeap(x,F,'#2a2415',{});
+    drawArm(x,F,'#2a2415',{disc:'#2a2415'});
+    x.restore();
+  }
+  else { // S6 drain → the form: taking becomes stamping (counterchange), then renight
+    const drain=E.io(seg(F,300,314));
+    const renight=E.i(seg(F,340,358));
+    paperBG(x,PAPER);
+    // walls drop: white page rises
+    x.save(); x.globalAlpha=drain; x.fillStyle='#f7f3e8'; x.fillRect(0,0,W,H);
+    // ruled form + signature line
+    x.strokeStyle='rgba(90,78,52,0.5)'; x.lineWidth=2;
+    for(let y=200;y<760;y+=64){x.beginPath();x.moveTo(120,y);x.lineTo(W-120,y);x.stroke();}
+    x.lineWidth=4; x.beginPath();x.moveTo(140,860);x.lineTo(620,860);x.stroke();
+    x.restore();
+    // marching OK stamps — one per take already landed
+    const stamps=Math.floor(seg(F,300,348)*7);
+    for(let i=0;i<stamps;i++){
+      const land=seg(F,302+i*6,306+i*6);
+      stamp(x,200+i*105,330,lerp(1.6,1,E.o(land)),E.o(land)*drain*(1-renight));
+    }
+    // the hand, ink-black on the page: same gesture, now administration
+    x.save(); x.translate(ARMX+60,ARMY+90);
+    drawHeap(x,F,'#1c1810',{});
+    drawArm(x,F,'#1c1810',{disc:'#1c1810'});
+    x.restore();
+    // night falls; neon world returns for the loop seam
+    if(renight>0){
+      x.save(); x.globalAlpha=renight; x.fillStyle=NIGHT; x.fillRect(0,0,W,H);
+      const g=x.createRadialGradient(W/2,H*0.55,60,W/2,H*0.55,640);
+      g.addColorStop(0,'rgba(120,70,15,0.45)'); g.addColorStop(1,'rgba(0,0,0,0)');
+      x.fillStyle=g; x.fillRect(0,0,W,H);
+      neonText(x,F,'ALL YOU CAN EAT',W/2,170,86,renight);
+      marquee(x,F,W/2,H*0.56,860,560,renight);
+      x.save(); x.globalAlpha=renight; x.translate(ARMX,ARMY);
+      drawHeap(x,F,GOLD,{glow:0.8*renight});
+      drawArm(x,F,GOLD,{glow:0.8*renight,disc:GOLDHOT});
+      x.restore();
+      audience(x,F,renight);
+      vign(0.55*renight);
+      x.restore();
+    }
+  }
+  grainPass(F,0.05);
+}
+// helper: cool the arm color from gold to bone
+function lerp01Color(t){
+  const c0=[240,164,40], c1=[216,210,194];
+  return `rgb(${Math.round(lerp(c0[0],c1[0],t))},${Math.round(lerp(c0[1],c1[1],t))},${Math.round(lerp(c0[2],c1[2],t))})`;
+}
+function renderFrame(t){
+  const Fg=Math.floor(t*FPS+0.0001);
+  const F=((Fg%LOOP)+LOOP)%LOOP;
+  renderLoop(F);
+}
+window.renderFrame=renderFrame;
+window.READY=true;
+const q=new URLSearchParams(location.search);
+renderFrame(parseFloat(q.get('t')||'0'));
+document.addEventListener('keydown',e=>{
+  const q=new URLSearchParams(location.search);
+  let t=parseFloat(q.get('t')||'0');
+  if(e.key==='ArrowRight')t+=1/24; if(e.key==='ArrowLeft')t-=1/24;
+  if(e.key==='ArrowUp')t+=0.5; if(e.key==='ArrowDown')t-=0.5;
+  q.set('t',Math.max(0,t).toFixed(3)); history.replaceState(null,'','?'+q); renderFrame(parseFloat(q.get('t')));
+});
+</script>
+</body>
+</html>
